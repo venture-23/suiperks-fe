@@ -1,0 +1,39 @@
+.navbar {
+    height: 76px;
+    background: #000000;
+    display: flex;
+    align-items: center;
+
+    .navbar-contents {
+        width: 100%;
+        max-width: 1245px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        color: #FFF;
+        font-family: Roboto;
+        font-weight: 500;
+
+        .logos-and-links {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+
+            .nav-links {
+                display: flex;
+                gap: 16px;
+
+                .nav-link {
+                    padding: 12px 8px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+    }
+}
