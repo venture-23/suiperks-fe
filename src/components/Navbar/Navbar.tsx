@@ -25,7 +25,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="right-section">
-                    <ConnectButton />
+                    <ConnectButton>Connect Wallet</ConnectButton>
                 </div>
             </div>
         </div>
