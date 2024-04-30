@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { ConnectButton } from "@suiet/wallet-kit";
 
 import "./Navbar.scss";
 
 const Navbar = () => {
+    const location = useLocation();
+
     return (
         <div className="navbar">
             <div className="navbar-contents">
@@ -11,16 +13,15 @@ const Navbar = () => {
                     {/* <div>Logo</div> */}
 
                     <div className="nav-links ">
-                        <Link to="/">
-                            <div className="nav-link border b-2 border-zinc-400  rounded-md hover:border-b hover:border-zinc-700">
-                                Home
-                            </div>
-                        </Link>
-                        <Link to="/proposals">
-                            <div className="nav-link border b-2 border-zinc-400  rounded-md hover:border-b hover:border-zinc-700">
-                                Proposals
-                            </div>
-                        </Link>
+                        <NavLink to="/" className={`nav-link ${location.pathname === "/" ? "active" : ""}`}>
+                            Home
+                        </NavLink>
+                        <NavLink
+                            to="/proposals"
+                            className={`nav-link ${location.pathname === "/proposals" ? "active" : ""}`}
+                        >
+                            Proposals
+                        </NavLink>
                     </div>
                 </div>
 
