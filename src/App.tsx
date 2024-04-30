@@ -1,19 +1,19 @@
 import "./App.scss";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <div>Home</div>,
-    },
-]);
+import LandingPage from "./components/pages/LandingPage";
+import ProposalPage from "./components/pages/ProposalPage";
 
 function App() {
     return (
         <div className="app">
-            <Navbar />
-            <RouterProvider router={router} />
+            <BrowserRouter>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/proposals" element={<ProposalPage />} />
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }
