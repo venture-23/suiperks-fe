@@ -2,11 +2,20 @@ import { FormEvent, useState } from "react";
 import { createSettleBidTxb } from "../../services/settleBidServices";
 import { useWallet } from "@suiet/wallet-kit";
 
+// Todo: Update according to BE response
+type AuctionItem = {
+    auctionInfoId: string;
+}
+
 const SettleBidPage = () => {
     const [nftName, setNftName] = useState("");
     const [nftDescription, setNftDescription] = useState("");
     const [nftImage, setNftImage] = useState("");
     const wallet = useWallet();
+
+    const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
+        auctionInfoId: "",
+    });
 
     const clearInputs = () => {
         setNftName("");
@@ -28,11 +37,12 @@ const SettleBidPage = () => {
                 nftName: nftName,
                 nftDetails: nftDescription,
                 nftImageUrl: nftImage,
-            });
+            }, auctionItemDetails.auctionInfoId);
             const txnResponse = await wallet.signAndExecuteTransactionBlock({
                 // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                 transactionBlock: txb,
             });
+            console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Settle bid digest:", txnResponse?.digest);
 

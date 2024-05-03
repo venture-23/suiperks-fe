@@ -16,15 +16,24 @@ type BidItem = {
     bidTime: string;
 };
 
+// Todo: Update according to BE response
+type AuctionItem = {
+    auctionInfoId: string;
+}
+
 const ActiveBid = () => {
     const wallet = useWallet();
     const [inputBid, setInputBid] = useState("");
     const [bids, setBids] = useState<BidItem[]>([]);
     const [endDate, setEndDate] = useState<Date>(new Date("2024-04-27T12:00:00"));
-    const [itemName, setItemName] = useState("Noun 10");
+    const [itemName, setItemName] = useState("NFT N");
     const [currentBid, setCurrentBid] = useState("0.00");
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
+        auctionInfoId: "",
+    });
 
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -50,17 +59,19 @@ const ActiveBid = () => {
     };
 
     const handleSubmit = async () => {
-        const bidAmount = parseFloat(inputBid);
+        const amount = Number(inputBid) * (10 ** 9);
+        const bidAmount = parseFloat(`${amount}`);
         const minBid = parseFloat(currentBid) + 0.01;
         const intBidAmount = Math.floor(bidAmount);
 
         if (!isNaN(bidAmount) && bidAmount >= minBid) {
             try {
-                const txb = createBidAuctionTxb(intBidAmount);
+                const txb = createBidAuctionTxb(intBidAmount, auctionItemDetails.auctionInfoId);
                 const txnResponse = await wallet.signAndExecuteTransactionBlock({
                     // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                     transactionBlock: txb,
                 });
+                console.log("txnResponse", txnResponse);
                 if (txnResponse?.digest) {
                     console.log("Bid auction digest:", txnResponse?.digest);
 

@@ -3,7 +3,6 @@ import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui.js/utils";
 
 const PACKAGE_ID = import.meta.env.VITE_APP_PACKAGE_ID as string;
 const DAO_TREASURY_ID = import.meta.env.VITE_APP_DAO_TREASURY_ID as string;
-const AUCTION_INFO_ID = import.meta.env.VITE_APP_AUCTION_INFO_ID as string;
 
 interface NFTDetails {
     nftName: string;
@@ -11,7 +10,7 @@ interface NFTDetails {
     nftImageUrl: string;
 }
 
-export const createSettleBidTxb = (nftDetails: NFTDetails) => {
+export const createSettleBidTxb = (nftDetails: NFTDetails, auctionInfoId: string) => {
     try {
         const txb = new TransactionBlock();
         txb.moveCall({
@@ -21,8 +20,11 @@ export const createSettleBidTxb = (nftDetails: NFTDetails) => {
                 txb.pure.string(nftDetails.nftDetails),
                 txb.pure.string(nftDetails.nftImageUrl),
                 txb.object(DAO_TREASURY_ID),
-                txb.object(AUCTION_INFO_ID),
-                txb.object(SUI_CLOCK_OBJECT_ID),
+                txb.object(auctionInfoId),
+                txb.object(SUI_CLOCK_OBJECT_ID)
+            ],
+            typeArguments: [
+                '0x2::sui::SUI',
             ],
         });
 

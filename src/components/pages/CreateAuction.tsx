@@ -20,6 +20,7 @@ const CreateEventPage = () => {
                 transactionBlock: txb,
             });
 
+            console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 setSuccess(true);
                 setTimeout(() => {
