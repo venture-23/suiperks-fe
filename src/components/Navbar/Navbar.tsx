@@ -1,10 +1,11 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { ConnectButton } from "@suiet/wallet-kit";
+import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 
 import "./Navbar.scss";
 
 const Navbar = () => {
     const location = useLocation();
+    const wallet = useWallet();
 
     return (
         <div className="navbar">
@@ -32,6 +33,15 @@ const Navbar = () => {
                 </div>
 
                 <div className="right-section">
+                    {wallet.connected && (
+                        <NavLink
+                            to="/user-dashboard"
+                            className={`nav-link dashboard ${location.pathname === "/user-dashboard" ? "active" : ""}`}
+                        >
+                            Dashboard
+                        </NavLink>
+                    )}
+
                     <ConnectButton>Connect Wallet</ConnectButton>
                 </div>
             </div>
