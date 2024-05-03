@@ -1,5 +1,7 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../../assets/stylings/ActiveBid.scss";
+import { createBidAuctionTxb } from "../../services/bidAmount";
+import { useWallet } from "@suiet/wallet-kit";
 
 import PopOutImg from "../../assets/images/popout.png";
 import BarImg from "../../assets/images/bars.png";
@@ -9,47 +11,15 @@ import CloseIconImg from "../../assets/images/crossIcon.png";
 type BidItem = {
     userImg: string;
     username: string;
-    amount: string;
-    transactionLink: string;
+    amount: number;
+    transactionLink?: string;
     bidTime: string;
 };
 
 const ActiveBid = () => {
+    const wallet = useWallet();
     const [inputBid, setInputBid] = useState("");
-    const [bids, setBids] = useState<BidItem[]>([
-        {
-            userImg: UserIconImg,
-            username: "User1",
-            amount: "0.01",
-            transactionLink:
-                "https://etherscan.io/tx/0x14b8548c7db02e8fd4c137da6fc03543a555003e9713f160cb8119090c17e49e",
-            bidTime: "April 26,2024 11:04PM",
-        },
-        {
-            userImg: UserIconImg,
-            username: "User2",
-            amount: "0.02",
-            transactionLink:
-                "https://etherscan.io/tx/0x14b8548c7db02e8fd4c137da6fc03543a555003e9713f160cb8119090c17e49e",
-            bidTime: "April 26,2024 11:04PM",
-        },
-        {
-            userImg: UserIconImg,
-            username: "User3",
-            amount: "0.03",
-            transactionLink:
-                "https://etherscan.io/tx/0x14b8548c7db02e8fd4c137da6fc03543a555003e9713f160cb8119090c17e49e",
-            bidTime: "April 26,2024 11:04PM",
-        },
-        {
-            userImg: UserIconImg,
-            username: "User4",
-            amount: "0.04",
-            transactionLink:
-                "https://etherscan.io/tx/0x14b8548c7db02e8fd4c137da6fc03543a555003e9713f160cb8119090c17e49e",
-            bidTime: "April 26,2024 11:04PM",
-        },
-    ]);
+    const [bids, setBids] = useState<BidItem[]>([]);
     const [endDate, setEndDate] = useState<Date>(new Date("2024-04-27T12:00:00"));
     const [itemName, setItemName] = useState("Noun 10");
     const [currentBid, setCurrentBid] = useState("0.00");
@@ -62,12 +32,12 @@ const ActiveBid = () => {
 
     useEffect(() => {
         const highestBid = bids.reduce(
-            (maxBid, bid) => (parseFloat(bid.amount) > parseFloat(maxBid) ? bid.amount : maxBid),
-            "0.00"
+            (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
+            0
         );
-        setCurrentBid(highestBid);
+        setCurrentBid(highestBid.toFixed(2));
 
-        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
+        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
         setBids(sortedBids);
 
         const currentDate = new Date();
@@ -79,23 +49,37 @@ const ActiveBid = () => {
         setInputBid(event.target.value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const bidAmount = parseFloat(inputBid);
         const minBid = parseFloat(currentBid) + 0.01;
+        const intBidAmount = Math.floor(bidAmount);
 
-        if (bidAmount >= minBid) {
-            const newBid: BidItem = {
-                userImg: UserIconImg,
-                username: "User",
-                amount: inputBid,
-                transactionLink:
-                    "https://etherscan.io/tx/0x14b8548c7db02e8fd4c137da6fc03543a555003e9713f160cb8119090c17e49e",
-                bidTime: new Date().toLocaleString(),
-            };
-            const updatedBids = [...bids, newBid];
-            setBids(updatedBids);
-            setInputBid("");
-            setErrorMessage("");
+        if (!isNaN(bidAmount) && bidAmount >= minBid) {
+            try {
+                const txb = createBidAuctionTxb(intBidAmount);
+                const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                    // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                    transactionBlock: txb,
+                });
+                if (txnResponse?.digest) {
+                    console.log("Bid auction digest:", txnResponse?.digest);
+
+                    const newBid: BidItem = {
+                        userImg: UserIconImg,
+                        username: "User",
+                        amount: intBidAmount,
+                        //transactionLink: "https://etherscan.io/tx/...",
+                        bidTime: new Date().toLocaleString(),
+                    };
+                    const updatedBids = [...bids, newBid];
+                    setBids(updatedBids);
+                    setInputBid("");
+                    setErrorMessage("");
+                }
+            } catch (error) {
+                console.error("Error placing bid:", error);
+                setErrorMessage("Error placing bid. Please try again later.");
+            }
         } else {
             setErrorMessage(`Bid amount must be at least ${minBid.toFixed(2)}`);
             setTimeout(() => {

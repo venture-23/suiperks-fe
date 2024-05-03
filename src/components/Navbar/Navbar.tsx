@@ -22,6 +22,12 @@ const Navbar = () => {
                         >
                             Proposals
                         </NavLink>
+                        <NavLink
+                            to="/create-auction"
+                            className={`nav-link ${location.pathname === "/create-auction" ? "active" : ""}`}
+                        >
+                            Create Auction
+                        </NavLink>
                     </div>
                 </div>
 
