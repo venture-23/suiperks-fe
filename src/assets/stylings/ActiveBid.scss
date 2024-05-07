@@ -27,6 +27,30 @@
     cursor: pointer;
 }
 
+.bid-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 200px;
+    background-color: red;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    transition: opacity 0.3s;
+}
+
+.bid-button[disabled]:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
 .bid-list li {
     //background-color: rgb(225, 215, 213);
     padding: 10px;

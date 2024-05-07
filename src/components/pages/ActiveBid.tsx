@@ -1,7 +1,7 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../../assets/stylings/ActiveBid.scss";
 import { createBidAuctionTxb } from "../../services/bidAmount";
-import { useWallet } from "@suiet/wallet-kit";
+import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
 import PopOutImg from "../../assets/images/popout.png";
 import BarImg from "../../assets/images/bars.png";
@@ -19,7 +19,7 @@ type BidItem = {
 // Todo: Update according to BE response
 type AuctionItem = {
     auctionInfoId: string;
-}
+};
 
 const ActiveBid = () => {
     const wallet = useWallet();
@@ -38,6 +38,7 @@ const ActiveBid = () => {
     const modalRef = useRef<HTMLDivElement>(null);
 
     const auctionDate = "April 26, 2024";
+    const { balance = 0n } = useAccountBalance();
 
     useEffect(() => {
         const highestBid = bids.reduce(
@@ -55,12 +56,22 @@ const ActiveBid = () => {
     }, []);
 
     const handleBidSubmit = (event: ChangeEvent<HTMLInputElement>) => {
-        setInputBid(event.target.value);
+        const bidValue = event.target.value;
+        setInputBid(bidValue);
+
+        const bidAmount = parseFloat(bidValue) * 10 ** 9;
+
+        if (!isNaN(bidAmount) && bidAmount > balance) {
+            setErrorMessage("Bid amount exceeds wallet balance.");
+        } else {
+            setErrorMessage("");
+        }
     };
 
     const handleSubmit = async () => {
-        const amount = Number(inputBid) * (10 ** 9);
+        const amount = Number(inputBid) * 10 ** 9;
         const bidAmount = parseFloat(`${amount}`);
+
         const minBid = parseFloat(currentBid) + 0.01;
         const intBidAmount = Math.floor(bidAmount);
 
@@ -156,8 +167,13 @@ const ActiveBid = () => {
                     placeholder={`${parseFloat(currentBid) + 0.01} or more`}
                     className="input-field"
                 />
-                <button onClick={handleSubmit} className="bid-button">
+                <button
+                    onClick={handleSubmit}
+                    className="bid-button"
+                    disabled={balance === undefined || balance === null || parseFloat(inputBid) * 10 ** 9 > balance}
+                >
                     Place Bid
+                    <span className="tooltip">Bid amount cannot exceed wallet balance</span>
                 </button>
             </div>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
