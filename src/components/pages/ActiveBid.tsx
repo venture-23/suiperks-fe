@@ -30,6 +30,40 @@ const ActiveBid = () => {
     const [currentBid, setCurrentBid] = useState("0.00");
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [showCountdown, setShowCountdown] = useState(true);
+    const [countdownTimer, setCountdownTimer] = useState("");
+
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = endDate.getTime() - now;
+
+        if (distance <= 0) {
+            setCountdownTimer("Auction ended");
+        } else {
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            let timerString = "";
+
+            if (days > 0) {
+                timerString += `${days}d `;
+            }
+            timerString += `${hours}h ${minutes}m ${seconds}s`;
+
+            setCountdownTimer(timerString);
+        }
+    };
+
+    useEffect(() => {
+        const timer = setInterval(updateCountdown, 1000);
+        return () => clearInterval(timer);
+    }, [endDate]);
+
+    const toggleDisplay = () => {
+        setShowCountdown((prev) => !prev);
+    };
 
     const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
         auctionInfoId: "",
@@ -152,11 +186,22 @@ const ActiveBid = () => {
                         {currentBid}
                     </h3>
                 </div>
-                <div className="flex md:flex-col items-center md:justify-center justify-between md:pl-4 md:border-l md:border-gray-700">
-                    <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">
-                        Ends on {formattedMonthDay} at
-                    </h2>
-                    <h3 className="md:text-3xl text-2xl font-bold">{formattedTime}</h3>
+                <div
+                    className="flex md:flex-col items-center md:justify-center justify-between md:pl-4 md:border-l md:border-gray-700 md:w-64"
+                    onClick={toggleDisplay}
+                    style={{ cursor: "pointer" }}
+                >
+                    {!showCountdown ? (
+                        <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">
+                            Ends on {formattedMonthDay}
+                        </h2>
+                    ) : (
+                        <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">Ends in</h2>
+                    )}
+
+                    <div className="date md:text-3xl text-2xl font-bold">
+                        {showCountdown ? countdownTimer : ` ${formattedTime}`}
+                    </div>
                 </div>
             </div>
             <div className="input-section mt-7">
