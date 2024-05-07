@@ -1,9 +1,9 @@
 import { useWallet } from "@suiet/wallet-kit";
 
-import NFTImage1 from "../../assets/images/nft dummy images/Pleased_Sulley.png";
-import NFTImage2 from "../../assets/images/nft dummy images/bars.png";
-import NFTImage3 from "../../assets/images/nft dummy images/images (2).png";
-import NFTImage4 from "../../assets/images/nft dummy images/cover3.png";
+const NFTImage1 = "https://via.placeholder.com/300";
+const NFTImage2 = "https://via.placeholder.com/300";
+const NFTImage3 = "https://via.placeholder.com/300";
+const NFTImage4 = "https://via.placeholder.com/300";
 
 const userNFTs = [
     {
