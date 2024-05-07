@@ -129,6 +129,8 @@ const ActiveBid = () => {
                     };
                     const updatedBids = [...bids, newBid];
                     setBids(updatedBids);
+                    const newBidValue = intBidAmount + (intBidAmount * 0.05); // 5% increment to bid price
+                    setCurrentBid(newBidValue.toString());
                     setInputBid("");
                     setErrorMessage("");
                 }
