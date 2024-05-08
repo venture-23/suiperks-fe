@@ -32,7 +32,27 @@ const ActiveBid = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [showCountdown, setShowCountdown] = useState(true);
     const [countdownTimer, setCountdownTimer] = useState("");
+    const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
+        auctionInfoId: "",
+    });
+    const { balance = 0n } = useAccountBalance();
+    
+    const modalRef = useRef<HTMLDivElement>(null);
+    const auctionDate = "April 26, 2024";
 
+    const formattedMonthDay = endDate.toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+    });
+
+    const formattedTime = endDate.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: true,
+    });
+
+    // Todo: Move to utils file
     const updateCountdown = () => {
         const now = new Date().getTime();
         const distance = endDate.getTime() - now;
@@ -56,40 +76,11 @@ const ActiveBid = () => {
         }
     };
 
-    useEffect(() => {
-        const timer = setInterval(updateCountdown, 1000);
-        return () => clearInterval(timer);
-    }, [endDate]);
-
     const toggleDisplay = () => {
         setShowCountdown((prev) => !prev);
     };
 
-    const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
-        auctionInfoId: "",
-    });
-
-    const modalRef = useRef<HTMLDivElement>(null);
-
-    const auctionDate = "April 26, 2024";
-    const { balance = 0n } = useAccountBalance();
-
-    useEffect(() => {
-        const highestBid = bids.reduce(
-            (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
-            0
-        );
-        setCurrentBid(highestBid.toFixed(2));
-
-        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
-        setBids(sortedBids);
-
-        const currentDate = new Date();
-        const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-        setEndDate(endDate);
-    }, []);
-
-    const handleBidSubmit = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const bidValue = event.target.value;
         setInputBid(bidValue);
 
@@ -149,9 +140,11 @@ const ActiveBid = () => {
     const handleViewMore = () => {
         setShowViewAllBidsModal(true);
     };
+
     const handleCloseModal = () => {
         setShowViewAllBidsModal(false);
     };
+
     const handleOutsideClick = (event: MouseEvent) => {
         if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
             setShowViewAllBidsModal(false);
@@ -165,16 +158,26 @@ const ActiveBid = () => {
         };
     }, []);
 
-    const formattedMonthDay = endDate.toLocaleString("en-US", {
-        month: "long",
-        day: "numeric",
-    });
-    const formattedTime = endDate.toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        hour12: true,
-    });
+
+    useEffect(() => {
+        const highestBid = bids.reduce(
+            (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
+            0
+        );
+        setCurrentBid(highestBid.toFixed(2));
+
+        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
+        setBids(sortedBids);
+
+        const currentDate = new Date();
+        const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+        setEndDate(endDate);
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(updateCountdown, 1000);
+        return () => clearInterval(timer);
+    }, [endDate]);
 
     return (
         <div className="active-bid">
@@ -210,7 +213,7 @@ const ActiveBid = () => {
                 <input
                     type="text"
                     value={inputBid}
-                    onChange={handleBidSubmit}
+                    onChange={handleInputChange}
                     placeholder={`${parseFloat(currentBid) + 0.01} or more`}
                     className="input-field"
                 />
