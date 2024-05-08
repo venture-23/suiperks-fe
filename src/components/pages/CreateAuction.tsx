@@ -1,42 +1,68 @@
-import { FormEvent, useState } from "react";
-import { createCreateEventTxb } from "../../services/createAuctionServices";
-import { useWallet } from "@suiet/wallet-kit";
+import { useState } from "react";
+import { createAuction } from "../../services/createAuctionServices";
 
 const CreateEventPage = () => {
-    const wallet = useWallet();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
+    const [createInputValues, setCreateInputValues] = useState({
+        title: "",
+        description: "",
+        nftName: "",
+        nftDescription: "",
+        nftImage: "",
+    });
 
-    const handleSubmit = async (event: FormEvent) => {
-        event.preventDefault();
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setCreateInputValues((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleCreateSubmit = async () => {
+        console.log("asdasedasd");
         setLoading(true);
         setError("");
 
         try {
-            const txb = createCreateEventTxb();
-            const txnResponse = await wallet.signAndExecuteTransactionBlock({
-                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
-                transactionBlock: txb,
-            });
-
-            console.log("txnResponse", txnResponse);
-            if (txnResponse?.digest) {
-                setSuccess(true);
-                setTimeout(() => {
-                    setSuccess(false);
-                }, 3000);
-            } else {
-                setError("Transaction failed");
-                setTimeout(() => {
-                    setError("");
-                }, 3000);
+            if (
+                !createInputValues.title ||
+                !createInputValues.description ||
+                !createInputValues.nftName ||
+                !createInputValues.nftDescription ||
+                !createInputValues.nftImage
+            ) {
+                throw new Error("Please recheck the input values!");
             }
-        } catch (err) {
-            setError("An error occurred while creating event");
+
+            const auctionMetadata = {
+                title: createInputValues.title,
+                description: createInputValues.description,
+                nftName: createInputValues.nftName,
+                nftDescription: createInputValues.nftDescription,
+                nftImage: createInputValues.nftImage,
+            };
+            const res = await createAuction(auctionMetadata);
+
+            if (!res) {
+                throw new Error("An error occurred while creating event");
+            }
+
+            setSuccess(true);
             setTimeout(() => {
-                setError("");
+                setSuccess(false);
             }, 3000);
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError(String(err));
+            }
+            // setTimeout(() => {
+            //     setError("");
+            // }, 3000);
         } finally {
             setLoading(false);
         }
@@ -46,29 +72,92 @@ const CreateEventPage = () => {
         <div>
             <div className="md:mx-40 my-10 mx-4">
                 <div className="name text-gray-500 text-2xl">Crowdfund DAO</div>
-                <div className="name text-6xl">Create Auction</div>
-                <div className="my-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.
-                </div>
+                <div className="name text-6xl">Admin</div>
+                <div className="my-4">Create and Settle Auctions.</div>
 
-                <div className="mt-4">
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group mt-4">
-                            <button
-                                type="submit"
-                                className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-                                disabled={loading}
-                            >
-                                {loading ? "Creating Event..." : "Create Event"}
-                            </button>
+                <div className="flex">
+                    <div className="w-full max-w-[500px] bg-[rgba(255,255,255,0.3)] rounded-md p-4">
+                        <h3 className="text-lg font-bold">Create Auction</h3>
+                        <div>
+                            <div className="form-group flex flex-col mt-2">
+                                <label htmlFor="nftName">Auction Name:</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    value={createInputValues.title}
+                                    placeholder="Auction Name"
+                                    onChange={handleInputChange}
+                                    required
+                                    className="h-[40px] mt-1 p-1"
+                                />
+                            </div>
+                            <div className="form-group flex flex-col mt-2">
+                                <label htmlFor="nftName">Auction Description:</label>
+                                <input
+                                    type="text"
+                                    id="description"
+                                    name="description"
+                                    value={createInputValues.description}
+                                    placeholder="Auction Description"
+                                    onChange={handleInputChange}
+                                    required
+                                    className="h-[40px] mt-1 p-1"
+                                />
+                            </div>
+                            <div className="form-group flex flex-col mt-2">
+                                <label htmlFor="nftName">NFT Name:</label>
+                                <input
+                                    type="text"
+                                    id="nftName"
+                                    name="nftName"
+                                    value={createInputValues.nftName}
+                                    placeholder="Name"
+                                    onChange={handleInputChange}
+                                    required
+                                    className="h-[40px] mt-1 p-1"
+                                />
+                            </div>
+                            <div className="form-group flex flex-col mt-2">
+                                <label htmlFor="nftDescription">NFT Description:</label>
+                                <input
+                                    type="text"
+                                    id="nftDescription"
+                                    name="nftDescription"
+                                    value={createInputValues.nftDescription}
+                                    placeholder="Description"
+                                    onChange={handleInputChange}
+                                    required
+                                    className="h-[40px] mt-1 p-1"
+                                />
+                            </div>
+                            <div className="form-group flex flex-col mt-2">
+                                <label htmlFor="nftImage">NFT Image:</label>
+                                <input
+                                    type="nftImage"
+                                    id="nftImage"
+                                    name="nftImage"
+                                    value={createInputValues.nftImage}
+                                    placeholder="Image URL"
+                                    onChange={handleInputChange}
+                                    required
+                                    className="h-[40px] mt-1 p-1"
+                                />
+                            </div>
+                            <div className="form-group mt-4">
+                                <button
+                                    type="submit"
+                                    className="bg-gray-900 text-white px-4 py-2 rounded-md"
+                                    disabled={loading}
+                                    onClick={handleCreateSubmit}
+                                >
+                                    Create
+                                </button>
+                            </div>
                         </div>
-                    </form>
-                    {success && <div className="text-green-800">Event created successfully!</div>}
-                    {error && <div className="text-red-800">{error}</div>}
+                        {success && <div className="text-green-500 mt-2">Event created successfully!</div>}
+                        {error && <div className="text-red-500 mt-2">{error}</div>}
+                    </div>
                 </div>
             </div>
         </div>
