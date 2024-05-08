@@ -1,7 +1,7 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../../assets/stylings/ActiveBid.scss";
-import { createBidAuctionTxb } from "../../services/bidAmount";
-import { useWallet } from "@suiet/wallet-kit";
+import { createBidAuctionTxb } from "../../services/activeBidServices";
+import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
 import PopOutImg from "../../assets/images/popout.png";
 import BarImg from "../../assets/images/bars.png";
@@ -19,7 +19,7 @@ type BidItem = {
 // Todo: Update according to BE response
 type AuctionItem = {
     auctionInfoId: string;
-}
+};
 
 const ActiveBid = () => {
     const wallet = useWallet();
@@ -30,37 +30,73 @@ const ActiveBid = () => {
     const [currentBid, setCurrentBid] = useState("0.00");
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const [showCountdown, setShowCountdown] = useState(true);
+    const [countdownTimer, setCountdownTimer] = useState("");
     const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
         auctionInfoId: "",
     });
-
+    const { balance = 0n } = useAccountBalance();
+    
     const modalRef = useRef<HTMLDivElement>(null);
-
     const auctionDate = "April 26, 2024";
 
-    useEffect(() => {
-        const highestBid = bids.reduce(
-            (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
-            0
-        );
-        setCurrentBid(highestBid.toFixed(2));
+    const formattedMonthDay = endDate.toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+    });
 
-        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
-        setBids(sortedBids);
+    const formattedTime = endDate.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: true,
+    });
 
-        const currentDate = new Date();
-        const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-        setEndDate(endDate);
-    }, []);
+    // Todo: Move to utils file
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = endDate.getTime() - now;
 
-    const handleBidSubmit = (event: ChangeEvent<HTMLInputElement>) => {
-        setInputBid(event.target.value);
+        if (distance <= 0) {
+            setCountdownTimer("Auction ended");
+        } else {
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            let timerString = "";
+
+            if (days > 0) {
+                timerString += `${days}d `;
+            }
+            timerString += `${hours}h ${minutes}m ${seconds}s`;
+
+            setCountdownTimer(timerString);
+        }
+    };
+
+    const toggleDisplay = () => {
+        setShowCountdown((prev) => !prev);
+    };
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const bidValue = event.target.value;
+        setInputBid(bidValue);
+
+        const bidAmount = parseFloat(bidValue) * 10 ** 9;
+
+        if (!isNaN(bidAmount) && bidAmount > balance) {
+            setErrorMessage("Bid amount exceeds wallet balance.");
+        } else {
+            setErrorMessage("");
+        }
     };
 
     const handleSubmit = async () => {
-        const amount = Number(inputBid) * (10 ** 9);
+        const amount = Number(inputBid) * 10 ** 9;
         const bidAmount = parseFloat(`${amount}`);
+
         const minBid = parseFloat(currentBid) + 0.01;
         const intBidAmount = Math.floor(bidAmount);
 
@@ -84,6 +120,8 @@ const ActiveBid = () => {
                     };
                     const updatedBids = [...bids, newBid];
                     setBids(updatedBids);
+                    const newBidValue = intBidAmount + (intBidAmount * 0.05); // 5% increment to bid price
+                    setCurrentBid(newBidValue.toString());
                     setInputBid("");
                     setErrorMessage("");
                 }
@@ -102,9 +140,11 @@ const ActiveBid = () => {
     const handleViewMore = () => {
         setShowViewAllBidsModal(true);
     };
+
     const handleCloseModal = () => {
         setShowViewAllBidsModal(false);
     };
+
     const handleOutsideClick = (event: MouseEvent) => {
         if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
             setShowViewAllBidsModal(false);
@@ -118,16 +158,26 @@ const ActiveBid = () => {
         };
     }, []);
 
-    const formattedMonthDay = endDate.toLocaleString("en-US", {
-        month: "long",
-        day: "numeric",
-    });
-    const formattedTime = endDate.toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        hour12: true,
-    });
+
+    useEffect(() => {
+        const highestBid = bids.reduce(
+            (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
+            0
+        );
+        setCurrentBid(highestBid.toFixed(2));
+
+        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
+        setBids(sortedBids);
+
+        const currentDate = new Date();
+        const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+        setEndDate(endDate);
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(updateCountdown, 1000);
+        return () => clearInterval(timer);
+    }, [endDate]);
 
     return (
         <div className="active-bid">
@@ -141,23 +191,39 @@ const ActiveBid = () => {
                         {currentBid}
                     </h3>
                 </div>
-                <div className="flex md:flex-col items-center md:justify-center justify-between md:pl-4 md:border-l md:border-gray-700">
-                    <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">
-                        Ends on {formattedMonthDay} at
-                    </h2>
-                    <h3 className="md:text-3xl text-2xl font-bold">{formattedTime}</h3>
+                <div
+                    className="flex md:flex-col items-center md:justify-center justify-between md:pl-4 md:border-l md:border-gray-700 md:w-64"
+                    onClick={toggleDisplay}
+                    style={{ cursor: "pointer" }}
+                >
+                    {!showCountdown ? (
+                        <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">
+                            Ends on {formattedMonthDay}
+                        </h2>
+                    ) : (
+                        <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">Ends in</h2>
+                    )}
+
+                    <div className="date md:text-3xl text-2xl font-bold">
+                        {showCountdown ? countdownTimer : ` ${formattedTime}`}
+                    </div>
                 </div>
             </div>
             <div className="input-section mt-7">
                 <input
                     type="text"
                     value={inputBid}
-                    onChange={handleBidSubmit}
+                    onChange={handleInputChange}
                     placeholder={`${parseFloat(currentBid) + 0.01} or more`}
                     className="input-field"
                 />
-                <button onClick={handleSubmit} className="bid-button">
+                <button
+                    onClick={handleSubmit}
+                    className="bid-button"
+                    disabled={balance === undefined || balance === null || parseFloat(inputBid) * 10 ** 9 > balance}
+                >
                     Place Bid
+                    <span className="tooltip">Bid amount cannot exceed wallet balance</span>
                 </button>
             </div>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
