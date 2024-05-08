@@ -47,3 +47,24 @@ export const createAuction = async (body: createAuctionReqBody) => {
         return null;
     }
 }
+
+type settleAuctionReqBody = {
+    auctionInfo: string;
+    nftName: string;
+    nftDescription: string;
+    nftImage: string;
+}
+
+export const settleAuction = async (body: settleAuctionReqBody) => {
+    try {
+        const response = await axios.post(`${BACKEND_URL}/settle`, body, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+        return response.data;
+    } catch (err) {
+        console.error('Error settling auction:', err);
+        return null;
+    }
+}
