@@ -35,7 +35,7 @@ const AuctionHistoryPage = () => {
     }, []);
 
     return (
-        <div className="auction-history max-w-[1200px] m-auto my-8">
+        <div className="auction-history max-w-[1200px] m-auto my-8 p-4">
             <h3 className="text-4xl font-bold">Auction History</h3>
 
             <div className="mt-6">
