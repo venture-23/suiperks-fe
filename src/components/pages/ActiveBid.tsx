@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../../assets/stylings/ActiveBid.scss";
-import { createBidAuctionTxb } from "../../services/bidAmount";
+import { createBidAuctionTxb } from "../../services/activeBidServices";
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
 import PopOutImg from "../../assets/images/popout.png";
