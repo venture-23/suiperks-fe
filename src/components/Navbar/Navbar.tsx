@@ -39,10 +39,10 @@ const Navbar = () => {
                                 Proposals
                             </NavLink>
                             <NavLink
-                                to="/create-auction"
-                                className={`nav-link ${location.pathname === "/create-auction" ? "active" : ""}`}
+                                to="/admin"
+                                className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}
                             >
-                                Create Auction
+                                Admin
                             </NavLink>
                         </div>
                     </div>
@@ -85,8 +85,8 @@ const Navbar = () => {
                             <div onClick={() => mobileNavigate("/proposals")}>
                                 <div className="mobile-nav-link">Proposals</div>
                             </div>
-                            <div onClick={() => mobileNavigate("/create-auction")}>
-                                <div className="mobile-nav-link">Create Auction</div>
+                            <div onClick={() => mobileNavigate("/admin")}>
+                                <div className="mobile-nav-link">Admin</div>
                             </div>
                             {wallet.connected && (
                                 <div onClick={() => mobileNavigate("/user-dashboard")}>

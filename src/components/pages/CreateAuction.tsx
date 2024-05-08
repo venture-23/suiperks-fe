@@ -128,7 +128,7 @@ const CreateEventPage = () => {
                 <div className="name text-6xl">Admin</div>
                 <div className="my-4">Create and Settle Auctions.</div>
 
-                <div className="flex gap-8">
+                <div className="flex gap-8 flex-wrap">
                     <div className="w-full max-w-[500px] bg-[rgba(255,255,255,0.3)] rounded-md p-4">
                         <h3 className="text-lg font-bold">Create Auction</h3>
                         <div>
