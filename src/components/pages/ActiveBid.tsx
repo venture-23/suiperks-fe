@@ -253,6 +253,10 @@ const ActiveBid = () => {
                 <img src={auctionItemDetails.nftImage} alt="Auction Image" className="md:h-auto md:w-2/3 h-2/5 w-2/5" />
             </div>
             <div className="details">
+                <div className="auction-details mb-5">
+                    <div className="title  text-xl text-gray-500 font-bold">{auctionItemDetails.title}</div>
+                    <div className="description text-sm">{auctionItemDetails.description}</div>
+                </div>
                 <div className="date text-lg text-gray-500 font-bold mb-3">
                     {startDate.toLocaleString("en-US", { year: "numeric", month: "long", day: "numeric" })}
                 </div>
@@ -346,7 +350,7 @@ const ActiveBid = () => {
                                                         <img src={UserIconImg} className="h-5 w-5" />
                                                     </div>
                                                     <div className="username-container flex flex-col">
-                                                        <span>
+                                                        <span className="username">
                                                             {fund.address.slice(0, 4)}...{fund.address.slice(-4)}
                                                         </span>
                                                     </div>
