@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../../assets/stylings/ProposalPage.scss";
 
 import BarImg from "../../assets/images/bars.png";
+import { useWallet } from "@suiet/wallet-kit";
 
 type Proposal = {
     id: number;
@@ -11,13 +13,13 @@ type Proposal = {
 
 const ProposalPage = () => {
     const initialProposals: Proposal[] = [
-        { id: 1, name: "Proposal Title 1", status: "Updatable" },
         { id: 2, name: "Proposal Title 2", status: "Active" },
         { id: 3, name: "Proposal Title 3", status: "Queued" },
-        { id: 4, name: "Proposal Title 4", status: "Cancelled" },
-        { id: 5, name: "Proposal Title 5", status: "Executed" },
-        { id: 6, name: "Proposal Title 6", status: "Defeated" },
+        { id: 5, name: "Proposal Title 5", status: "Passed" },
+        { id: 6, name: "Proposal Title 6", status: "Failed" },
     ];
+
+    const wallet = useWallet();
 
     const [proposals, setProposals] = useState([] as Proposal[]);
     const [currentTreasury, setCurrentTreasury] = useState("0.00");
@@ -31,15 +33,11 @@ const ProposalPage = () => {
         switch (status) {
             case "Active":
                 return "#43b369";
-            case "Updatable":
-                return "orange";
-            case "Executed":
+            case "Passed":
                 return "#0d6efd";
             case "Queued":
                 return "#8c8d92";
-            case "Cancelled":
-                return "#8c8d92";
-            case "Defeated":
+            case "Failed":
                 return "#e40536";
             default:
                 return "white";
@@ -50,13 +48,30 @@ const ProposalPage = () => {
         <div className="md:mx-40 my-10 mx-4">
             <div className="name text-gray-500 text-2xl">Governance</div>
             <div className="name text-6xl">Crowdfund DAO</div>
-            <div className="my-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborum.
+            <div className="my-4 flex justify-between py-4">
+                <div>Submit your proposal</div>
+                <div>
+                    {wallet.connected ? (
+                        <Link
+                            to="/proposal-submit"
+                            className="proposal-button px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
+                        >
+                            Submit Proposal
+                        </Link>
+                    ) : (
+                        <div className="flex items-center gap-10">
+                            <p>Connect wallet to make a proposal</p>
+                            <button
+                                disabled
+                                className="proposal-button px-4 py-4 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed"
+                            >
+                                Submit Proposal
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
+
             <div className="treasury flex flex-col lg:flex-row border border-b border-gray-700 rounded-2xl p-6 gap-10">
                 <div className="treasure-left">
                     <div className="name text-gray-500 text-2xl">Treasury</div>
