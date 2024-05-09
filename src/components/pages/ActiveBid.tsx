@@ -42,10 +42,6 @@ const ActiveBid = () => {
     const wallet = useWallet();
     const [inputBid, setInputBid] = useState("");
     const [bids, setBids] = useState<BidItem[]>([]);
-    const [startDate, setStartDate] = useState<Date>(new Date());
-    const [endDate, setEndDate] = useState<Date>(new Date());
-    const [itemName, setItemName] = useState("NFT N");
-    const [description, setDescription] = useState("");
     const [currentBid, setCurrentBid] = useState("0.00");
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -72,18 +68,18 @@ const ActiveBid = () => {
         highestBidder: "",
     });
 
-    const countdownTimer = useCountdown(endDate);
+    const countdownTimer = useCountdown(new Date(auctionItemDetails.endTime));
 
     const { balance = 0n } = useAccountBalance();
 
     const modalRef = useRef<HTMLDivElement>(null);
 
-    const formattedMonthDay = endDate.toLocaleString("en-US", {
+    const formattedMonthDay = new Date(auctionItemDetails.endTime).toLocaleString("en-US", {
         month: "long",
         day: "numeric",
     });
 
-    const formattedTime = endDate.toLocaleString("en-US", {
+    const formattedTime = new Date(auctionItemDetails.endTime).toLocaleString("en-US", {
         hour: "numeric",
         minute: "numeric",
         second: "numeric",
@@ -93,7 +89,7 @@ const ActiveBid = () => {
     useEffect(() => {
         const timer = setInterval(() => {}, 1000);
         return () => clearInterval(timer);
-    }, [endDate]);
+    }, [auctionItemDetails.endTime]);
 
     const toggleDisplay = () => {
         setShowCountdown((prev) => !prev);
@@ -183,20 +179,20 @@ const ActiveBid = () => {
         };
     }, []);
 
-    useEffect(() => {
-        const highestBid = bids.reduce(
-            (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
-            0
-        );
-        setCurrentBid(highestBid.toFixed(2));
+    // useEffect(() => {
+    //     const highestBid = bids.reduce(
+    //         (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
+    //         0
+    //     );
+    //     setCurrentBid(highestBid.toFixed(2));
 
-        const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
-        setBids(sortedBids);
+    //     const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
+    //     setBids(sortedBids);
 
-        const currentDate = new Date();
-        const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-        setEndDate(endDate);
-    }, []);
+    //     const currentDate = new Date();
+    //     const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+    //     setEndDate(endDate);
+    // }, []);
 
     useEffect(() => {
         const fetchAuctionDetails = async () => {
@@ -234,10 +230,6 @@ const ActiveBid = () => {
                 };
 
                 setAuctionItemDetails(dummyAuctionData);
-                setItemName(dummyAuctionData.nftName);
-                setDescription(dummyAuctionData.nftDescription);
-                setStartDate(new Date(dummyAuctionData.startTime));
-                setEndDate(new Date(dummyAuctionData.endTime));
                 setCurrentBid((dummyAuctionData.amount * 10 ** -9).toString());
             } catch (error) {
                 console.error("Error fetching auction details:", error);
@@ -258,11 +250,15 @@ const ActiveBid = () => {
                     <div className="description text-sm">{auctionItemDetails.description}</div>
                 </div>
                 <div className="date text-lg text-gray-500 font-bold mb-3">
-                    {startDate.toLocaleString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                    {new Date(auctionItemDetails.startTime).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })}
                 </div>
 
-                <h1 className="name mb-3 md:text-7xl text-4xl ">{itemName}</h1>
-                <p className="mb-8 md:text-lg text-sm border-b border-gray-700">{description}</p>
+                <h1 className="name mb-3 md:text-7xl text-4xl ">{auctionItemDetails.nftName}</h1>
+                <p className="mb-8 md:text-lg text-sm border-b border-gray-700">{auctionItemDetails.description}</p>
                 <div className="flex md:flex-row flex-col md:gap-14 gap-7">
                     <div className="flex md:flex-col items-center md:justify-center justify-between">
                         <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">Current Bid</h2>
@@ -339,7 +335,7 @@ const ActiveBid = () => {
                             <div className="modal-content">
                                 <div className="description">
                                     <h4 className="text-lg text-gray-500 font-bold">Bids for</h4>
-                                    <h1 className="name mb-3 md:text-7xl text-4xl">{itemName}</h1>
+                                    <h1 className="name mb-3 md:text-7xl text-4xl">{auctionItemDetails.nftName}</h1>
                                 </div>
                                 <div className="list-container flex flex-col">
                                     <ul className="popup-bid-list mt-6 gap-10 md:text-xl">
