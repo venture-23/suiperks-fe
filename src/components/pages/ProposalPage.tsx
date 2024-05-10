@@ -47,7 +47,7 @@ const ProposalPage = () => {
     return (
         <div className="md:mx-40 my-10 mx-4">
             <div className="name text-gray-500 text-2xl">Governance</div>
-            <div className="name text-6xl">Crowdfund DAO</div>
+            <div className="name text-6xl">EthenaDAO</div>
             <div className="my-4 flex justify-between py-4">
                 <div>Submit your proposal</div>
                 <div>

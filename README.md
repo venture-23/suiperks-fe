@@ -1,1 +1,1 @@
-# sui-crowdfunddao-fe
+# sui-ethenadao-fe

@@ -34,7 +34,7 @@ const ProposalForm: React.FC = () => {
     return (
         <div className="md:mx-40 my-10 mx-4">
             <div className="container mx-auto max-w-lg p-8 bg-[rgba(255,255,255,0.3)] rounded-md shadow-md">
-                <div className="name text-gray-500 md:text-2xl text-lg">Crowdfund DAO</div>
+                <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
                 <div className="name md:text-3xl text-xl">Submit your proposal</div>
                 <form onSubmit={handleSubmit} className="mt-5">
                     <div className="mb-4">

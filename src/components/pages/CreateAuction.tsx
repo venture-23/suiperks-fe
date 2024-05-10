@@ -124,7 +124,7 @@ const CreateEventPage = () => {
     return (
         <div>
             <div className="md:mx-40 my-10 mx-4">
-                <div className="name text-gray-500 text-2xl">Crowdfund DAO</div>
+                <div className="name text-gray-500 text-2xl">EthenaDAO</div>
                 <div className="name text-6xl">Admin</div>
                 <div className="my-4">Create and Settle Auctions.</div>
 

@@ -46,7 +46,7 @@ const UserDashboard = () => {
         <div className="md:mx-40 my-10 mx-4">
             <div className="flex md:justify-between md:flex-row flex-col my-4 ">
                 <div>
-                    <div className="name text-gray-500 md:text-2xl text-lg">Crowdfund DAO</div>
+                    <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
                     <div className="name md:text-6xl text-2xl">Owned NFTs</div>
                 </div>
                 <div className="flex items-center">
