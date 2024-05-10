@@ -1,12 +1,12 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
-import "../../assets/stylings/ActiveBid.scss";
-import { Auction, createBidAuctionTxb } from "../../services/activeBidServices";
+import "../assets/stylings/ActiveBid.scss";
+import { Auction, createBidAuctionTxb } from "../services/activeBidServices";
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
-import BarImg from "../../assets/images/bars.png";
-import UserIconImg from "../../assets/images/usericon.png";
-import CloseIconImg from "../../assets/images/crossIcon.png";
-import useCountdown from "../../utils/countdownUtils";
+import BarImg from "../assets/images/bars.png";
+import UserIconImg from "../assets/images/usericon.png";
+import CloseIconImg from "../assets/images/crossIcon.png";
+import useCountdown from "../utils/countdownUtils";
 
 type BidItem = {
     userImg: string;

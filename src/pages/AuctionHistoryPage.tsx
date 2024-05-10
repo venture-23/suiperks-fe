@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AuctionDetails, getAuctionHistory } from "../../services/auctionHistoryServices";
+import { AuctionDetails, getAuctionHistory } from "../services/auctionHistoryServices";
 
 const AuctionHistoryPage = () => {
     const [historyData, setHistoryData] = useState<AuctionDetails[]>([

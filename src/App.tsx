@@ -1,12 +1,12 @@
 import "./App.scss";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import LandingPage from "./components/pages/LandingPage";
-import ProposalPage from "./components/pages/ProposalPage";
-import CreateAuctionPage from "./components/pages/CreateAuction";
-import UserDashboard from "./components/pages/UserDashboard";
+import LandingPage from "./pages/LandingPage";
+import ProposalPage from "./pages/ProposalPage";
+import CreateAuctionPage from "./pages/CreateAuction";
+import UserDashboard from "./pages/UserDashboard";
 import ProposalForm from "./components/Form/ProposalSubmit";
-import AuctionHistoryPage from "./components/pages/AuctionHistoryPage";
+import AuctionHistoryPage from "./pages/AuctionHistoryPage";
 
 function App() {
     return (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createAuction, settleAuction } from "../../services/createAuctionServices";
+import { createAuction, settleAuction } from "../services/createAuctionServices";
 
 const CreateEventPage = () => {
     const [loading, setLoading] = useState(false);

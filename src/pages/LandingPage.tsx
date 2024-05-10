@@ -1,5 +1,5 @@
 import ActiveBid from "./ActiveBid";
-import "../../assets/stylings/LandingPage.scss";
+import "../assets/stylings/LandingPage.scss";
 
 const LandingPage = () => {
     return (
