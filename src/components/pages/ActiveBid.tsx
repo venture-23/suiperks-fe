@@ -123,7 +123,7 @@ const ActiveBid = () => {
 
         if (!isNaN(bidAmount) && bidAmount >= minBid) {
             try {
-                const txb = createBidAuctionTxb(intBidAmount, auctionItemDetails._id);
+                const txb = createBidAuctionTxb(intBidAmount, auctionItemDetails.uid);
                 const txnResponse = await wallet.signAndExecuteTransactionBlock({
                     // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                     transactionBlock: txb,
@@ -209,7 +209,7 @@ const ActiveBid = () => {
                     reservePrice: 100000000,
                     duration: 600000,
                     startTime: "2024-05-07T05:56:56.462Z",
-                    endTime: "2024-05-10T06:06:56.462Z",
+                    endTime: "2024-05-12T06:06:56.462Z",
                     minBidIncrementPercentage: 5,
                     settled: true,
                     funds: [
@@ -306,18 +306,20 @@ const ActiveBid = () => {
 
                 <div className="list-container flex flex-col">
                     <ul className="bid-list mt-6 gap-10 md:text-xl">
-                        {auctionItemDetails.funds?.map((fund, index) => (
-                            <li key={index}>
-                                <span className="username flex items-center gap-2">
-                                    <img src={UserIconImg} className="h-5 w-5" />
-                                    {fund.address.slice(0, 4)}...{fund.address.slice(-4)}
-                                </span>
-                                <span className="font-bold flex items-center gap-2 justify-end">
-                                    <img src={BarImg} className="w-3 h-3" />
-                                    {(fund.balance * 10 ** -9).toString()}
-                                </span>
-                            </li>
-                        ))}
+                        {auctionItemDetails.funds
+                            ?.sort((a, b) => b.balance - a.balance)
+                            .map((fund, index) => (
+                                <li key={index}>
+                                    <span className="username flex items-center gap-2">
+                                        <img src={UserIconImg} className="h-5 w-5" />
+                                        {fund.address.slice(0, 4)}...{fund.address.slice(-4)}
+                                    </span>
+                                    <span className="font-bold flex items-center gap-2 justify-end">
+                                        <img src={BarImg} className="w-3 h-3" />
+                                        {(fund.balance * 10 ** -9).toString()}
+                                    </span>
+                                </li>
+                            ))}
                     </ul>
                     <div className="view-more-button">
                         <button onClick={handleViewMore} className="md:text-lg text-base text-gray-500 font-bold mb-2">
@@ -339,24 +341,26 @@ const ActiveBid = () => {
                                 </div>
                                 <div className="list-container flex flex-col">
                                     <ul className="popup-bid-list mt-6 gap-10 md:text-xl">
-                                        {auctionItemDetails.funds?.map((fund, index) => (
-                                            <li key={index}>
-                                                <span className="username flex items-center gap-2">
-                                                    <div className="icon-container">
-                                                        <img src={UserIconImg} className="h-5 w-5" />
-                                                    </div>
-                                                    <div className="username-container flex flex-col">
-                                                        <span className="username">
-                                                            {fund.address.slice(0, 4)}...{fund.address.slice(-4)}
-                                                        </span>
-                                                    </div>
-                                                </span>
-                                                <span className="font-bold flex items-center gap-2 justify-end">
-                                                    <img src={BarImg} className="md:w-3 w-2 md:h-3 h-2" />
-                                                    {(fund.balance * 10 ** -9).toString()}
-                                                </span>
-                                            </li>
-                                        ))}
+                                        {auctionItemDetails.funds
+                                            ?.sort((a, b) => b.balance - a.balance)
+                                            .map((fund, index) => (
+                                                <li key={index}>
+                                                    <span className="username flex items-center gap-2">
+                                                        <div className="icon-container">
+                                                            <img src={UserIconImg} className="h-5 w-5" />
+                                                        </div>
+                                                        <div className="username-container flex flex-col">
+                                                            <span className="username">
+                                                                {fund.address.slice(0, 4)}...{fund.address.slice(-4)}
+                                                            </span>
+                                                        </div>
+                                                    </span>
+                                                    <span className="font-bold flex items-center gap-2 justify-end">
+                                                        <img src={BarImg} className="md:w-3 w-2 md:h-3 h-2" />
+                                                        {(fund.balance * 10 ** -9).toString()}
+                                                    </span>
+                                                </li>
+                                            ))}
                                     </ul>
                                 </div>
                             </div>
