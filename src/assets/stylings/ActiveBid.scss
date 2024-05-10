@@ -59,11 +59,12 @@
     justify-content: space-around;
     align-items: center;
     border-bottom: 2px solid gray;
-
-    .username {
-        font-family: "Signika Negative";
-    }
 }
+
+.username {
+    font-family: "Signika Negative";
+}
+
 .view-more-button {
     display: flex;
     justify-content: center;

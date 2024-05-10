@@ -33,7 +33,7 @@ interface Fund {
     balance: number;
 }
 
-interface Auction {
+export interface Auction {
     _id: string;
     uid: string;
     nftImage: string;

@@ -15,7 +15,9 @@ export interface AuctionDetails {
 
 export const getAuctionHistory = async (): Promise<AuctionDetails[]> => {
     try {
-        const response: AxiosResponse<AuctionDetails[]> = await axios.get<AuctionDetails[]>(`${BACKEND_URL}/auction/winners`);
+        const response: AxiosResponse<AuctionDetails[]> = await axios.get<AuctionDetails[]>(
+            `${BACKEND_URL}/auction/winners`
+        );
         return response.data;
     } catch (err) {
         console.error("Error fetching auction history:", err);
