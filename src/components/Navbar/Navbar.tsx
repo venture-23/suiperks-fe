@@ -44,6 +44,12 @@ const Navbar = () => {
                             >
                                 Admin
                             </NavLink>
+                            <NavLink
+                                to="/history"
+                                className={`nav-link ${location.pathname === "/history" ? "active" : ""}`}
+                            >
+                                History
+                            </NavLink>
                         </div>
                     </div>
 
@@ -87,6 +93,9 @@ const Navbar = () => {
                             </div>
                             <div onClick={() => mobileNavigate("/admin")}>
                                 <div className="mobile-nav-link">Admin</div>
+                            </div>
+                            <div onClick={() => mobileNavigate("/history")}>
+                                <div className="mobile-nav-link">History</div>
                             </div>
                             {wallet.connected && (
                                 <div onClick={() => mobileNavigate("/user-dashboard")}>
