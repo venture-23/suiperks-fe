@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../../assets/stylings/ProposalPage.scss";
+import "../assets/stylings/ProposalPage.scss";
 
-import BarImg from "../../assets/images/bars.png";
+import BarImg from "../assets/images/bars.png";
 import { useWallet } from "@suiet/wallet-kit";
 
 type Proposal = {
