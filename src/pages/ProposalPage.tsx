@@ -95,7 +95,10 @@ const ProposalPage = () => {
             <ul className="md:mx-40 my-10 mx-4">
                 {proposals.map((proposal) => (
                     <li key={proposal.id} className="single-list-container mb-3 px-6 py-2">
-                        <div className="proposal-content flex justify-between items-center md:text-2xl text-lg">
+                        <Link
+                            to={`/vote/${proposal.id}`}
+                            className="proposal-content flex justify-between items-center md:text-2xl text-lg"
+                        >
                             <div className="flex gap-4">
                                 <span className="name font-bold text-gray-600">{proposal.id}</span>
                                 <span className="font-bold">{proposal.name}</span>
@@ -106,7 +109,7 @@ const ProposalPage = () => {
                             >
                                 {proposal.status}
                             </div>
-                        </div>
+                        </Link>
                     </li>
                 ))}
             </ul>
