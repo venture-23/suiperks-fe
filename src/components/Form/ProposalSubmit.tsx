@@ -1,34 +1,26 @@
 import React, { useState } from "react";
-
-interface ProposalFormData {
-    tldr: string;
-    context: string;
-    scope: string;
-    details: string;
-}
+import ReactMarkdown from "react-markdown";
 
 const ProposalForm: React.FC = () => {
-    const [formData, setFormData] = useState<ProposalFormData>({
-        tldr: "",
-        context: "",
-        scope: "",
-        details: "",
-    });
+    const initialInput = `# Title of your proposal
+## **TLDR** 
+Enter a brief summary of your proposal here. This should provide a concise overview of what your proposal entails.
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+## **Context** 
+Describe the background or context of your proposal here. Provide any relevant information that helps to understand the reasons behind your proposal.
+
+## **Scope** 
+Outline the scope of your proposal here. Detail what your proposal aims to achieve and its potential impact.
+`;
+    const [markdownInput, setMarkdownInput] = useState<string>(initialInput);
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMarkdownInput(e.target.value);
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Form Data:", formData);
-        setFormData({
-            tldr: "",
-            context: "",
-            scope: "",
-            details: "",
-        });
+        console.log("Markdown Input:", markdownInput);
     };
 
     return (
@@ -38,57 +30,28 @@ const ProposalForm: React.FC = () => {
                 <div className="name md:text-3xl text-xl">Submit your proposal</div>
                 <form onSubmit={handleSubmit} className="mt-5">
                     <div className="mb-4">
-                        <label htmlFor="tldr" className="block text-sm font-semibold mb-1">
-                            TLDR
-                        </label>
-                        <input
-                            type="text"
-                            id="tldr"
-                            name="tldr"
-                            value={formData.tldr}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="context" className="block text-sm font-semibold mb-1">
-                            Context
-                        </label>
                         <textarea
-                            id="context"
-                            name="context"
-                            value={formData.context}
+                            id="markdownInput"
+                            name="markdownInput"
+                            value={markdownInput}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
+                            className="w-full h-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
+                            placeholder="Enter your proposal"
                             required
                         ></textarea>
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="scope" className="block text-sm font-semibold mb-1">
-                            Scope
-                        </label>
-                        <textarea
-                            id="scope"
-                            name="scope"
-                            value={formData.scope}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
-                            required
-                        ></textarea>
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="details" className="block text-sm font-semibold mb-1">
-                            Additional Details
-                        </label>
-                        <textarea
-                            id="details"
-                            name="details"
-                            value={formData.details}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
-                            required
-                        ></textarea>
+                        <label className="block text-sm font-semibold mb-1">Preview</label>
+                        <div className="border border-gray-300 rounded-md p-4">
+                            <ReactMarkdown
+                                components={{
+                                    h1: ({ children }) => <h1 className="name text-2xl">{children}</h1>,
+                                    h2: ({ children }) => <h2 className="name text-xl mt-4 mb-2">{children}</h2>,
+                                }}
+                            >
+                                {markdownInput}
+                            </ReactMarkdown>
+                        </div>
                     </div>
                     <button
                         type="submit"
