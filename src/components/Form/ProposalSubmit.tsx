@@ -43,7 +43,7 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300"
+                            className="w-1/4 bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300"
                         >
                             Submit
                         </button>
