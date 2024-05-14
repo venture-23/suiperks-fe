@@ -10,6 +10,12 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const wallet = useWallet();
+    const [treasuryBalance, setTreasuryBalance] = useState<number>(288455584);
+
+    const formatBalance = (balance: number): string => {
+        const formattedBalance = balance / 10 ** 9;
+        return formattedBalance.toFixed(2);
+    };
 
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
@@ -26,8 +32,6 @@ const Navbar = () => {
             <div className="navbar">
                 <div className="navbar-contents">
                     <div className="logos-and-links">
-                        {/* <div>Logo</div> */}
-
                         <div className="nav-links ">
                             <NavLink to="/" className={`nav-link ${location.pathname === "/" ? "active" : ""}`}>
                                 Home
@@ -54,6 +58,10 @@ const Navbar = () => {
                     </div>
 
                     <div className="right-section">
+                        <div className="bg-gray-200 px-4 py-2 rounded-lg">
+                            <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
+                        </div>
+
                         {wallet.connected && (
                             <NavLink
                                 to="/user-dashboard"
