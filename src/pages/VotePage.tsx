@@ -111,7 +111,7 @@ For a deeper dive you are welcome to review the NFT-backed token Github reposito
 
     return (
         <>
-            <div className="md:mx-40 my-10 mx-4">
+            <div className="proposal-page w-full md:mx-40 my-10 mx-4">
                 <div className="flex items-center gap-6 mb-3">
                     <div className="name text-gray-500 md:text-xl text-lg">Proposal {proposal.id}</div>
                     <div
