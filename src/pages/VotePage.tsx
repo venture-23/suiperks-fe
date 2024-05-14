@@ -151,55 +151,60 @@ For a deeper dive you are welcome to review the NFT-backed token Github reposito
                     )}
                 </div>
 
-                <div className="flex justify-around">
-                    <p className="text-green-700 md:text-2xl text-xl name">
-                        For: <span className="md:text-3xl text-xl">{votes.for}</span>
-                    </p>
-                    <p className="text-red-700 md:text-2xl text-lg name">
-                        Against: <span className="md:text-3xl text-xl">{votes.against}</span>
-                    </p>
-                    <p className="text-gray-800 md:text-2xl text-lg name">
-                        Abstain: <span className="md:text-3xl text-xl">{votes.abstain}</span>
-                    </p>
-                </div>
+                <div className="flex md:flex-row flex-col gap-10">
+                    <div className="description md:w-3/4">
+                        <div className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">Description</div>
+                        <ReactMarkdown
+                            components={{
+                                h1: ({ children }) => <h1 className="name md:text-2xl text-lg">{children}</h1>,
+                                h2: ({ children }) => (
+                                    <h2 className="name md:text-xl text-base mt-4 mb-2">{children}</h2>
+                                ),
+                            }}
+                        >
+                            {proposal.description}
+                        </ReactMarkdown>
+                    </div>
+                    <div className="votes md:w-1/4 flex flex-col md:border-t-0 border-t border-gray-500">
+                        <div className="flex flex-col justify-around">
+                            <div className="text-gray-700 font-semibold lg:text-4xl text-2xl name py-4">Votes</div>
 
-                <div className="flex md:flex-row flex-col justify-around gap-2 mt-8">
-                    <div className="bg-gray-200 rounded-lg px-4 py-6 flex items-center justify-around gap-10">
-                        <p className="text-gray-700 name  text-xl font-semibold">Threshold</p>
-                        <div className="flex flex-col justify-end">
-                            <p className="text-sm">Current Threshold</p>
-                            <p className="text-lg font-bold">{proposal.threshold}</p>
+                            <p className="text-green-700 lg:text-2xl text-xl font-semibold">
+                                In favor of : <span className="lg:text-3xl text-xl font-normal name">{votes.for}</span>
+                            </p>
+                            <p className="text-red-700 lg:text-2xl text-lg font-semibold">
+                                Opposed to :{" "}
+                                <span className="lg:text-3xl text-xl font-normal name">{votes.against}</span>
+                            </p>
+                            <p className="text-gray-800 lg:text-2xl text-lg font-semibold">
+                                Refrain : <span className="lg:text-3xl text-xl name font-normal">{votes.abstain}</span>
+                            </p>
+                        </div>
+                        <div className="flex flex-col justify-around gap-2 mt-8">
+                            <div className="bg-gray-200 rounded-lg px-4 py-6 flex items-center justify-around gap-2">
+                                <p className="text-gray-700 name  text-lg font-semibold">Threshold</p>
+                                <div className="flex flex-col justify-end">
+                                    <p className="text-xs">Current Threshold</p>
+                                    <p className="text-base font-bold">{proposal.threshold}</p>
+                                </div>
+                            </div>
+                            <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
+                                <p className="text-gray-700  name  text-lg font-semibold">
+                                    <p> {proposal.status === "Active" ? "Ends On" : "Ended"}</p>
+                                </p>
+                                <div className="flex flex-col justify-end">
+                                    <p className="text-xs font-bold">{proposal.endTime}</p>
+                                </div>
+                            </div>
+                            <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
+                                <p className="text-gray-700 name  text-lg font-semibold">Snapshot</p>
+                                <div className="flex flex-col justify-end">
+                                    <p className="text-xs">Taken at block</p>
+                                    <p className="text-base font-bold">{proposal.snapshot}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-10 ">
-                        <p className="text-gray-700  name  text-xl font-semibold">
-                            <p> {proposal.status === "Active" ? "Ends On" : "Ended"}</p>
-                        </p>
-                        <div className="flex flex-col justify-end">
-                            <p className="text-lg font-bold">{proposal.endTime}</p>
-                        </div>
-                    </div>
-                    <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-10 ">
-                        <p className="text-gray-700 name  text-xl font-semibold">Snapshot</p>
-                        <div className="flex flex-col justify-end">
-                            <p className="text-sm">Taken at block</p>
-                            <p className="text-lg font-bold">{proposal.snapshot}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-8">
-                    <div className="text-gray-700 font-semibold md:text-4xl text-2xl name border-t border-gray-500 my-4 py-4">
-                        Description
-                    </div>
-                    <ReactMarkdown
-                        components={{
-                            h1: ({ children }) => <h1 className="name md:text-2xl text-lg">{children}</h1>,
-                            h2: ({ children }) => <h2 className="name md:text-xl text-base mt-4 mb-2">{children}</h2>,
-                        }}
-                    >
-                        {proposal.description}
-                    </ReactMarkdown>
                 </div>
             </div>
         </>
