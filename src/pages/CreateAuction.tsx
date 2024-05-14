@@ -122,7 +122,7 @@ const CreateEventPage = () => {
     };
 
     return (
-        <div>
+        <div className="admin-page w-full">
             <div className="md:mx-40 my-10 mx-4">
                 <div className="name text-gray-500 text-2xl">EthenaDAO</div>
                 <div className="name text-6xl">Admin</div>

@@ -14,15 +14,18 @@ function App() {
         <div className="app">
             <BrowserRouter>
                 <Navbar />
-                <Routes>
-                    <Route path="/proposals" element={<ProposalPage />} />
-                    <Route path="/admin" element={<CreateAuctionPage />} />
-                    <Route path="/user-dashboard" element={<UserDashboard />} />
-                    <Route path="/proposal-submit" element={<ProposalForm />} />
-                    <Route path="/history" element={<AuctionHistoryPage />} />
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/vote/:proposalId" element={<VotePage />} />
-                </Routes>
+
+                <div className="pt-[80px] w-full flex flex-1">
+                    <Routes>
+                        <Route path="/proposals" element={<ProposalPage />} />
+                        <Route path="/admin" element={<CreateAuctionPage />} />
+                        <Route path="/user-dashboard" element={<UserDashboard />} />
+                        <Route path="/proposal-submit" element={<ProposalForm />} />
+                        <Route path="/history" element={<AuctionHistoryPage />} />
+                        <Route path="/vote/:proposalId" element={<VotePage />} />
+                        <Route path="/" element={<LandingPage />} />
+                    </Routes>
+                </div>
             </BrowserRouter>
         </div>
     );

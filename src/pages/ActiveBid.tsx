@@ -3,7 +3,7 @@ import "../assets/stylings/ActiveBid.scss";
 import { Auction, createBidAuctionTxb } from "../services/activeBidServices";
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
-import BarImg from "../assets/images/bars.png";
+import SUIIcon from "../assets/images/sui-sui-logo.png";
 import UserIconImg from "../assets/images/usericon.png";
 import CloseIconImg from "../assets/images/crossIcon.png";
 import useCountdown from "../utils/countdownUtils";
@@ -263,7 +263,7 @@ const ActiveBid = () => {
                     <div className="flex md:flex-col items-center md:justify-center justify-between">
                         <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">Current Bid</h2>
                         <h3 className="md:text-3xl text-2xl font-bold flex items-center gap-2">
-                            <img src={BarImg} className="w-5 h-5" />
+                            <img src={SUIIcon} className="w-5 h-5" />
                             {currentBid}
                         </h3>
                     </div>
@@ -315,7 +315,7 @@ const ActiveBid = () => {
                                         {fund.address.slice(0, 4)}...{fund.address.slice(-4)}
                                     </span>
                                     <span className="font-bold flex items-center gap-2 justify-end">
-                                        <img src={BarImg} className="w-3 h-3" />
+                                        <img src={SUIIcon} className="w-3 h-3" />
                                         {(fund.balance * 10 ** -9).toString()}
                                     </span>
                                 </li>
@@ -356,7 +356,7 @@ const ActiveBid = () => {
                                                         </div>
                                                     </span>
                                                     <span className="font-bold flex items-center gap-2 justify-end">
-                                                        <img src={BarImg} className="md:w-3 w-2 md:h-3 h-2" />
+                                                        <img src={SUIIcon} className="md:w-3 w-2 md:h-3 h-2" />
                                                         {(fund.balance * 10 ** -9).toString()}
                                                     </span>
                                                 </li>
