@@ -7,6 +7,7 @@ import CreateAuctionPage from "./pages/CreateAuction";
 import UserDashboard from "./pages/UserDashboard";
 import ProposalForm from "./components/Form/ProposalSubmit";
 import AuctionHistoryPage from "./pages/AuctionHistoryPage";
+import VotePage from "./pages/VotePage";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/user-dashboard" element={<UserDashboard />} />
                         <Route path="/proposal-submit" element={<ProposalForm />} />
                         <Route path="/history" element={<AuctionHistoryPage />} />
+                        <Route path="/vote/:proposalId" element={<VotePage />} />
                         <Route path="/" element={<LandingPage />} />
                     </Routes>
                 </div>
