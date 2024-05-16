@@ -1,71 +1,44 @@
-import { useWallet } from "@suiet/wallet-kit";
-
-const NFTImage1 = "https://via.placeholder.com/300";
-const NFTImage2 = "https://via.placeholder.com/300";
-const NFTImage3 = "https://via.placeholder.com/300";
-const NFTImage4 = "https://via.placeholder.com/300";
-
-const userNFTs = [
-    {
-        id: 1,
-        name: "NFT 1",
-        image: NFTImage1,
-        description: "Description of NFT 1",
-    },
-    {
-        id: 2,
-        name: "NFT 2",
-        image: NFTImage2,
-        description: "Description of NFT 2",
-    },
-    {
-        id: 3,
-        name: "NFT 3",
-        image: NFTImage3,
-        description: "Description of NFT 3",
-    },
-    {
-        id: 4,
-        name: "NFT 4",
-        image: NFTImage4,
-        description: "Description of NFT 4",
-    },
-];
+import { useEffect, useState } from "react";
 
 const UserDashboard = () => {
-    const wallet = useWallet();
+    const [userNFTs, setUserNFTs] = useState<any[]>([]);
 
-    const formatWalletAddress = (address: string | undefined) => {
-        if (!address) return "";
-        const start = address.substring(0, 5);
-        const end = address.substring(address.length - 4);
-        return `${start}...${end}`;
-    };
+    useEffect(() => {
+        const staticResponse = {
+            ownedNFT: [
+                {
+                    _id: "6639c2a9381262788fee0956",
+                    nftImage: "https://goblinsuinft.web.app/assets/img/goblin5.png",
+                    nftName: "Goblin",
+                    nftDescription: "Goblin description",
+                },
+                {
+                    _id: "6639cbfdb30b17d047c2289e",
+                    nftImage: "https://goblinsuinft.web.app/assets/img/goblin5.png",
+                    nftName: "Goblin",
+                    nftDescription: "Goblin description",
+                },
+            ],
+        };
+        setUserNFTs(staticResponse.ownedNFT);
+    }, []);
 
     return (
         <div className="md:mx-40 my-10 mx-4">
-            <div className="flex md:justify-between md:flex-row flex-col my-4 ">
-                <div>
-                    <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
-                    <div className="name md:text-6xl text-2xl">Owned NFTs</div>
-                </div>
-                <div className="flex items-center">
-                    <span className="font-bold">Wallet Address:&nbsp; </span>
-                    <span className="underline" title={wallet?.address}>
-                        {formatWalletAddress(wallet?.address)}
-                    </span>
-                </div>
+            <div className="my-4">
+                <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
+                <div className="name md:text-5xl text-2xl">Owned NFTs</div>
             </div>
 
             <div className="flex flex-wrap justify-center">
                 {userNFTs.map((nft) => (
-                    <div key={nft.id} className="bg-white rounded-lg shadow-md p-4 m-2" style={{ width: "300px" }}>
-                        <div className="w-full h-60 overflow-hidden">
-                            <img src={nft.image} alt={nft.name} className="w-full h-auto" />
+                    <div key={nft._id} className="bg-white rounded-lg shadow-md p-4 m-2" style={{ width: "300px" }}>
+                        <div className="w-full md:h-60 h-52 overflow-hidden">
+                            <img src={nft.nftImage} alt={nft.nftName} className="w-full h-auto" />
                         </div>
                         <div className="p-3">
-                            <h2 className="text-2xl font-bold">{nft.name}</h2>
-                            <p className="text-gray-800">{nft.description}</p>
+                            <h2 className="md:text-2xl text-xl font-bold">{nft.nftName}</h2>
+                            <p className="text-gray-800">{nft.nftDescription}</p>
                         </div>
                     </div>
                 ))}

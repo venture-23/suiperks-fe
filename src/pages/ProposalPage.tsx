@@ -5,20 +5,21 @@ import "../assets/stylings/ProposalPage.scss";
 import BarImg from "../assets/images/bars.png";
 import { useWallet } from "@suiet/wallet-kit";
 
+enum Status {
+    WAITING = "Waiting",
+    ACTIVE = "Active",
+    FAILED = "Failed",
+    QUEUE = "Queue",
+    EXECUTED = "Executed",
+}
+
 type Proposal = {
-    id: number;
-    name: string;
-    status: string;
+    id: string;
+    title: string;
+    status: Status;
 };
 
 const ProposalPage = () => {
-    const initialProposals: Proposal[] = [
-        { id: 2, name: "Proposal Title 2", status: "Active" },
-        { id: 3, name: "Proposal Title 3", status: "Queued" },
-        { id: 5, name: "Proposal Title 5", status: "Passed" },
-        { id: 6, name: "Proposal Title 6", status: "Failed" },
-    ];
-
     const wallet = useWallet();
 
     const [proposals, setProposals] = useState([] as Proposal[]);
@@ -26,19 +27,31 @@ const ProposalPage = () => {
     const [treasuryAmount, setTreasuryAmount] = useState("0");
 
     useEffect(() => {
-        setProposals(initialProposals);
+        const staticApiResponse = [
+            { _id: "6642f02687417afca8710555", title: "Test proposal 2", status: "Active" },
+            { _id: "6642f02c87417afca871055f", title: "Test proposal 3", status: "Waiting" },
+            { _id: "664348a255f5a1c80b494937", title: "Test proposal 4", status: "Waiting" },
+        ];
+
+        const transformedProposals = staticApiResponse.map((proposal) => ({
+            id: proposal._id,
+            title: proposal.title,
+            status: proposal.status as Status,
+        }));
+
+        setProposals(transformedProposals);
     }, []);
 
-    const getStatusColor = (status: string) => {
+    const getStatusColor = (status: Status) => {
         switch (status) {
-            case "Active":
+            case Status.ACTIVE:
                 return "#43b369";
-            case "Passed":
-                return "#0d6efd";
-            case "Queued":
-                return "#8c8d92";
-            case "Failed":
+            case Status.FAILED:
                 return "#e40536";
+            case Status.QUEUE:
+                return "#8c8d92";
+            case Status.WAITING:
+                return "#6c757d";
             default:
                 return "white";
         }
@@ -100,8 +113,7 @@ const ProposalPage = () => {
                             className="proposal-content flex justify-between items-center md:text-2xl text-lg"
                         >
                             <div className="flex gap-4">
-                                <span className="name font-bold text-gray-600">{proposal.id}</span>
-                                <span className="font-bold">{proposal.name}</span>
+                                <span className="font-bold">{proposal.title}</span>
                             </div>
                             <div
                                 className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
