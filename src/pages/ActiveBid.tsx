@@ -46,6 +46,7 @@ const ActiveBid = () => {
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showCountdown, setShowCountdown] = useState(true);
+    const [minBidIncrementPercentage, setMinBidIncrementPercentage] = useState<number>(0);
 
     const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
         _id: "",
@@ -86,11 +87,6 @@ const ActiveBid = () => {
         hour12: true,
     });
 
-    useEffect(() => {
-        const timer = setInterval(() => {}, 1000);
-        return () => clearInterval(timer);
-    }, [auctionItemDetails.endTime]);
-
     const toggleDisplay = () => {
         setShowCountdown((prev) => !prev);
     };
@@ -114,7 +110,7 @@ const ActiveBid = () => {
         const bidAmount = parseFloat(`${amount}`);
 
         const intBidAmount = Math.floor(bidAmount);
-        const minBid = parseFloat(currentBid) + parseFloat(currentBid) * 0.05;
+        const minBid = parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage;
 
         if (input < minBid) {
             setErrorMessage(`Bid amount must be at least ${minBid.toFixed(2)}.`);
@@ -131,18 +127,6 @@ const ActiveBid = () => {
                 console.log("txnResponse", txnResponse);
                 if (txnResponse?.digest) {
                     console.log("Bid auction digest:", txnResponse?.digest);
-
-                    const newBid: BidItem = {
-                        userImg: UserIconImg,
-                        username: "User",
-                        amount: intBidAmount,
-                        //transactionLink: "https://etherscan.io/tx/...",
-                        bidTime: new Date().toLocaleString(),
-                    };
-                    const updatedBids = [...bids, newBid];
-                    setBids(updatedBids);
-                    const newBidValue = intBidAmount + intBidAmount * 0.05; // 5% increment to bid price
-                    setCurrentBid(newBidValue.toString());
                     setInputBid("");
                     setErrorMessage("");
                 }
@@ -151,7 +135,7 @@ const ActiveBid = () => {
                 setErrorMessage("Error placing bid. Please try again later.");
             }
         } else {
-            setErrorMessage(`Bid amount must be at least ${minBid}`);
+            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(2)}.`);
             setTimeout(() => {
                 setErrorMessage("");
             }, 3000);
@@ -171,6 +155,11 @@ const ActiveBid = () => {
             setShowViewAllBidsModal(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setInterval(() => {}, 1000);
+        return () => clearInterval(timer);
+    }, [auctionItemDetails.endTime]);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleOutsideClick);
@@ -200,7 +189,13 @@ const ActiveBid = () => {
                 const auctionData = await getActiveAuctionDetails();
                 if (auctionData) {
                     setAuctionItemDetails(auctionData);
-                    setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                    setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
+
+                    if (auctionData.amount === 0) {
+                        setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
+                    } else {
+                        setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                    }
                 } else {
                     console.log("no auction data");
                 }
@@ -263,7 +258,7 @@ const ActiveBid = () => {
                         type="text"
                         value={inputBid}
                         onChange={handleInputChange}
-                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * 0.05).toFixed(2)} or more`}
+                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(2)} or more`}
                         className="input-field"
                     />
                     <button
