@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../assets/stylings/ActiveBid.scss";
-import { Auction, createBidAuctionTxb } from "../services/activeBidServices";
+import { Auction, createBidAuctionTxb, getActiveAuctionDetails } from "../services/activeBidServices";
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
 import SUIIcon from "../assets/images/sui-sui-logo.png";
@@ -197,40 +197,13 @@ const ActiveBid = () => {
     useEffect(() => {
         const fetchAuctionDetails = async () => {
             try {
-                const dummyAuctionData: Auction = {
-                    _id: "6639c2a9381262788fee0956",
-                    uid: "0x43f0a3b758db0458385a58a4325e7399cd69b917b36199db67daa933e7e2e889",
-                    nftImage: "https://goblinsuinft.web.app/assets/img/goblin5.png",
-                    nftName: "Goblin",
-                    nftDescription: "Goblin description",
-                    title: "Auction Day 1",
-                    description: "Auction Day 1 description",
-                    amount: 147745543,
-                    reservePrice: 100000000,
-                    duration: 600000,
-                    startTime: "2024-05-07T05:56:56.462Z",
-                    endTime: "2024-05-12T06:06:56.462Z",
-                    minBidIncrementPercentage: 5,
-                    settled: true,
-                    funds: [
-                        {
-                            address: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-                            balance: 134009563,
-                            _id: "6639c423c8104281e6f5fa93",
-                        },
-                        {
-                            address: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-                            balance: 140710041,
-                            _id: "6639c473c8104281e6f5fa95",
-                        },
-                    ],
-                    createdAt: "2024-05-07T05:56:57.693Z",
-                    __v: 0,
-                    highestBidder: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-                };
-
-                setAuctionItemDetails(dummyAuctionData);
-                setCurrentBid((dummyAuctionData.amount * 10 ** -9).toString());
+                const auctionData = await getActiveAuctionDetails();
+                if (auctionData) {
+                    setAuctionItemDetails(auctionData);
+                    setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                } else {
+                    console.log("no auction data");
+                }
             } catch (error) {
                 console.error("Error fetching auction details:", error);
             }
