@@ -10,13 +10,8 @@ export const createCreateEventTxb = () => {
         const txb = new TransactionBlock();
         txb.moveCall({
             target: `${PACKAGE_ID}::auction::create_auction`,
-            arguments: [
-                txb.pure.u64('100000000'),
-                txb.object(SUI_CLOCK_OBJECT_ID),
-            ],
-            typeArguments: [
-                '0x2::sui::SUI',
-            ],
+            arguments: [txb.pure.u64("100000000"), txb.object(SUI_CLOCK_OBJECT_ID)],
+            typeArguments: ["0x2::sui::SUI"],
         });
 
         return txb;
@@ -32,39 +27,39 @@ type createAuctionReqBody = {
     nftName: string;
     nftDescription: string;
     nftImage: string;
-}
+};
 
 export const createAuction = async (body: createAuctionReqBody) => {
     try {
         const response = await axios.post(`${BACKEND_URL}/v1/auction/create`, body, {
             headers: {
-              'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
-          });
+        });
         return response.data;
     } catch (err) {
-        console.error('Error creating auction:', err);
+        console.error("Error creating auction:", err);
         return null;
     }
-}
+};
 
 type settleAuctionReqBody = {
     auctionInfo: string;
     nftName: string;
     nftDescription: string;
     nftImage: string;
-}
+};
 
 export const settleAuction = async (body: settleAuctionReqBody) => {
     try {
-        const response = await axios.post(`${BACKEND_URL}/settle`, body, {
+        const response = await axios.post(`${BACKEND_URL}/v1/auction/settle`, body, {
             headers: {
-              'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
-          });
+        });
         return response.data;
     } catch (err) {
-        console.error('Error settling auction:', err);
+        console.error("Error settling auction:", err);
         return null;
     }
-}
+};

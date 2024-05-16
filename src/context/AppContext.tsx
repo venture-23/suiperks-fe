@@ -50,11 +50,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
         if (wallet?.address) {
             updateOwnedNFTs(wallet?.address);
-            updateTreasuryBalance();
         } else {
             setUserOwnedNFTs([]);
         }
     }, [wallet?.address]);
+
+    useEffect(() => {
+        updateTreasuryBalance();
+    }, []);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };
