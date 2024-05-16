@@ -36,7 +36,7 @@ type createAuctionReqBody = {
 
 export const createAuction = async (body: createAuctionReqBody) => {
     try {
-        const response = await axios.post(`${BACKEND_URL}/create`, body, {
+        const response = await axios.post(`${BACKEND_URL}/v1/auction/create`, body, {
             headers: {
               'Content-Type': 'application/json',
             },

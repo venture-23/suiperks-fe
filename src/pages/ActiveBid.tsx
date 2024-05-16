@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../assets/stylings/ActiveBid.scss";
-import { Auction, createBidAuctionTxb } from "../services/activeBidServices";
+import { Auction, createBidAuctionTxb, getActiveAuctionDetails } from "../services/activeBidServices";
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
 import SUIIcon from "../assets/images/sui-sui-logo.png";
@@ -46,6 +46,7 @@ const ActiveBid = () => {
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showCountdown, setShowCountdown] = useState(true);
+    const [minBidIncrementPercentage, setMinBidIncrementPercentage] = useState<number>(0);
 
     const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
         _id: "",
@@ -86,11 +87,6 @@ const ActiveBid = () => {
         hour12: true,
     });
 
-    useEffect(() => {
-        const timer = setInterval(() => {}, 1000);
-        return () => clearInterval(timer);
-    }, [auctionItemDetails.endTime]);
-
     const toggleDisplay = () => {
         setShowCountdown((prev) => !prev);
     };
@@ -114,7 +110,7 @@ const ActiveBid = () => {
         const bidAmount = parseFloat(`${amount}`);
 
         const intBidAmount = Math.floor(bidAmount);
-        const minBid = parseFloat(currentBid) + parseFloat(currentBid) * 0.05;
+        const minBid = parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage;
 
         if (input < minBid) {
             setErrorMessage(`Bid amount must be at least ${minBid.toFixed(2)}.`);
@@ -131,18 +127,6 @@ const ActiveBid = () => {
                 console.log("txnResponse", txnResponse);
                 if (txnResponse?.digest) {
                     console.log("Bid auction digest:", txnResponse?.digest);
-
-                    const newBid: BidItem = {
-                        userImg: UserIconImg,
-                        username: "User",
-                        amount: intBidAmount,
-                        //transactionLink: "https://etherscan.io/tx/...",
-                        bidTime: new Date().toLocaleString(),
-                    };
-                    const updatedBids = [...bids, newBid];
-                    setBids(updatedBids);
-                    const newBidValue = intBidAmount + intBidAmount * 0.05; // 5% increment to bid price
-                    setCurrentBid(newBidValue.toString());
                     setInputBid("");
                     setErrorMessage("");
                 }
@@ -151,7 +135,7 @@ const ActiveBid = () => {
                 setErrorMessage("Error placing bid. Please try again later.");
             }
         } else {
-            setErrorMessage(`Bid amount must be at least ${minBid}`);
+            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(2)}.`);
             setTimeout(() => {
                 setErrorMessage("");
             }, 3000);
@@ -171,6 +155,11 @@ const ActiveBid = () => {
             setShowViewAllBidsModal(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setInterval(() => {}, 1000);
+        return () => clearInterval(timer);
+    }, [auctionItemDetails.endTime]);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleOutsideClick);
@@ -197,40 +186,19 @@ const ActiveBid = () => {
     useEffect(() => {
         const fetchAuctionDetails = async () => {
             try {
-                const dummyAuctionData: Auction = {
-                    _id: "6639c2a9381262788fee0956",
-                    uid: "0x43f0a3b758db0458385a58a4325e7399cd69b917b36199db67daa933e7e2e889",
-                    nftImage: "https://goblinsuinft.web.app/assets/img/goblin5.png",
-                    nftName: "Goblin",
-                    nftDescription: "Goblin description",
-                    title: "Auction Day 1",
-                    description: "Auction Day 1 description",
-                    amount: 147745543,
-                    reservePrice: 100000000,
-                    duration: 600000,
-                    startTime: "2024-05-07T05:56:56.462Z",
-                    endTime: "2024-05-12T06:06:56.462Z",
-                    minBidIncrementPercentage: 5,
-                    settled: true,
-                    funds: [
-                        {
-                            address: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-                            balance: 134009563,
-                            _id: "6639c423c8104281e6f5fa93",
-                        },
-                        {
-                            address: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-                            balance: 140710041,
-                            _id: "6639c473c8104281e6f5fa95",
-                        },
-                    ],
-                    createdAt: "2024-05-07T05:56:57.693Z",
-                    __v: 0,
-                    highestBidder: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-                };
+                const auctionData = await getActiveAuctionDetails();
+                if (auctionData) {
+                    setAuctionItemDetails(auctionData);
+                    setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
 
-                setAuctionItemDetails(dummyAuctionData);
-                setCurrentBid((dummyAuctionData.amount * 10 ** -9).toString());
+                    if (auctionData.amount === 0) {
+                        setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
+                    } else {
+                        setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                    }
+                } else {
+                    console.log("no auction data");
+                }
             } catch (error) {
                 console.error("Error fetching auction details:", error);
             }
@@ -290,7 +258,7 @@ const ActiveBid = () => {
                         type="text"
                         value={inputBid}
                         onChange={handleInputChange}
-                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * 0.05).toFixed(2)} or more`}
+                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(2)} or more`}
                         className="input-field"
                     />
                     <button
