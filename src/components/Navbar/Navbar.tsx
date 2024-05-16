@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import "./Navbar.scss";
+import { useAppContext } from "../../context/AppContext";
 
 import MenuImg from "../../assets/images/menu.png";
 import CloseImg from "../../assets/images/crossIcon.png";
@@ -10,9 +11,16 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const wallet = useWallet();
-    const [treasuryBalance, setTreasuryBalance] = useState<number>(288455584);
+    const { treasuryBalance, updateTreasuryBalance } = useAppContext();
 
-    const formatBalance = (balance: number): string => {
+    useEffect(() => {
+        updateTreasuryBalance();
+    }, [updateTreasuryBalance]);
+
+    const formatBalance = (balance: number | undefined): string => {
+        if (typeof balance !== "number") {
+            return "0.00";
+        }
         const formattedBalance = balance / 10 ** 9;
         return formattedBalance.toFixed(2);
     };
