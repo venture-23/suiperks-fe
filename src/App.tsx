@@ -8,6 +8,8 @@ import UserDashboard from "./pages/UserDashboard";
 import ProposalForm from "./components/Form/ProposalSubmit";
 import AuctionHistoryPage from "./pages/AuctionHistoryPage";
 import VotePage from "./pages/VotePage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     return (
@@ -25,6 +27,7 @@ function App() {
                         <Route path="/vote/:proposalId" element={<VotePage />} />
                         <Route path="/" element={<LandingPage />} />
                     </Routes>
+                    <ToastContainer />
                 </div>
             </BrowserRouter>
         </div>

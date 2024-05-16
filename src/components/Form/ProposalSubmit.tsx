@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { toast } from "react-toastify";
 
 const ProposalForm: React.FC = () => {
     const initialInput = `# Title of your proposal
@@ -18,9 +19,23 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
         setMarkdownInput(e.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Markdown Input:", markdownInput);
+
+        const lines = markdownInput.split("\n");
+
+        let title = lines[0].trim();
+        let details = lines.slice(1).join("\n").trim();
+
+        console.log("Title:", title);
+        console.log("Details:", details);
+
+        toast.success("Proposal submitted successfully");
+
+        setTimeout(() => {
+            window.location.href = "/proposals";
+        }, 1000);
     };
 
     return (
