@@ -7,6 +7,8 @@ const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL as string;
 
 export const createBidAuctionTxb = (amount: number, auctionInfoId: string) => {
     try {
+        console.log('amount',amount)
+        console.log('auction id',auctionInfoId)
         const tx = new TransactionBlock();
         const coin = tx.splitCoins(tx.gas, [tx.pure(amount)]);
         tx.moveCall({
@@ -56,7 +58,7 @@ export interface Auction {
 
 export const getActiveAuctionDetails = async (): Promise<Auction | null> => {
     try {
-        const response: AxiosResponse<Auction> = await axios.get<Auction>(`${BACKEND_URL}/active`);
+        const response: AxiosResponse<Auction> = await axios.get<Auction>(`${BACKEND_URL}/v1/auction/active`);
         return response.data;
     } catch (err) {
         console.error('Error fetching auction data:', err);
