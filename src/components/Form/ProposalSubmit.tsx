@@ -45,23 +45,28 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
         const seekAmount = parseFloat(amount) * 10 ** 9;
         console.log("Seek Amount:", seekAmount);
 
-        const res = await createProposal(title, details, seekAmount);
-        if (res?.hash) {
-            console.log("Hash", res.hash);
-            const txb = createProposalTxb(userOwnedNFTs[0].nftId, res.hash, seekAmount);
-            const txnResponse = await wallet.signAndExecuteTransactionBlock({
-                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
-                transactionBlock: txb,
-            });
-            console.log("txnResponse", txnResponse);
-            if (txnResponse?.digest) {
-                console.log("Bid auction digest:", txnResponse?.digest);
-                toast.success("Proposal submitted successfully");
+        try {
+            const res = await createProposal(title, details);
+            if (res?.hash) {
+                console.log("Hash", res.hash);
+                const txb = createProposalTxb(userOwnedNFTs[0].nftId, res.hash, seekAmount);
+                const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                    // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                    transactionBlock: txb,
+                });
+                console.log("txnResponse", txnResponse);
+                if (txnResponse?.digest) {
+                    console.log("Bid auction digest:", txnResponse?.digest);
+                    toast.success("Proposal submitted successfully");
 
-                setTimeout(() => {
-                    window.location.href = "/proposals";
-                }, 1000);
+                    setTimeout(() => {
+                        window.location.href = "/proposals";
+                    }, 1000);
+                }
             }
+        } catch (err) {
+            console.log("Failed to create proposal.", err);
+            toast.error("Failed to create proposal.");
         }
     };
 

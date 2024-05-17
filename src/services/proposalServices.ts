@@ -79,14 +79,13 @@ export const fetchProposalDetails = async (proposal_id: string): Promise<Proposa
     }
 };
 
-export const createProposal = async (title: string, details: string, seekingAmount:number): Promise<ProposalCreate | null> => {
+export const createProposal = async (title: string, details: string): Promise<ProposalCreate | null> => {
     try {
         const response: AxiosResponse<ProposalCreate> = await axios.post<ProposalCreate>(
             `${BACKEND_URL}/v1/proposal/create`,
             {
                 title: title,
                 details: details,
-                seekAmount: seekingAmount
             }
         );
         console.log(response);
@@ -100,15 +99,19 @@ export const createProposal = async (title: string, details: string, seekingAmou
 export const createProposalTxb = (userNFTId: string, proposalHash: string, seekingAmount: number) => {
     try {
         const txb = new TransactionBlock();
-        txb.moveCall({
+        const proposal = txb.moveCall({
             target: `${PACKAGE_ID}::ethena_dao::propose`,
             arguments: [
                 txb.object(DAO_ID), // Dao<DaoWitness>
                 txb.object(userNFTId), // 0xDaoNFT,
                 txb.object(SUI_CLOCK_OBJECT_ID), // quorum_votes,
                 txb.pure.string(proposalHash), // hash proposal title/content
-                txb.pure.u64(seekingAmount), // seek_amount
+                txb.pure.u64(`${seekingAmount}`), // seek_amount
             ],
+        });
+        txb.moveCall({
+            target: `${PACKAGE_ID}::ethena_dao::add_proposal_dynamically`,
+            arguments: [txb.object(DAO_ID), proposal],
         });
 
         return txb;
