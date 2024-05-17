@@ -104,6 +104,26 @@ const ActiveBid = () => {
         }
     };
 
+    const fetchAuctionDetails = async () => {
+        try {
+            const auctionData = await getActiveAuctionDetails();
+            if (auctionData) {
+                setAuctionItemDetails(auctionData);
+                setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
+
+                if (auctionData.amount === 0) {
+                    setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
+                } else {
+                    setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                }
+            } else {
+                console.log("no auction data");
+            }
+        } catch (error) {
+            console.error("Error fetching auction details:", error);
+        }
+    };
+
     const handleSubmit = async () => {
         const amount = Number(inputBid) * 10 ** 9;
         const input = Number(inputBid);
@@ -113,7 +133,7 @@ const ActiveBid = () => {
         const minBid = parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage;
 
         if (input < minBid) {
-            setErrorMessage(`Bid amount must be at least ${minBid.toFixed(2)}.`);
+            setErrorMessage(`Bid amount must be at least ${minBid.toFixed(4)}.`);
             return;
         }
 
@@ -129,13 +149,14 @@ const ActiveBid = () => {
                     console.log("Bid auction digest:", txnResponse?.digest);
                     setInputBid("");
                     setErrorMessage("");
+                    fetchAuctionDetails();
                 }
             } catch (error) {
                 console.error("Error placing bid:", error);
                 setErrorMessage("Error placing bid. Please try again later.");
             }
         } else {
-            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(2)}.`);
+            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(4)}.`);
             setTimeout(() => {
                 setErrorMessage("");
             }, 3000);
@@ -156,6 +177,8 @@ const ActiveBid = () => {
         }
     };
 
+    const isAuctionEnded = new Date() > new Date(auctionItemDetails.endTime);
+
     useEffect(() => {
         const timer = setInterval(() => {}, 1000);
         return () => clearInterval(timer);
@@ -168,42 +191,7 @@ const ActiveBid = () => {
         };
     }, []);
 
-    // useEffect(() => {
-    //     const highestBid = bids.reduce(
-    //         (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
-    //         0
-    //     );
-    //     setCurrentBid(highestBid.toFixed(2));
-
-    //     const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
-    //     setBids(sortedBids);
-
-    //     const currentDate = new Date();
-    //     const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-    //     setEndDate(endDate);
-    // }, []);
-
     useEffect(() => {
-        const fetchAuctionDetails = async () => {
-            try {
-                const auctionData = await getActiveAuctionDetails();
-                if (auctionData) {
-                    setAuctionItemDetails(auctionData);
-                    setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
-
-                    if (auctionData.amount === 0) {
-                        setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
-                    } else {
-                        setCurrentBid((auctionData.amount * 10 ** -9).toString());
-                    }
-                } else {
-                    console.log("no auction data");
-                }
-            } catch (error) {
-                console.error("Error fetching auction details:", error);
-            }
-        };
-
         fetchAuctionDetails();
     }, []);
 
@@ -258,16 +246,21 @@ const ActiveBid = () => {
                         type="text"
                         value={inputBid}
                         onChange={handleInputChange}
-                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(2)} or more`}
+                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(4)} or more`}
                         className="input-field"
+                        disabled={isAuctionEnded}
                     />
                     <button
                         onClick={handleSubmit}
                         className="bid-button"
-                        disabled={balance === undefined || balance === null || parseFloat(inputBid) * 10 ** 9 > balance}
+                        disabled={
+                            balance === undefined ||
+                            balance === null ||
+                            parseFloat(inputBid) * 10 ** 9 > balance ||
+                            isAuctionEnded
+                        }
                     >
                         Place Bid
-                        <span className="tooltip">Bid amount cannot exceed wallet balance</span>
                     </button>
                 </div>
                 {errorMessage && <div className="error-message">{errorMessage}</div>}

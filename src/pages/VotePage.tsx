@@ -2,6 +2,7 @@ import { useWallet } from "@suiet/wallet-kit";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { fetchProposalDetails, Proposal, Status } from "../services/proposalServices";
 
 const VotePage = () => {
     const { proposalId } = useParams<{ proposalId?: string }>() ?? { proposalId: "" };
@@ -9,97 +10,26 @@ const VotePage = () => {
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
     const wallet = useWallet();
 
-    useEffect(() => {
-        const id = proposalId || "";
-        const proposalDetails = getStaticProposalData(parseInt(id));
-        setProposal(proposalDetails);
-        if (proposalDetails) {
-            initializeVotes(proposalDetails);
-        }
-    }, [proposalId]);
-
     const initializeVotes = (proposal: Proposal) => {
-        setVotes({ for: 10, against: 5, abstain: 3 });
-    };
-
-    const getStaticProposalData = (id: number): Proposal => {
-        const proposals: { [key: number]: Proposal } = {
-            2: {
-                id: 2,
-                name: "Proposal Title 2",
-                status: "Active",
-                threshold: "50%",
-                endTime: "2024-05-15",
-                snapshot: "2024-05-08",
-                description: `# Proposal Title 2
-
-## **TLDR** 
-Asking for 45,625 USDC to audit the $nouns ERC20 token contract and DAO upgrade with Sherlock.
-
-## **Context** 
-The $nouns token is designed to be the canonical ERC20 token backed by Nouns. Any Noun could be deposited into the $nouns contract in order to mint e.g. 1M $nouns. Anyone holding 1M $nouns would be able to redeem them for a Noun from the $nouns contract.
-
-For deeper context please see:
-
-- The token spec.
-- A discussion thread about the spec.
-
-## **Scope** 
-We’re deploying a new token factory on mainnet, that lets anyone create a new NFT-backed ERC20 token:
-
-- They have a fixed exchange rate, e.g. 1 NFT = 1M ERC20 tokens.
-- The ERC20 token has an Owner account that can upgrade it, as well as disable future upgrades.
-
-We’re upgrading the Nouns DAO logic contract, such that it treats its $nouns akin to how it treats DAO-owned Nouns:
-
-- The DAO’s Nouns redeemable balance is excluded from adjusted total supply.
-- One of the DAO’s fork parameters is the list of ERC20 tokens that get sent to fork DAOs; this upgrade rejects attempts to add the $nouns address to this list (again, similar to how we do not send Nouns to fork DAOs today).
-
-For a deeper dive you are welcome to review the NFT-backed token Github repository, and the DAO upgrade PR.
-`,
-            },
-            3: {
-                id: 3,
-                name: "Proposal Title 3",
-                status: "Queued",
-                threshold: "50%",
-                endTime: "2024-05-15",
-                snapshot: "2024-05-08",
-            },
-            5: {
-                id: 5,
-                name: "Proposal Title 5",
-                status: "Passed",
-                threshold: "50%",
-                endTime: "2024-05-15",
-                snapshot: "2024-05-08",
-            },
-            6: {
-                id: 6,
-                name: "Proposal Title 6",
-                status: "Failed",
-                threshold: "50%",
-                endTime: "2024-05-15",
-                snapshot: "2024-05-08",
-            },
-        };
-        return proposals[id];
+        setVotes({ for: proposal.forVotes, against: proposal.againstVotes, abstain: 0 });
     };
 
     if (!proposal) {
-        return null;
+        return <div>Loading...</div>;
     }
 
-    const getStatusColor = (status: string) => {
+    const getStatusColor = (status: Status) => {
         switch (status) {
-            case "Active":
+            case Status.ACTIVE:
                 return "#43b369";
-            case "Passed":
+            case Status.EXECUTED:
                 return "#0d6efd";
-            case "Queued":
+            case Status.QUEUE:
                 return "#8c8d92";
-            case "Failed":
+            case Status.FAILED:
                 return "#e40536";
+            case Status.WAITING:
+                return "#888888";
             default:
                 return "white";
         }
@@ -109,23 +39,42 @@ For a deeper dive you are welcome to review the NFT-backed token Github reposito
         console.log("vote");
     };
 
+    useEffect(() => {
+        const fetchProposal = async () => {
+            if (proposalId) {
+                const proposalDetails = await fetchProposalDetails(proposalId);
+                setProposal(proposalDetails);
+                if (proposalDetails) {
+                    initializeVotes(proposalDetails);
+                }
+            }
+        };
+        fetchProposal();
+    }, [proposalId]);
+
     return (
         <>
             <div className="proposal-page w-full md:mx-40 my-10 mx-4">
-                <div className="flex items-center gap-6 mb-3">
-                    <div className="name text-gray-500 md:text-xl text-lg">Proposal {proposal.id}</div>
+                {/* <div className="flex items-center gap-6 mb-3">
+                    <div className="name text-gray-500 md:text-xl text-lg">Proposal {proposal._id}</div>
                     <div
                         className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
                         style={{ backgroundColor: getStatusColor(proposal.status), borderRadius: "4px" }}
                     >
                         {proposal.status}
                     </div>
-                </div>
+                </div> */}
 
                 <div className="flex items-center justify-between border-b border-gray-500 mb-4 pb-4">
-                    <div className="name md:text-4xl text-2xl">{proposal.name}</div>
+                    <div className="name md:text-4xl text-2xl">{proposal.title.replace(/^#\s*/, "")}</div>
+                    <div
+                        className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
+                        style={{ backgroundColor: getStatusColor(proposal.status), borderRadius: "4px" }}
+                    >
+                        {proposal.status}
+                    </div>
 
-                    {proposal.status === "Active" && (
+                    {proposal.status === Status.ACTIVE && (
                         <div className="my-4 flex justify-between py-4">
                             <div>
                                 {wallet.connected ? (
@@ -162,7 +111,7 @@ For a deeper dive you are welcome to review the NFT-backed token Github reposito
                                 ),
                             }}
                         >
-                            {proposal.description}
+                            {proposal.details}
                         </ReactMarkdown>
                     </div>
                     <div className="votes md:w-1/4 flex flex-col md:border-t-0 border-t border-gray-500">
@@ -185,24 +134,24 @@ For a deeper dive you are welcome to review the NFT-backed token Github reposito
                                 <p className="text-gray-700 name  text-lg font-semibold">Threshold</p>
                                 <div className="flex flex-col justify-end">
                                     <p className="text-xs">Current Threshold</p>
-                                    <p className="text-base font-bold">{proposal.threshold}</p>
+                                    <p className="text-base font-bold">{proposal.votingQuorumRate}%</p>
                                 </div>
                             </div>
                             <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
                                 <p className="text-gray-700  name  text-lg font-semibold">
-                                    <p> {proposal.status === "Active" ? "Ends On" : "Ended"}</p>
+                                    <p> {proposal.status === Status.ACTIVE ? "Ends On" : "Ended"}</p>
                                 </p>
                                 <div className="flex flex-col justify-end">
                                     <p className="text-xs font-bold">{proposal.endTime}</p>
                                 </div>
                             </div>
-                            <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
+                            {/* <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
                                 <p className="text-gray-700 name  text-lg font-semibold">Snapshot</p>
                                 <div className="flex flex-col justify-end">
                                     <p className="text-xs">Taken at block</p>
                                     <p className="text-base font-bold">{proposal.snapshot}</p>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -212,16 +161,6 @@ For a deeper dive you are welcome to review the NFT-backed token Github reposito
 };
 
 export default VotePage;
-
-type Proposal = {
-    id: number;
-    name: string;
-    status: string;
-    threshold: string;
-    endTime: string;
-    snapshot: string;
-    description?: string;
-};
 
 type Votes = {
     for: number;
