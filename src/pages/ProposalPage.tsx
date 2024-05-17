@@ -91,7 +91,7 @@ const ProposalPage = () => {
                                         className="proposal-content flex justify-between items-center md:text-2xl text-lg"
                                     >
                                         <div className="flex gap-4">
-                                            <span className="font-bold">{proposal.title}</span>
+                                            <span className="font-bold">{proposal.title.replace(/^#\s*/, "")}</span>
                                         </div>
                                         <div
                                             className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
