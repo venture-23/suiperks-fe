@@ -234,7 +234,7 @@ const ActiveBid = () => {
                                 <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">Current Bid</h2>
                                 <h3 className="md:text-3xl text-2xl font-bold flex items-center gap-2">
                                     <img src={SUIIcon} className="w-5 h-5" />
-                                    {currentBid}
+                                    {parseFloat(currentBid).toFixed(5)}
                                 </h3>
                             </div>
                             <div
@@ -292,7 +292,7 @@ const ActiveBid = () => {
                                             </span>
                                             <span className="font-bold flex items-center gap-2 justify-end">
                                                 <img src={SUIIcon} className="w-3 h-3" />
-                                                {(fund.balance * 10 ** -9).toString()}
+                                                {parseFloat((fund.balance * 10 ** -9).toString()).toFixed(5)}
                                             </span>
                                         </li>
                                     ))}
@@ -339,7 +339,9 @@ const ActiveBid = () => {
                                                             </span>
                                                             <span className="font-bold flex items-center gap-2 justify-end">
                                                                 <img src={SUIIcon} className="md:w-3 w-2 md:h-3 h-2" />
-                                                                {(fund.balance * 10 ** -9).toString()}
+                                                                {parseFloat(
+                                                                    (fund.balance * 10 ** -9).toString()
+                                                                ).toFixed(5)}
                                                             </span>
                                                         </li>
                                                     ))}
