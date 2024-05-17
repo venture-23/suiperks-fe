@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../assets/stylings/ProposalPage.scss";
 import { fetchAllProposals, Proposal, Status } from "../services/proposalServices";
-
 import { useWallet } from "@suiet/wallet-kit";
+import { useAppContext } from "../context/AppContext";
 
 const ProposalPage = () => {
     const wallet = useWallet();
+    const { userOwnedNFTs } = useAppContext();
     const [proposals, setProposals] = useState<Proposal[] | null>(null);
 
     const getStatusColor = (status: Status) => {
@@ -41,12 +42,24 @@ const ProposalPage = () => {
             <div className="my-4 flex md:justify-end py-4 ">
                 <div>
                     {wallet.connected ? (
-                        <Link
-                            to="/proposal-submit"
-                            className="proposal-button px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
-                        >
-                            Submit Proposal
-                        </Link>
+                        userOwnedNFTs.length === 0 ? (
+                            <div className="flex items-center gap-10">
+                                <p>You must own an NFT to make a proposal</p>
+                                <button
+                                    disabled
+                                    className="proposal-button px-4 py-4 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed"
+                                >
+                                    Submit Proposal
+                                </button>
+                            </div>
+                        ) : (
+                            <Link
+                                to="/proposal-submit"
+                                className="proposal-button px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
+                            >
+                                Submit Proposal
+                            </Link>
+                        )
                     ) : (
                         <div className="flex items-center gap-10">
                             <p>Connect wallet to make a proposal</p>
