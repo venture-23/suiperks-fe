@@ -14,9 +14,9 @@ const UserDashboard = () => {
                 {userOwnedNFTs.length === 0 && <div>No owned items yet.</div>}
 
                 {userOwnedNFTs.map((nft) => (
-                    <div key={nft._id} className="bg-white rounded-lg shadow-md p-4 m-2" style={{ width: "300px" }}>
-                        <div className="w-full md:h-60 h-52 overflow-hidden">
-                            <img src={nft.nftImage} alt={nft.nftName} className="w-full h-auto" />
+                    <div key={nft.nftId} className="bg-white rounded-lg shadow-md p-4 m-2" style={{ width: "300px" }}>
+                        <div className="w-full h-[240px] overflow-hidden">
+                            <img src={nft.nftImage} alt={nft.nftName} className="w-full h-full object-contain" />
                         </div>
                         <div className="p-3">
                             <h2 className="md:text-2xl text-xl font-bold">{nft.nftName}</h2>

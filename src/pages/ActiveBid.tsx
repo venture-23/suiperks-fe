@@ -202,14 +202,14 @@ const ActiveBid = () => {
     }, []);
 
     return (
-        <div className="active-bid flex md:flex-row flex-col items-center justify-center">
+        <div className="active-bid flex md:flex-row flex-col justify-center gap-8">
             {hasActiveAuction ? (
                 <>
-                    <div className="image flex justify-center mb-6 md:mb-0">
+                    <div className="image flex justify-center w-[400px] h-[400px] bg-[rgba(255,255,255,0.5)] rounded-xl p-1">
                         <img
                             src={auctionItemDetails.nftImage}
                             alt="Auction Image"
-                            className="md:h-auto md:w-2/3 h-2/5 w-2/5"
+                            className="w-full h-full object-contain"
                         />
                     </div>
                     <div className="details">
