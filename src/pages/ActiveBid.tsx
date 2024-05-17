@@ -149,7 +149,9 @@ const ActiveBid = () => {
                     console.log("Bid auction digest:", txnResponse?.digest);
                     setInputBid("");
                     setErrorMessage("");
-                    fetchAuctionDetails();
+                    setTimeout(() => {
+                        fetchAuctionDetails();
+                    }, 3000);
                 }
             } catch (error) {
                 console.error("Error placing bid:", error);
@@ -269,6 +271,7 @@ const ActiveBid = () => {
                     <ul className="bid-list mt-6 gap-10 md:text-xl">
                         {auctionItemDetails.funds
                             ?.sort((a, b) => b.balance - a.balance)
+                            .slice(0, 2)
                             .map((fund, index) => (
                                 <li key={index}>
                                     <span className="username flex items-center gap-2">
