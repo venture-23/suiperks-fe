@@ -20,9 +20,14 @@ Describe the background or context of your proposal here. Provide any relevant i
 Outline the scope of your proposal here. Detail what your proposal aims to achieve and its potential impact.
 `;
     const [markdownInput, setMarkdownInput] = useState<string>(initialInput);
+    const [amount, setAmount] = useState<string>("");
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMarkdownInput(e.target.value);
+    };
+
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAmount(e.target.value);
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,10 +42,13 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
         console.log("Title:", title);
         console.log("Details:", details);
 
-        const res = await createProposal(title, details);
+        const seekAmount = parseFloat(amount) * 10 ** 9;
+        console.log("Seek Amount:", seekAmount);
+
+        const res = await createProposal(title, details, seekAmount);
         if (res?.hash) {
             console.log("Hash", res.hash);
-            const txb = createProposalTxb(userOwnedNFTs[0].nftId, res.hash, 1000000000); // temp: Seeking amount 1000000000
+            const txb = createProposalTxb(userOwnedNFTs[0].nftId, res.hash, seekAmount);
             const txnResponse = await wallet.signAndExecuteTransactionBlock({
                 // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                 transactionBlock: txb,
@@ -76,6 +84,18 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
                                 style={{ height: "100%" }}
                             ></textarea>
                         </div>
+                        <div className="flex flex-col mb-3">
+                            <label className="text-lg name">SUI</label>
+                            <input
+                                type="text"
+                                placeholder="Enter SUI amount..."
+                                className="p-2"
+                                value={amount}
+                                onChange={handleAmountChange}
+                                required
+                            />
+                        </div>
+
                         <button
                             type="submit"
                             className="w-1/4 bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300"
