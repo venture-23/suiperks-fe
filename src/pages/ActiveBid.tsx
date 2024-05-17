@@ -133,7 +133,7 @@ const ActiveBid = () => {
         const minBid = parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage;
 
         if (input < minBid) {
-            setErrorMessage(`Bid amount must be at least ${minBid.toFixed(2)}.`);
+            setErrorMessage(`Bid amount must be at least ${minBid.toFixed(4)}.`);
             return;
         }
 
@@ -156,7 +156,7 @@ const ActiveBid = () => {
                 setErrorMessage("Error placing bid. Please try again later.");
             }
         } else {
-            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(2)}.`);
+            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(4)}.`);
             setTimeout(() => {
                 setErrorMessage("");
             }, 3000);
@@ -176,6 +176,8 @@ const ActiveBid = () => {
             setShowViewAllBidsModal(false);
         }
     };
+
+    const isAuctionEnded = new Date() > new Date(auctionItemDetails.endTime);
 
     useEffect(() => {
         const timer = setInterval(() => {}, 1000);
@@ -246,14 +248,19 @@ const ActiveBid = () => {
                         onChange={handleInputChange}
                         placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(4)} or more`}
                         className="input-field"
+                        disabled={isAuctionEnded}
                     />
                     <button
                         onClick={handleSubmit}
                         className="bid-button"
-                        disabled={balance === undefined || balance === null || parseFloat(inputBid) * 10 ** 9 > balance}
+                        disabled={
+                            balance === undefined ||
+                            balance === null ||
+                            parseFloat(inputBid) * 10 ** 9 > balance ||
+                            isAuctionEnded
+                        }
                     >
                         Place Bid
-                        <span className="tooltip">Bid amount cannot exceed wallet balance</span>
                     </button>
                 </div>
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
