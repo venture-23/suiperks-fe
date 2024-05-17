@@ -1,25 +1,20 @@
-import React, { useState } from "react";
-
-interface Proposal {
-    _id: string;
-    title: string;
-    Status: string;
-}
+import React, { useEffect, useState } from "react";
+import { Proposal, Status, fetchAllProposals } from "../../services/proposalServices";
 
 interface QueueTableProps {
-    proposals: Proposal[];
+    proposals?: Proposal[] | null;
     onQueueClick?: (_id: string, updatedProposals: Proposal[]) => void;
     onExecuteClick?: (_id: string) => void;
 }
 
-const QueueTable: React.FC<QueueTableProps> = ({ proposals, onQueueClick, onExecuteClick }) => {
-    const [updatedProposals, setUpdatedProposals] = useState<Proposal[]>(proposals);
+const QueueTable: React.FC<QueueTableProps> = ({ onQueueClick, onExecuteClick }) => {
+    const [updatedProposals, setUpdatedProposals] = useState<Proposal[]>([]);
 
     const handleQueueClick = (_id: string) => {
         console.log(`Proposal ${_id} queued`);
         const updatedProposal = updatedProposals.find((proposal) => proposal._id === _id);
         if (updatedProposal) {
-            updatedProposal.Status = "Queue";
+            updatedProposal.status = Status.QUEUE;
             setUpdatedProposals([...updatedProposals]);
             if (onQueueClick) {
                 onQueueClick(_id, updatedProposals);
@@ -31,13 +26,30 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals, onQueueClick, onExec
         console.log(`Proposal ${_id} executed`);
         const updatedProposal = updatedProposals.find((proposal) => proposal._id === _id);
         if (updatedProposal) {
-            updatedProposal.Status = "Active";
+            updatedProposal.status = Status.ACTIVE;
             setUpdatedProposals([...updatedProposals]);
             if (onExecuteClick) {
                 onExecuteClick(_id);
             }
         }
     };
+
+    const fetchAllProposalsData = async () => {
+        try {
+            const allProposals = await fetchAllProposals();
+            if (allProposals) {
+                setUpdatedProposals(allProposals);
+            } else {
+                throw new Error("Failed to fetch proposals.");
+            }
+        } catch (error) {
+            console.error("Error fetching all proposals:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllProposalsData();
+    }, []);
 
     return (
         <div className="md:w-3/5 w-4/5 mx-auto my-5">
@@ -52,10 +64,12 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals, onQueueClick, onExec
                 <tbody>
                     {updatedProposals.map((proposal) => (
                         <tr key={proposal._id}>
-                            <td className="border border-black p-2 text-center">{proposal.title}</td>
-                            <td className="border border-black p-2 text-center">{proposal.Status}</td>
                             <td className="border border-black p-2 text-center">
-                                {proposal.Status === "Waiting" && (
+                                {proposal.title.replace(/^#\s*/, "")}
+                            </td>
+                            <td className="border border-black p-2 text-center">{proposal.status}</td>
+                            <td className="border border-black p-2 text-center">
+                                {proposal.status === Status.WAITING && (
                                     <button
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                         onClick={() => handleQueueClick(proposal._id)}
@@ -63,7 +77,7 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals, onQueueClick, onExec
                                         Queue
                                     </button>
                                 )}
-                                {proposal.Status === "Queue" && (
+                                {proposal.status === Status.QUEUE && (
                                     <button
                                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                         onClick={() => handleExecuteClick(proposal._id)}

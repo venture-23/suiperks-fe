@@ -2,12 +2,6 @@ import { useState } from "react";
 import { createAuction, settleAuction } from "../services/createAuctionServices";
 import QueueTable from "../components/Admin/QueueTable";
 
-const staticApiResponse = [
-    { _id: "6642f02687417afca8710555", title: "Test proposal 2", Status: "Active" },
-    { _id: "6642f02c87417afca871055f", title: "Test proposal 3", Status: "Waiting" },
-    { _id: "664348a255f5a1c80b494937", title: "Test proposal 4", Status: "Queue" },
-];
-
 const CreateEventPage = () => {
     const [loading, setLoading] = useState(false);
     const [createSuccess, setCreateSuccess] = useState(false);
@@ -290,7 +284,7 @@ const CreateEventPage = () => {
                     </div>
                 </div>
             </div>
-            <QueueTable proposals={staticApiResponse} />
+            <QueueTable />
         </div>
     );
 };
