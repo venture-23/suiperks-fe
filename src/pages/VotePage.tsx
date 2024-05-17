@@ -1,5 +1,5 @@
 import { useWallet } from "@suiet/wallet-kit";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import {
@@ -43,7 +43,13 @@ const VotePage = () => {
     });
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
     const wallet = useWallet();
-    const { userOwnedNFTs } = useAppContext();
+    const { activeNFT } = useAppContext();
+    const votedNFTList = useMemo(() => {
+        const forVoters = proposal.forVoterList.map((item) => item.nftId);
+        const againstVoters = proposal.againstVoterList.map((item) => item.nftId);
+        return [...forVoters, ...againstVoters];
+    }, [proposal.forVoterList, proposal.againstVoterList]);
+    const nftHasVoted = votedNFTList.includes(activeNFT?.nftId);
 
     const initializeVotes = (proposal: Proposal) => {
         setVotes({ for: proposal.forVotes, against: proposal.againstVotes, abstain: proposal.refrainVotes });
@@ -68,7 +74,10 @@ const VotePage = () => {
 
     const handleVote = async (vote: boolean) => {
         try {
-            const txb = castVoteTxb(userOwnedNFTs[0].nftId, proposal.objectId, vote);
+            if (!activeNFT) {
+                throw new Error("No active nft");
+            }
+            const txb = castVoteTxb(activeNFT.nftId, proposal.objectId, vote);
             const txnResponse = await wallet.signAndExecuteTransactionBlock({
                 // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                 transactionBlock: txb,
@@ -84,7 +93,10 @@ const VotePage = () => {
 
     const handleChangeVote = async () => {
         try {
-            const txb = changeVoteTxb(userOwnedNFTs[0].nftId, proposal.objectId);
+            if (!activeNFT) {
+                throw new Error("No active nft");
+            }
+            const txb = changeVoteTxb(activeNFT.nftId, proposal.objectId);
             const txnResponse = await wallet.signAndExecuteTransactionBlock({
                 // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                 transactionBlock: txb,
@@ -100,7 +112,10 @@ const VotePage = () => {
 
     const handleRevokeVote = async () => {
         try {
-            const txb = revokeVoteTxb(userOwnedNFTs[0].nftId, proposal.objectId);
+            if (!activeNFT) {
+                throw new Error("No active nft");
+            }
+            const txb = revokeVoteTxb(activeNFT.nftId, proposal.objectId);
             const txnResponse = await wallet.signAndExecuteTransactionBlock({
                 // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                 transactionBlock: txb,
@@ -156,36 +171,42 @@ const VotePage = () => {
                             <div>
                                 {wallet.connected ? (
                                     <>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleVote(true)}
-                                                className="proposal-button px-4 py-4 bg-green-600 hover:bg-blue-500 text-white rounded-md"
-                                            >
-                                                In favor
-                                            </button>
-                                            <button
-                                                onClick={() => handleVote(false)}
-                                                className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
-                                            >
-                                                Oppose
-                                            </button>
-                                        </div>
+                                        {!nftHasVoted ? (
+                                            <>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => handleVote(true)}
+                                                        className="proposal-button px-4 py-4 bg-green-600 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        In favor
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleVote(false)}
+                                                        className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        Oppose
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => handleChangeVote()}
+                                                        className="proposal-button px-4 py-4 bg-yellow-500 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        Change Vote
+                                                    </button>
 
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleChangeVote()}
-                                                className="proposal-button px-4 py-4 bg-yellow-500 hover:bg-blue-500 text-white rounded-md"
-                                            >
-                                                Change Vote
-                                            </button>
-
-                                            <button
-                                                onClick={() => handleRevokeVote()}
-                                                className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
-                                            >
-                                                Refrain Vote
-                                            </button>
-                                        </div>
+                                                    <button
+                                                        onClick={() => handleRevokeVote()}
+                                                        className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        Refrain Vote
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
                                     </>
                                 ) : (
                                     <div className="flex items-center gap-10">
