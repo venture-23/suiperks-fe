@@ -21,6 +21,7 @@ export interface Proposal {
     details: string;
     forVotes: number;
     againstVotes: number;
+    refrainVotes: number;
     eta: number;
     actionDelay: number;
     hash: string;
