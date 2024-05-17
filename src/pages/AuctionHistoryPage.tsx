@@ -2,18 +2,7 @@ import { useEffect, useState } from "react";
 import { AuctionDetails, getAuctionHistory } from "../services/auctionHistoryServices";
 
 const AuctionHistoryPage = () => {
-    const [historyData, setHistoryData] = useState<AuctionDetails[]>([
-        {
-            _id: "6639c2a9381262788fee0956",
-            nftImage: "https://goblinsuinft.web.app/assets/img/goblin5.png",
-            nftName: "Goblin",
-            nftDescription: "Goblin description",
-            title: "Auction Day 1",
-            description: "Auction Day 1 description",
-            amount: 147745543,
-            highestBidder: "0x821febff0631744c231a0f696f62b72576f2634b2ade78c74ff20f1df97fc9bf",
-        },
-    ]);
+    const [historyData, setHistoryData] = useState<AuctionDetails[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {

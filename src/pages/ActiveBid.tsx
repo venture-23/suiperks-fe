@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import "../assets/stylings/ActiveBid.scss";
-import { Auction, createBidAuctionTxb, getActiveAuctionDetails } from "../services/activeBidServices";
+import { createBidAuctionTxb, getActiveAuctionDetails } from "../services/activeBidServices";
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 
 import SUIIcon from "../assets/images/sui-sui-logo.png";
@@ -8,13 +8,13 @@ import UserIconImg from "../assets/images/usericon.png";
 import CloseIconImg from "../assets/images/crossIcon.png";
 import useCountdown from "../utils/countdownUtils";
 
-type BidItem = {
-    userImg: string;
-    username: string;
-    amount: number;
-    transactionLink?: string;
-    bidTime: string;
-};
+// type BidItem = {
+//     userImg: string;
+//     username: string;
+//     amount: number;
+//     transactionLink?: string;
+//     bidTime: string;
+// };
 
 // Todo: Update according to BE response
 type AuctionItem = {
@@ -41,7 +41,7 @@ type AuctionItem = {
 const ActiveBid = () => {
     const wallet = useWallet();
     const [inputBid, setInputBid] = useState("");
-    const [bids, setBids] = useState<BidItem[]>([]);
+    // const [bids, setBids] = useState<BidItem[]>([]);
     const [currentBid, setCurrentBid] = useState("0.00");
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");

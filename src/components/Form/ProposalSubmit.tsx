@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "react-toastify";
+import { createProposal, createProposalTxb } from "../../services/proposalServices";
+import { useWallet } from "@suiet/wallet-kit";
+import { useAppContext } from "../../context/AppContext";
 
 const ProposalForm: React.FC = () => {
+    const wallet = useWallet();
+    const { userOwnedNFTs } = useAppContext();
+
     const initialInput = `# Title of your proposal
 ## **TLDR** 
 Enter a brief summary of your proposal here. This should provide a concise overview of what your proposal entails.
@@ -25,17 +31,30 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
 
         const lines = markdownInput.split("\n");
 
-        let title = lines[0].trim();
-        let details = lines.slice(1).join("\n").trim();
+        const title = lines[0].trim();
+        const details = lines.slice(1).join("\n").trim();
 
         console.log("Title:", title);
         console.log("Details:", details);
 
-        toast.success("Proposal submitted successfully");
+        const res = await createProposal(title, details);
+        if (res?.hash) {
+            console.log("Hash", res.hash);
+            const txb = createProposalTxb(userOwnedNFTs[0].nftId, res.hash, 1000000000); // temp: Seeking amount 1000000000
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                console.log("Bid auction digest:", txnResponse?.digest);
+                toast.success("Proposal submitted successfully");
 
-        setTimeout(() => {
-            window.location.href = "/proposals";
-        }, 1000);
+                setTimeout(() => {
+                    window.location.href = "/proposals";
+                }, 1000);
+            }
+        }
     };
 
     return (

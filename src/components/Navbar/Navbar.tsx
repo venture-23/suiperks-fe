@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import "./Navbar.scss";
@@ -11,11 +11,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const wallet = useWallet();
-    const { treasuryBalance, updateTreasuryBalance } = useAppContext();
-
-    useEffect(() => {
-        updateTreasuryBalance();
-    }, [updateTreasuryBalance]);
+    const { treasuryBalance } = useAppContext();
 
     const formatBalance = (balance: number | undefined): string => {
         if (typeof balance !== "number") {
