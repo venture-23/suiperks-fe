@@ -3,10 +3,11 @@ import axios, { AxiosResponse } from "axios";
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL as string;
 
 export interface UserOwnedNFT {
-    _id?: string;
     nftImage: string;
     nftName: string;
     nftDescription: string;
+    nftId: string;
+    nftOwner: string;
 }
 
 interface OwnedNFTRes {
