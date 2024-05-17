@@ -284,7 +284,7 @@ const CreateEventPage = () => {
                     </div>
                 </div>
             </div>
-            <QueueTable proposals={null} />
+            <QueueTable />
         </div>
     );
 };

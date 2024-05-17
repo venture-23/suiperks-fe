@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Proposal, Status, fetchAllProposals } from "../../services/proposalServices";
 
 interface QueueTableProps {
-    proposals: Proposal[] | null;
+    proposals?: Proposal[] | null;
     onQueueClick?: (_id: string, updatedProposals: Proposal[]) => void;
     onExecuteClick?: (_id: string) => void;
 }
 
-const QueueTable: React.FC<QueueTableProps> = ({ proposals = null, onQueueClick, onExecuteClick }) => {
-    const [updatedProposals, setUpdatedProposals] = useState<Proposal[]>(proposals || []);
-    const [loading, setLoading] = useState(false);
+const QueueTable: React.FC<QueueTableProps> = ({ onQueueClick, onExecuteClick }) => {
+    const [updatedProposals, setUpdatedProposals] = useState<Proposal[]>([]);
 
     const handleQueueClick = (_id: string) => {
         console.log(`Proposal ${_id} queued`);
@@ -36,7 +35,6 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals = null, onQueueClick,
     };
 
     const fetchAllProposalsData = async () => {
-        setLoading(true);
         try {
             const allProposals = await fetchAllProposals();
             if (allProposals) {
@@ -46,8 +44,6 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals = null, onQueueClick,
             }
         } catch (error) {
             console.error("Error fetching all proposals:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -73,7 +69,7 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals = null, onQueueClick,
                             </td>
                             <td className="border border-black p-2 text-center">{proposal.status}</td>
                             <td className="border border-black p-2 text-center">
-                                {proposal.status === "Waiting" && (
+                                {proposal.status === Status.WAITING && (
                                     <button
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                         onClick={() => handleQueueClick(proposal._id)}
@@ -81,7 +77,7 @@ const QueueTable: React.FC<QueueTableProps> = ({ proposals = null, onQueueClick,
                                         Queue
                                     </button>
                                 )}
-                                {proposal.status === "Queue" && (
+                                {proposal.status === Status.QUEUE && (
                                     <button
                                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                         onClick={() => handleExecuteClick(proposal._id)}
