@@ -104,6 +104,26 @@ const ActiveBid = () => {
         }
     };
 
+    const fetchAuctionDetails = async () => {
+        try {
+            const auctionData = await getActiveAuctionDetails();
+            if (auctionData) {
+                setAuctionItemDetails(auctionData);
+                setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
+
+                if (auctionData.amount === 0) {
+                    setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
+                } else {
+                    setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                }
+            } else {
+                console.log("no auction data");
+            }
+        } catch (error) {
+            console.error("Error fetching auction details:", error);
+        }
+    };
+
     const handleSubmit = async () => {
         const amount = Number(inputBid) * 10 ** 9;
         const input = Number(inputBid);
@@ -129,6 +149,7 @@ const ActiveBid = () => {
                     console.log("Bid auction digest:", txnResponse?.digest);
                     setInputBid("");
                     setErrorMessage("");
+                    fetchAuctionDetails();
                 }
             } catch (error) {
                 console.error("Error placing bid:", error);
@@ -168,42 +189,7 @@ const ActiveBid = () => {
         };
     }, []);
 
-    // useEffect(() => {
-    //     const highestBid = bids.reduce(
-    //         (maxBid, bid) => (parseFloat(bid.amount.toString()) > maxBid ? parseFloat(bid.amount.toString()) : maxBid),
-    //         0
-    //     );
-    //     setCurrentBid(highestBid.toFixed(2));
-
-    //     const sortedBids = [...bids].sort((a, b) => parseFloat(b.amount.toString()) - parseFloat(a.amount.toString()));
-    //     setBids(sortedBids);
-
-    //     const currentDate = new Date();
-    //     const endDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-    //     setEndDate(endDate);
-    // }, []);
-
     useEffect(() => {
-        const fetchAuctionDetails = async () => {
-            try {
-                const auctionData = await getActiveAuctionDetails();
-                if (auctionData) {
-                    setAuctionItemDetails(auctionData);
-                    setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
-
-                    if (auctionData.amount === 0) {
-                        setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
-                    } else {
-                        setCurrentBid((auctionData.amount * 10 ** -9).toString());
-                    }
-                } else {
-                    console.log("no auction data");
-                }
-            } catch (error) {
-                console.error("Error fetching auction details:", error);
-            }
-        };
-
         fetchAuctionDetails();
     }, []);
 
@@ -258,7 +244,7 @@ const ActiveBid = () => {
                         type="text"
                         value={inputBid}
                         onChange={handleInputChange}
-                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(2)} or more`}
+                        placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(4)} or more`}
                         className="input-field"
                     />
                     <button
