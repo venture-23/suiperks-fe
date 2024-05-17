@@ -7,7 +7,7 @@ import { useAppContext } from "../../context/AppContext";
 
 const ProposalForm: React.FC = () => {
     const wallet = useWallet();
-    const { userOwnedNFTs } = useAppContext();
+    const { activeNFT } = useAppContext();
 
     const initialInput = `# Title of your proposal
 ## **TLDR** 
@@ -49,7 +49,10 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
             const res = await createProposal(title, details);
             if (res?.hash) {
                 console.log("Hash", res.hash);
-                const txb = createProposalTxb(userOwnedNFTs[0].nftId, res.hash, seekAmount);
+                if (!activeNFT) {
+                    throw new Error("No active nft");
+                }
+                const txb = createProposalTxb(activeNFT.nftId, res.hash, seekAmount);
                 const txnResponse = await wallet.signAndExecuteTransactionBlock({
                     // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                     transactionBlock: txb,
