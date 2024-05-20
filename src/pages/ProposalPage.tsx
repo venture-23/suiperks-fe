@@ -21,11 +21,11 @@ const ProposalPage = () => {
             case Status.WAITING:
                 return "#6c757d";
             case Status.EXECUTED:
-                return "blue";
+                return "#0d6efd";
             case Status.INITIAL:
-                return "#5d2510";
+                return "#9370DB";
             default:
-                return "#806044";
+                return "#d36ba6";
         }
     };
 
