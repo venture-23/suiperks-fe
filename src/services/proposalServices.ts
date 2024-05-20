@@ -13,6 +13,7 @@ export enum Status {
     FAILED = "Failed",
     QUEUE = "Queue",
     EXECUTED = "Executed",
+    INITIAL = "Initial"
 }
 
 export interface Proposal {
@@ -175,7 +176,6 @@ export const castVoteTxb = (userNFTId: string, proposalId: string, voteValue: bo
                 txb.pure.bool(voteValue), // yes or no vote
             ],
         });
-
         return txb;
     } catch (err) {
         console.log(err);
