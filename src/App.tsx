@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
 import ProposalPage from "./pages/ProposalPage";
-import CreateAuctionPage from "./pages/CreateAuction";
+import AdminPage from "./pages/AdminPage";
 import UserDashboard from "./pages/UserDashboard";
 import ProposalForm from "./components/Form/ProposalSubmit";
 import AuctionHistoryPage from "./pages/AuctionHistoryPage";
@@ -20,7 +20,7 @@ function App() {
                 <div className="pt-[80px] w-full flex flex-1">
                     <Routes>
                         <Route path="/proposals" element={<ProposalPage />} />
-                        <Route path="/admin" element={<CreateAuctionPage />} />
+                        <Route path="/admin" element={<AdminPage />} />
                         <Route path="/user-dashboard" element={<UserDashboard />} />
                         <Route path="/proposal-submit" element={<ProposalForm />} />
                         <Route path="/history" element={<AuctionHistoryPage />} />
