@@ -8,6 +8,8 @@ interface AppContextType {
     updatedUserOwnedNFTs: (nfts: UserOwnedNFT[]) => void;
     treasuryBalance: number | undefined;
     updateTreasuryBalance: () => void;
+    activeNFT: UserOwnedNFT | null;
+    updateActiveNFT: (nftDetails: UserOwnedNFT) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -19,6 +21,7 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const wallet = useWallet();
     const [userOwnedNFTs, setUserOwnedNFTs] = useState<UserOwnedNFT[]>([]);
+    const [activeNFT, setActiveNFT] = useState<UserOwnedNFT | null>(null);
     const [treasuryBalance, setTreasuryBalance] = useState<number | undefined>(undefined);
 
     const updatedUserOwnedNFTs = (nfts: UserOwnedNFT[]) => {
@@ -35,17 +38,28 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     };
 
+    const updateActiveNFT = (nftDetails: UserOwnedNFT | null) => {
+        setActiveNFT(nftDetails);
+    };
+
     const contextValue: AppContextType = {
         userOwnedNFTs,
         updatedUserOwnedNFTs,
         treasuryBalance,
         updateTreasuryBalance,
+        activeNFT,
+        updateActiveNFT,
     };
 
     useEffect(() => {
         const updateOwnedNFTs = async (walletAddress: string) => {
             const nfts = await fetchUserOwnedNFTs(walletAddress);
             setUserOwnedNFTs(nfts);
+            if (nfts.length > 0) {
+                updateActiveNFT(nfts[0]);
+            } else {
+                updateActiveNFT(null);
+            }
         };
 
         if (wallet?.address) {

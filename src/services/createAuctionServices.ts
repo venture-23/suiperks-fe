@@ -36,10 +36,13 @@ export const createAuction = async (body: createAuctionReqBody) => {
                 "Content-Type": "application/json",
             },
         });
-        return response.data;
+
+        if (response.status === 200) {
+            return true;
+        }
     } catch (err) {
         console.error("Error creating auction:", err);
-        return null;
+        return err;
     }
 };
 
@@ -57,9 +60,12 @@ export const settleAuction = async (body: settleAuctionReqBody) => {
                 "Content-Type": "application/json",
             },
         });
-        return response.data;
+
+        if (response.status === 200) {
+            return true;
+        }
     } catch (err) {
         console.error("Error settling auction:", err);
-        return null;
+        return err;
     }
 };

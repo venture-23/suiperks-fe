@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createAuction, settleAuction } from "../services/createAuctionServices";
 import QueueTable from "../components/Admin/QueueTable";
 
-const CreateEventPage = () => {
+const AdminPage = () => {
     const [loading, setLoading] = useState(false);
     const [createSuccess, setCreateSuccess] = useState(false);
     const [settleSuccess, setSettleSuccess] = useState(false);
@@ -284,9 +284,10 @@ const CreateEventPage = () => {
                     </div>
                 </div>
             </div>
+
             <QueueTable />
         </div>
     );
 };
 
-export default CreateEventPage;
+export default AdminPage;

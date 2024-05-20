@@ -1,22 +1,59 @@
 import { useWallet } from "@suiet/wallet-kit";
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { fetchProposalDetails, Proposal, Status } from "../services/proposalServices";
+import {
+    castVoteTxb,
+    changeVoteTxb,
+    fetchProposalDetails,
+    Proposal,
+    revokeVoteTxb,
+    Status,
+} from "../services/proposalServices";
+import { useAppContext } from "../context/AppContext";
+
+// Todo: Update Testnet value
+const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
 
 const VotePage = () => {
     const { proposalId } = useParams<{ proposalId?: string }>() ?? { proposalId: "" };
-    const [proposal, setProposal] = useState<Proposal | null>(null);
+    const [proposal, setProposal] = useState<Proposal>({
+        _id: "",
+        title: "",
+        details: "",
+        forVotes: 0,
+        againstVotes: 0,
+        refrainVotes: 0,
+        eta: 0,
+        actionDelay: 0,
+        hash: "",
+        seekAmount: 0,
+        executable: false,
+        status: Status.WAITING,
+        forVoterList: [],
+        againstVoterList: [],
+        createdAt: "",
+        __v: 0,
+        endTime: "",
+        objectId: "",
+        proposer: "",
+        quorumVotes: 0,
+        startTime: "",
+        votingQuorumRate: 0,
+    });
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
     const wallet = useWallet();
+    const { activeNFT } = useAppContext();
+    const votedNFTList = useMemo(() => {
+        const forVoters = proposal.forVoterList.map((item) => item.nftId);
+        const againstVoters = proposal.againstVoterList.map((item) => item.nftId);
+        return [...forVoters, ...againstVoters];
+    }, [proposal.forVoterList, proposal.againstVoterList]);
+    const nftHasVoted = votedNFTList.includes(activeNFT?.nftId);
 
     const initializeVotes = (proposal: Proposal) => {
-        setVotes({ for: proposal.forVotes, against: proposal.againstVotes, abstain: 0 });
+        setVotes({ for: proposal.forVotes, against: proposal.againstVotes, abstain: proposal.refrainVotes });
     };
-
-    if (!proposal) {
-        return <div>Loading...</div>;
-    }
 
     const getStatusColor = (status: Status) => {
         switch (status) {
@@ -35,16 +72,69 @@ const VotePage = () => {
         }
     };
 
-    const handleVote = () => {
-        console.log("vote");
+    const handleVote = async (vote: boolean) => {
+        try {
+            if (!activeNFT) {
+                throw new Error("No active nft");
+            }
+            const txb = castVoteTxb(activeNFT.nftId, proposal.objectId, vote);
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                console.log("Voting digest:", txnResponse?.digest);
+            }
+        } catch (error) {
+            console.error("Error casting vote:", error);
+        }
+    };
+
+    const handleChangeVote = async () => {
+        try {
+            if (!activeNFT) {
+                throw new Error("No active nft");
+            }
+            const txb = changeVoteTxb(activeNFT.nftId, proposal.objectId);
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                console.log("Voting Change digest:", txnResponse?.digest);
+            }
+        } catch (error) {
+            console.error("Error changing vote:", error);
+        }
+    };
+
+    const handleRevokeVote = async () => {
+        try {
+            if (!activeNFT) {
+                throw new Error("No active nft");
+            }
+            const txb = revokeVoteTxb(activeNFT.nftId, proposal.objectId);
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                console.log("Voting digest:", txnResponse?.digest);
+            }
+        } catch (error) {
+            console.error("Error casting vote:", error);
+        }
     };
 
     useEffect(() => {
         const fetchProposal = async () => {
             if (proposalId) {
                 const proposalDetails = await fetchProposalDetails(proposalId);
-                setProposal(proposalDetails);
                 if (proposalDetails) {
+                    setProposal(proposalDetails);
                     initializeVotes(proposalDetails);
                 }
             }
@@ -54,7 +144,7 @@ const VotePage = () => {
 
     return (
         <>
-            <div className="proposal-page w-full md:mx-40 my-10 mx-4">
+            <div className="proposal-page w-full max-w-[1200px] mx-auto p-4 py-10">
                 {/* <div className="flex items-center gap-6 mb-3">
                     <div className="name text-gray-500 md:text-xl text-lg">Proposal {proposal._id}</div>
                     <div
@@ -65,39 +155,99 @@ const VotePage = () => {
                     </div>
                 </div> */}
 
-                <div className="flex items-center justify-between border-b border-gray-500 mb-4 pb-4">
-                    <div className="name md:text-4xl text-2xl">{proposal.title.replace(/^#\s*/, "")}</div>
-                    <div
-                        className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
-                        style={{ backgroundColor: getStatusColor(proposal.status), borderRadius: "4px" }}
-                    >
-                        {proposal.status}
+                <div className="flex items-center justify-between border-b border-gray-500 mb-4">
+                    <div className="flex items-center gap-2">
+                        <div className="name md:text-4xl text-2xl">{proposal.title.replace(/^#\s*/, "")}</div>
+                        <div
+                            className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
+                            style={{ backgroundColor: getStatusColor(proposal.status), borderRadius: "4px" }}
+                        >
+                            {proposal?.status}
+                        </div>
                     </div>
 
-                    {proposal.status === Status.ACTIVE && (
+                    {proposal?.status === Status.ACTIVE && (
                         <div className="my-4 flex justify-between py-4">
                             <div>
                                 {wallet.connected ? (
-                                    <button
-                                        onClick={handleVote}
-                                        className="proposal-button px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
-                                    >
-                                        Vote
-                                    </button>
+                                    <>
+                                        {!nftHasVoted ? (
+                                            <>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => handleVote(true)}
+                                                        className="proposal-button px-4 py-4 bg-green-600 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        In favor
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleVote(false)}
+                                                        className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        Oppose
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => handleChangeVote()}
+                                                        className="proposal-button px-4 py-4 bg-yellow-500 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        Change Vote
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => handleRevokeVote()}
+                                                        className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
+                                                    >
+                                                        Refrain Vote
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </>
                                 ) : (
                                     <div className="flex items-center gap-10">
                                         <p>Connect wallet to vote</p>
-                                        <button
-                                            disabled
-                                            className="proposal-button px-4 py-4 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed"
-                                        >
-                                            Vote
-                                        </button>
                                     </div>
                                 )}
                             </div>
                         </div>
                     )}
+                </div>
+
+                <div className="flex gap-4">
+                    <div>
+                        <Link to={`${SUI_EXPLORER_URL}/object/${proposal.objectId}`} target="_blank">
+                            {proposal?.objectId ? (
+                                <>
+                                    Proposal Id:{" "}
+                                    <span className="underline">
+                                        {proposal.objectId.slice(0, 6)}...{proposal.objectId.slice(-6)}
+                                    </span>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                        </Link>
+                    </div>
+
+                    <div>
+                        <Link to={`${SUI_EXPLORER_URL}/account/${proposal.proposer}`} target="_blank">
+                            {proposal?.proposer ? (
+                                <>
+                                    Proposed By:{" "}
+                                    <span className="underline">
+                                        {proposal.proposer.slice(0, 6)}...{proposal.proposer.slice(-6)}
+                                    </span>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="flex md:flex-row flex-col gap-10">
@@ -138,9 +288,9 @@ const VotePage = () => {
                                 </div>
                             </div>
                             <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
-                                <p className="text-gray-700  name  text-lg font-semibold">
+                                <div className="text-gray-700  name  text-lg font-semibold">
                                     <p> {proposal.status === Status.ACTIVE ? "Ends On" : "Ended"}</p>
-                                </p>
+                                </div>
                                 <div className="flex flex-col justify-end">
                                     <p className="text-xs font-bold">{proposal.endTime}</p>
                                 </div>

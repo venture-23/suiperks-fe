@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import "./Navbar.scss";
 import { useAppContext } from "../../context/AppContext";
+import ActiveNFTDropDown from "../ActiveNFTDropDown";
 
 import MenuImg from "../../assets/images/menu.png";
 import CloseImg from "../../assets/images/crossIcon.png";
@@ -61,11 +62,11 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                    <div className="right-section">
-                        <div className="bg-gray-200 px-4 py-2 rounded-lg">
-                            <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
-                        </div>
+                    <div className="flex items-center bg-gray-200 px-4 py-2 rounded-lg">
+                        <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
+                    </div>
 
+                    <div className="right-section">
                         {wallet.connected && (
                             <NavLink
                                 to="/user-dashboard"
@@ -74,6 +75,8 @@ const Navbar = () => {
                                 Dashboard
                             </NavLink>
                         )}
+
+                        <ActiveNFTDropDown />
 
                         <ConnectButton>Connect Wallet</ConnectButton>
                     </div>

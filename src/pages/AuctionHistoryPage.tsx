@@ -36,7 +36,11 @@ const AuctionHistoryPage = () => {
                         historyData.map((auctionData) => (
                             <div className="auction-item flex bg-[rgba(255,255,255,0.4)] rounded-md gap-4 p-4 overflow-auto">
                                 <div className="w-[100px] h-[100px] flex-shrink-0">
-                                    <img src={auctionData.nftImage} alt={auctionData.title} className="w-full h-full" />
+                                    <img
+                                        src={auctionData.nftImage}
+                                        alt={auctionData.title}
+                                        className="w-full h-full object-contain bg-[rgba(255,255,255,0.5)] rounded-lg"
+                                    />
                                 </div>
 
                                 <div>

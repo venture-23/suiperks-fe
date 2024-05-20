@@ -213,11 +213,11 @@ const ActiveBid = () => {
                 </div>
             ) : hasActiveAuction ? (
                 <>
-                    <div className="image flex justify-center mb-6 md:mb-0">
+                    <div className="image flex justify-center w-[400px] h-[400px] bg-[rgba(255,255,255,0.5)] rounded-xl p-1">
                         <img
                             src={auctionItemDetails.nftImage}
                             alt="Auction Image"
-                            className="md:h-auto md:w-2/3 h-2/5 w-2/5"
+                            className="w-full h-full object-contain"
                         />
                     </div>
                     <div className="details">
@@ -242,7 +242,7 @@ const ActiveBid = () => {
                                 <h2 className="md:text-lg text-base text-gray-500 font-bold mb-2">Current Bid</h2>
                                 <h3 className="md:text-3xl text-2xl font-bold flex items-center gap-2">
                                     <img src={SUIIcon} className="w-5 h-5" />
-                                    {currentBid}
+                                    {parseFloat(currentBid).toFixed(5)}
                                 </h3>
                             </div>
                             <div
@@ -300,7 +300,7 @@ const ActiveBid = () => {
                                             </span>
                                             <span className="font-bold flex items-center gap-2 justify-end">
                                                 <img src={SUIIcon} className="w-3 h-3" />
-                                                {(fund.balance * 10 ** -9).toString()}
+                                                {parseFloat((fund.balance * 10 ** -9).toString()).toFixed(5)}
                                             </span>
                                         </li>
                                     ))}
@@ -347,7 +347,9 @@ const ActiveBid = () => {
                                                             </span>
                                                             <span className="font-bold flex items-center gap-2 justify-end">
                                                                 <img src={SUIIcon} className="md:w-3 w-2 md:h-3 h-2" />
-                                                                {(fund.balance * 10 ** -9).toString()}
+                                                                {parseFloat(
+                                                                    (fund.balance * 10 ** -9).toString()
+                                                                ).toFixed(5)}
                                                             </span>
                                                         </li>
                                                     ))}
