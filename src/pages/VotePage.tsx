@@ -11,6 +11,7 @@ import {
     Status,
 } from "../services/proposalServices";
 import { useAppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
 
 // Todo: Update Testnet value
 const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
@@ -75,6 +76,16 @@ const VotePage = () => {
         }
     };
 
+    const fetchProposal = async () => {
+        if (proposalId) {
+            const proposalDetails = await fetchProposalDetails(proposalId);
+            if (proposalDetails) {
+                setProposal(proposalDetails);
+                initializeVotes(proposalDetails);
+            }
+        }
+    };
+
     const handleVote = async (vote: boolean) => {
         try {
             if (!activeNFT) {
@@ -88,6 +99,10 @@ const VotePage = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Voting digest:", txnResponse?.digest);
+                toast.success("Vote submitted successfully");
+                setTimeout(() => {
+                    fetchProposal();
+                }, 5000);
             }
         } catch (error) {
             console.error("Error casting vote:", error);
@@ -107,6 +122,9 @@ const VotePage = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Voting Change digest:", txnResponse?.digest);
+                setTimeout(() => {
+                    fetchProposal();
+                }, 5000);
             }
         } catch (error) {
             console.error("Error changing vote:", error);
@@ -126,6 +144,9 @@ const VotePage = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Voting digest:", txnResponse?.digest);
+                setTimeout(() => {
+                    fetchProposal();
+                }, 5000);
             }
         } catch (error) {
             console.error("Error casting vote:", error);
@@ -133,15 +154,6 @@ const VotePage = () => {
     };
 
     useEffect(() => {
-        const fetchProposal = async () => {
-            if (proposalId) {
-                const proposalDetails = await fetchProposalDetails(proposalId);
-                if (proposalDetails) {
-                    setProposal(proposalDetails);
-                    initializeVotes(proposalDetails);
-                }
-            }
-        };
         fetchProposal();
     }, [proposalId]);
 
