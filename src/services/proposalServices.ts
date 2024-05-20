@@ -39,6 +39,7 @@ export interface Proposal {
     quorumVotes: number;
     startTime: string;
     votingQuorumRate: number;
+    executedHash: string;
 }
 
 export interface ProposalCreate {
