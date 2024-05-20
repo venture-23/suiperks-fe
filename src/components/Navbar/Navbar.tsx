@@ -117,8 +117,8 @@ const Navbar = () => {
                                         onClick={toggleUserDropdown}
                                     />
                                     {userDropdownOpen && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-                                            <div className="flex justify-around font-bold">
+                                        <div className="absolute right-0 mt-4 w-48 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+                                            <div className="flex justify-around font-bold py-3 border-b border-gray-800">
                                                 <div>
                                                     {wallet.address
                                                         ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
@@ -132,7 +132,13 @@ const Navbar = () => {
                                                 </div>
                                             </div>
 
-                                            <div>Balance: {formatWalletBalance(walletBalance)} SUI</div>
+                                            <div className="py-3 text-center font-normal text-base border-b border-gray-800">
+                                                Balance&nbsp;
+                                                <span className="font-bold text-lg">
+                                                    {formatWalletBalance(walletBalance)} SUI
+                                                </span>
+                                            </div>
+                                            <div className="py-3 text-center">Disconnect</div>
                                         </div>
                                     )}
                                 </div>
