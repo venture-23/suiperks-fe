@@ -64,7 +64,7 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
 
                     setTimeout(() => {
                         window.location.href = "/proposals";
-                    }, 1000);
+                    }, 5000);
                 }
             }
         } catch (err) {
