@@ -151,7 +151,9 @@ const Navbar = () => {
                                 </div>
                             </>
                         ) : (
-                            <ConnectButton>Connect Wallet</ConnectButton>
+                            <div className="rounded-md border-2 border-gray-400">
+                                <ConnectButton>Connect Wallet</ConnectButton>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -168,64 +170,11 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center gap-3 pr-4">
-                        {wallet.connected ? (
-                            <div className="relative">
-                                <img
-                                    src={UserImg}
-                                    className="w-[30px] h-[30px] cursor-pointer"
-                                    onClick={toggleUserDropdown}
-                                />
-                                {userDropdownOpen && (
-                                    <div className="absolute text-black right-0 mt-4 w-48 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-                                        <div className="flex justify-around font-bold py-3 border-b border-gray-800">
-                                            <div>
-                                                {wallet.address
-                                                    ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
-                                                    : "Address not available"}
-                                            </div>
-                                            <div
-                                                onClick={() => wallet.address && copyToClipboard(wallet.address)}
-                                                title={copyTooltip}
-                                            >
-                                                <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
-                                            </div>
-                                        </div>
-
-                                        <div className="py-3 text-center font-normal text-base border-b border-gray-800">
-                                            Balance&nbsp;
-                                            <span className="font-bold text-lg">
-                                                {formatWalletBalance(walletBalance)} SUI
-                                            </span>
-                                        </div>
-                                        <div className="py-3 text-center cursor-pointer" onClick={handleDisconnect}>
-                                            Disconnect
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                        {menuOpen ? (
+                            <img src={CloseImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
                         ) : (
-                            <div className="relative">
-                                <img
-                                    src={UserImg}
-                                    className="w-[30px] h-[30px] cursor-pointer"
-                                    onClick={toggleUserDropdown}
-                                />
-                                {userDropdownOpen && (
-                                    <div className="absolute right-0 mt-4 bg-white border border-gray-300 rounded-lg shadow-lg p-2">
-                                        <div>
-                                            <ConnectButton>Connect Wallet </ConnectButton>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            <img src={MenuImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
                         )}
-                        <div>
-                            {menuOpen ? (
-                                <img src={CloseImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
-                            ) : (
-                                <img src={MenuImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
-                            )}
-                        </div>
                     </div>
 
                     {menuOpen && <div className="overlay" onClick={toggleMenu}></div>}
@@ -244,7 +193,7 @@ const Navbar = () => {
                                 <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
                             </div>
 
-                            {wallet.connected && (
+                            {wallet.connected ? (
                                 <>
                                     <div onClick={() => mobileNavigate("/user-dashboard")}>
                                         <div className="mobile-nav-link">Dashboard</div>
@@ -253,7 +202,33 @@ const Navbar = () => {
                                     <div className="text-black py-3">
                                         <ActiveNFTDropDown />
                                     </div>
+                                    <div className="flex justify-around font-bold py-3 text-black">
+                                        <div>
+                                            {wallet.address
+                                                ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
+                                                : "Address not available"}
+                                        </div>
+                                        <div
+                                            onClick={() => wallet.address && copyToClipboard(wallet.address)}
+                                            title={copyTooltip}
+                                        >
+                                            <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
+                                        </div>
+                                    </div>
+                                    <div className="py-3  text-black">
+                                        Balance&nbsp;
+                                        <span className="font-bold text-lg">
+                                            {formatWalletBalance(walletBalance)} SUI
+                                        </span>
+                                    </div>
+                                    <div className="py-3  cursor-pointer text-black" onClick={handleDisconnect}>
+                                        Disconnect
+                                    </div>
                                 </>
+                            ) : (
+                                <div className="py-3  text-black">
+                                    <ConnectButton>Connect Wallet</ConnectButton>
+                                </div>
                             )}
                         </div>
                     )}
