@@ -5,8 +5,9 @@
 
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    background: #e7d8d8;
-    /* background: rgb(111, 188, 240, 0.3); */
+    /* background: #e7d8d8; */
+    background: rgb(228, 218, 218);
+    background: radial-gradient(circle, rgba(228, 218, 218, 1) 0%, rgba(255, 255, 255, 1) 70%);
 }
 
 html,

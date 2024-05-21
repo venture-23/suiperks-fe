@@ -10,7 +10,7 @@ const ActiveNFTDropDown = () => {
 
     return (
         <div className="nft-drop-down group relative w-[200px]">
-            <div className="bg-[#e5e7eb] px-4 py-2 rounded-lg font-semibold cursor-pointer h-[48px] flex justify-center items-center">
+            <div className="bg-[rgba(235,235,235,0.8)] px-4 py-2 rounded-lg font-semibold cursor-pointer h-[48px] flex justify-center items-center">
                 {activeNFT ? (
                     <div>
                         <div className="flex items-center gap-2">
@@ -35,7 +35,7 @@ const ActiveNFTDropDown = () => {
             </div>
 
             <div className="pt-2 hidden group-hover:block absolute right-0">
-                <div className="bg-[#e5e7eb] rounded-lg px-2 py-2">
+                <div className="bg-[rgba(235,235,235,0.8)] rounded-lg px-2 py-2">
                     <div className="text-xs text-gray-500">Select your active NFT</div>
 
                     <div className="flex flex-col gap-2">
