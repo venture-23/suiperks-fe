@@ -299,8 +299,8 @@ const VotePage = () => {
                                 <h3 className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">
                                     Voters List
                                 </h3>
-                                <div className="flex gap-14">
-                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 w-1/3">
+                                <div className="flex flex-col md:flex-row md:gap-14">
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">In Favor</h4>
                                         {proposal.forVotes !== 0 ? (
                                             <ul>
@@ -338,7 +338,7 @@ const VotePage = () => {
                                         )}
                                     </div>
 
-                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 w-1/3">
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">Against</h4>
                                         {proposal.againstVotes !== 0 ? (
                                             <ul>
@@ -375,7 +375,7 @@ const VotePage = () => {
                                             </button>
                                         )}
                                     </div>
-                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 w-1/3">
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">Refrain</h4>
                                         {proposal.refrainVotes !== 0 ? (
                                             <ul className="list-none list-inside">
