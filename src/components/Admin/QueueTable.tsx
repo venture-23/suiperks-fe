@@ -1,36 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { Proposal, Status, fetchAllProposals } from "../../services/proposalServices";
+import { useEffect, useState } from "react";
+import {
+    Proposal,
+    Status,
+    executeProposalTxb,
+    fetchAllProposals,
+    queueProposalTxb,
+} from "../../services/proposalServices";
+import { useWallet } from "@suiet/wallet-kit";
+import { toast } from "react-toastify";
 
-interface QueueTableProps {
-    proposals?: Proposal[] | null;
-    onQueueClick?: (_id: string, updatedProposals: Proposal[]) => void;
-    onExecuteClick?: (_id: string) => void;
-}
-
-const QueueTable: React.FC<QueueTableProps> = ({ onQueueClick, onExecuteClick }) => {
+const QueueTable = () => {
     const [updatedProposals, setUpdatedProposals] = useState<Proposal[]>([]);
+    const wallet = useWallet();
 
-    const handleQueueClick = (_id: string) => {
-        console.log(`Proposal ${_id} queued`);
-        const updatedProposal = updatedProposals.find((proposal) => proposal._id === _id);
-        if (updatedProposal) {
-            updatedProposal.status = Status.QUEUE;
-            setUpdatedProposals([...updatedProposals]);
-            if (onQueueClick) {
-                onQueueClick(_id, updatedProposals);
+    const handleQueueClick = async (proposalId: string) => {
+        try {
+            console.log(`Proposal ${proposalId} queued`);
+
+            const txb = queueProposalTxb(proposalId);
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("Queue txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                console.log("Queue digest:", txnResponse?.digest);
+                toast.success("Proposal queued successfully");
+
+                const updatedProposal = updatedProposals.find((proposal) => proposal.objectId === proposalId);
+                if (updatedProposal) {
+                    updatedProposal.status = Status.QUEUE;
+                    setUpdatedProposals([...updatedProposals]);
+                }
             }
+        } catch (err) {
+            console.log("Settle failed.", err);
+            toast.error("Proposal queue failed");
+
+            // Add queue failed API call here.
         }
     };
 
-    const handleExecuteClick = (_id: string) => {
-        console.log(`Proposal ${_id} executed`);
-        const updatedProposal = updatedProposals.find((proposal) => proposal._id === _id);
-        if (updatedProposal) {
-            updatedProposal.status = Status.ACTIVE;
-            setUpdatedProposals([...updatedProposals]);
-            if (onExecuteClick) {
-                onExecuteClick(_id);
+    const handleExecuteClick = async (proposalId: string) => {
+        try {
+            console.log(`Proposal ${proposalId} queued`);
+
+            const txb = executeProposalTxb(proposalId);
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("Execute txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                console.log("Queue digest:", txnResponse?.digest);
+                toast.success("Proposal executed successfully");
+
+                const updatedProposal = updatedProposals.find((proposal) => proposal.objectId === proposalId);
+                if (updatedProposal) {
+                    updatedProposal.status = Status.ACTIVE;
+                    setUpdatedProposals([...updatedProposals]);
+                }
             }
+        } catch (err) {
+            console.log("Execute failed.", err);
+            toast.error("Proposal execution failed");
         }
     };
 
@@ -72,7 +105,7 @@ const QueueTable: React.FC<QueueTableProps> = ({ onQueueClick, onExecuteClick })
                                 {proposal.status === Status.WAITING && (
                                     <button
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                        onClick={() => handleQueueClick(proposal._id)}
+                                        onClick={() => handleQueueClick(proposal.objectId)}
                                     >
                                         Queue
                                     </button>
@@ -80,7 +113,7 @@ const QueueTable: React.FC<QueueTableProps> = ({ onQueueClick, onExecuteClick })
                                 {proposal.status === Status.QUEUE && (
                                     <button
                                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                        onClick={() => handleExecuteClick(proposal._id)}
+                                        onClick={() => handleExecuteClick(proposal.objectId)}
                                     >
                                         Execute
                                     </button>
