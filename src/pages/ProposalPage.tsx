@@ -20,8 +20,12 @@ const ProposalPage = () => {
                 return "#8c8d92";
             case Status.WAITING:
                 return "#6c757d";
+            case Status.EXECUTED:
+                return "#0d6efd";
+            case Status.INITIAL:
+                return "#9370DB";
             default:
-                return "white";
+                return "#d36ba6";
         }
     };
 
@@ -36,7 +40,7 @@ const ProposalPage = () => {
     }, []);
 
     return (
-        <div className="proposals-page w-full max-w-[1200px] mx-auto p-4 py-10">
+        <div className="proposals-page w-full max-w-[800px] mx-auto p-4 py-10">
             <div className="name text-gray-500 md:text-2xl text-lg">Governance</div>
             <div className="name md:text-6xl text-3xl">EthenaDAO</div>
             <div className="my-4 flex md:justify-end py-4 ">
@@ -85,7 +89,7 @@ const ProposalPage = () => {
                     ) : (
                         <ul className="my-10 mx-4">
                             {proposals.map((proposal) => (
-                                <li key={proposal._id} className="single-list-container mb-3 px-6 py-2">
+                                <li key={proposal._id} className="single-list-container mb-3 px-10 py-2">
                                     <Link
                                         to={`/vote/${proposal._id}`}
                                         className="proposal-content flex justify-between items-center md:text-2xl text-lg"
