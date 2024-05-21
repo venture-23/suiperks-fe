@@ -11,6 +11,7 @@ import {
     Status,
 } from "../services/proposalServices";
 import { useAppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
 
 // Todo: Update Testnet value
 const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
@@ -40,6 +41,7 @@ const VotePage = () => {
         quorumVotes: 0,
         startTime: "",
         votingQuorumRate: 0,
+        executedHash: "",
     });
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
     const wallet = useWallet();
@@ -67,8 +69,20 @@ const VotePage = () => {
                 return "#e40536";
             case Status.WAITING:
                 return "#888888";
+            case Status.INITIAL:
+                return "#9370DB";
             default:
-                return "white";
+                return "#d36ba6";
+        }
+    };
+
+    const fetchProposal = async () => {
+        if (proposalId) {
+            const proposalDetails = await fetchProposalDetails(proposalId);
+            if (proposalDetails) {
+                setProposal(proposalDetails);
+                initializeVotes(proposalDetails);
+            }
         }
     };
 
@@ -85,6 +99,10 @@ const VotePage = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Voting digest:", txnResponse?.digest);
+                toast.success("Vote submitted successfully");
+                setTimeout(() => {
+                    fetchProposal();
+                }, 5000);
             }
         } catch (error) {
             console.error("Error casting vote:", error);
@@ -104,6 +122,9 @@ const VotePage = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Voting Change digest:", txnResponse?.digest);
+                setTimeout(() => {
+                    fetchProposal();
+                }, 5000);
             }
         } catch (error) {
             console.error("Error changing vote:", error);
@@ -123,6 +144,9 @@ const VotePage = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 console.log("Voting digest:", txnResponse?.digest);
+                setTimeout(() => {
+                    fetchProposal();
+                }, 5000);
             }
         } catch (error) {
             console.error("Error casting vote:", error);
@@ -130,15 +154,6 @@ const VotePage = () => {
     };
 
     useEffect(() => {
-        const fetchProposal = async () => {
-            if (proposalId) {
-                const proposalDetails = await fetchProposalDetails(proposalId);
-                if (proposalDetails) {
-                    setProposal(proposalDetails);
-                    initializeVotes(proposalDetails);
-                }
-            }
-        };
         fetchProposal();
     }, [proposalId]);
 
@@ -295,13 +310,22 @@ const VotePage = () => {
                                     <p className="text-xs font-bold">{proposal.endTime}</p>
                                 </div>
                             </div>
-                            {/* <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
-                                <p className="text-gray-700 name  text-lg font-semibold">Snapshot</p>
-                                <div className="flex flex-col justify-end">
-                                    <p className="text-xs">Taken at block</p>
-                                    <p className="text-base font-bold">{proposal.snapshot}</p>
+                            {proposal.status === Status.EXECUTED && proposal.executedHash && (
+                                <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
+                                    <p className="text-gray-700 name text-lg font-semibold">Proposal Executed</p>
+                                    <div className="flex flex-col justify-end">
+                                        <p className="text-xs">Digest</p>
+                                        <p className="text-base font-bold underline">
+                                            <Link
+                                                to={`${SUI_EXPLORER_URL}/tx/${proposal.executedHash}`}
+                                                target="_blank"
+                                            >
+                                                {proposal.executedHash.slice(0, 5)}...{proposal.executedHash.slice(-5)}
+                                            </Link>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div> */}
+                            )}
                         </div>
                     </div>
                 </div>

@@ -48,6 +48,7 @@ const ActiveBid = () => {
     const [showCountdown, setShowCountdown] = useState(true);
     const [minBidIncrementPercentage, setMinBidIncrementPercentage] = useState<number>(0);
     const [hasActiveAuction, setHasActiveAuction] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [auctionItemDetails, setAuctionItemDetails] = useState<AuctionItem>({
         _id: "",
@@ -107,6 +108,7 @@ const ActiveBid = () => {
 
     const fetchAuctionDetails = async () => {
         try {
+            setIsLoading(true);
             const auctionData = await getActiveAuctionDetails();
             if (auctionData) {
                 setAuctionItemDetails(auctionData);
@@ -125,6 +127,8 @@ const ActiveBid = () => {
         } catch (error) {
             console.error("Error fetching auction details:", error);
             setHasActiveAuction(false);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -202,8 +206,12 @@ const ActiveBid = () => {
     }, []);
 
     return (
-        <div className="active-bid flex md:flex-row flex-col justify-center gap-8">
-            {hasActiveAuction ? (
+        <div className="active-bid flex md:flex-row flex-col items-center justify-center">
+            {isLoading ? (
+                <div className="loading-state">
+                    <h1 className="text-2xl font-bold">Loading auction details...</h1>
+                </div>
+            ) : hasActiveAuction ? (
                 <>
                     <div className="image flex justify-center w-[400px] h-[400px] bg-[rgba(255,255,255,0.5)] rounded-xl p-1">
                         <img
