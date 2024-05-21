@@ -32,6 +32,7 @@ const VotePage = () => {
         executable: false,
         status: Status.WAITING,
         forVoterList: [],
+        refrainVoterList: [],
         againstVoterList: [],
         createdAt: "",
         __v: 0,
@@ -44,6 +45,10 @@ const VotePage = () => {
         executedHash: "",
     });
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
+    const [showAllForVoters, setShowAllForVoters] = useState(false);
+    const [showAllRefrainVoters, setShowAllRefrainVoters] = useState(false);
+    const [showAllAgainstVoters, setShowAllAgainstVoters] = useState(false);
+
     const wallet = useWallet();
     const { activeNFT } = useAppContext();
     const votedNFTList = useMemo(() => {
@@ -152,6 +157,13 @@ const VotePage = () => {
             console.error("Error casting vote:", error);
         }
     };
+    const ForVotersToDisplay = showAllForVoters ? proposal.forVoterList : proposal.forVoterList.slice(0, 4);
+    const AgainstVotersToDisplay = showAllAgainstVoters
+        ? proposal.againstVoterList
+        : proposal.againstVoterList.slice(0, 4);
+    const RefrainVotersToDisplay = showAllRefrainVoters
+        ? proposal.refrainVoterList
+        : proposal.refrainVoterList.slice(0, 4);
 
     useEffect(() => {
         fetchProposal();
@@ -266,19 +278,147 @@ const VotePage = () => {
                 </div>
 
                 <div className="flex md:flex-row flex-col gap-10">
-                    <div className="description md:w-3/4">
-                        <div className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">Description</div>
-                        <ReactMarkdown
-                            components={{
-                                h1: ({ children }) => <h1 className="name md:text-2xl text-lg">{children}</h1>,
-                                h2: ({ children }) => (
-                                    <h2 className="name md:text-xl text-base mt-4 mb-2">{children}</h2>
-                                ),
-                            }}
-                        >
-                            {proposal.details}
-                        </ReactMarkdown>
+                    <div className="md:w-3/4">
+                        <div>
+                            <div className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">
+                                Description
+                            </div>
+                            <ReactMarkdown
+                                components={{
+                                    h1: ({ children }) => <h1 className="name md:text-2xl text-lg">{children}</h1>,
+                                    h2: ({ children }) => (
+                                        <h2 className="name md:text-xl text-base mt-4 mb-2">{children}</h2>
+                                    ),
+                                }}
+                            >
+                                {proposal.details}
+                            </ReactMarkdown>
+                        </div>
+                        {(proposal.forVotes !== 0 || proposal.againstVotes !== 0 || proposal.refrainVotes !== 0) && (
+                            <div className="mt-8 border-t border-gray-500">
+                                <h3 className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">
+                                    Voters List
+                                </h3>
+                                <div className="flex gap-14">
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 w-1/3">
+                                        <h4 className="name text-lg font-semibold mb-2">In Favor</h4>
+                                        {proposal.forVotes !== 0 ? (
+                                            <ul>
+                                                {ForVotersToDisplay.map((voter, index) => (
+                                                    <Link
+                                                        to={`${SUI_EXPLORER_URL}/account/${voter.address}`}
+                                                        target="_blank"
+                                                        key={index}
+                                                    >
+                                                        <li className="py-3 underline">
+                                                            {voter.address.slice(0, 6)}...{voter.address.slice(-6)}
+                                                        </li>
+                                                    </Link>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-center pt-4">No For Votes</p>
+                                        )}
+                                        {!showAllForVoters && proposal.forVoterList.length > 4 && (
+                                            <button
+                                                className="name py-2 mt-2 font-bold text-center text-sm"
+                                                onClick={() => setShowAllForVoters(true)}
+                                            >
+                                                View All
+                                            </button>
+                                        )}
+
+                                        {showAllForVoters && (
+                                            <button
+                                                className="name py-2 mt-2 font-bold text-center text-sm"
+                                                onClick={() => setShowAllForVoters(false)}
+                                            >
+                                                View Less
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 w-1/3">
+                                        <h4 className="name text-lg font-semibold mb-2">Against</h4>
+                                        {proposal.againstVotes !== 0 ? (
+                                            <ul>
+                                                {AgainstVotersToDisplay.map((voter, index) => (
+                                                    <Link
+                                                        to={`${SUI_EXPLORER_URL}/account/${voter.address}`}
+                                                        target="_blank"
+                                                        key={index}
+                                                    >
+                                                        <li className="py-3 underline">
+                                                            {voter.address.slice(0, 6)}...{voter.address.slice(-6)}
+                                                        </li>
+                                                    </Link>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-center pt-4">No Against Votes</p>
+                                        )}
+                                        {!showAllAgainstVoters && proposal.againstVoterList.length > 4 && (
+                                            <button
+                                                className="name py-2 mt-2 font-bold text-center text-sm"
+                                                onClick={() => setShowAllAgainstVoters(true)}
+                                            >
+                                                View All
+                                            </button>
+                                        )}
+
+                                        {showAllAgainstVoters && (
+                                            <button
+                                                className="name py-2 mt-2 font-bold text-center text-sm"
+                                                onClick={() => setShowAllAgainstVoters(false)}
+                                            >
+                                                View Less
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 w-1/3">
+                                        <h4 className="name text-lg font-semibold mb-2">Refrain</h4>
+                                        {proposal.refrainVotes !== 0 ? (
+                                            <ul className="list-none list-inside">
+                                                {RefrainVotersToDisplay.map((voter, index) => (
+                                                    <Link
+                                                        to={`${SUI_EXPLORER_URL}/account/${voter.address}`}
+                                                        target="_blank"
+                                                        key={index}
+                                                    >
+                                                        <li className="py-3 underline">
+                                                            {voter.address.slice(0, 6)}...{voter.address.slice(-6)}
+                                                        </li>
+                                                    </Link>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-center pt-4">No Refrain Votes</p>
+                                        )}
+                                        <div className="flex justify-center mt-2">
+                                            {!showAllRefrainVoters && proposal.refrainVoterList.length > 4 && (
+                                                <button
+                                                    className="name py-2 mt-2 font-bold text-center text-sm"
+                                                    onClick={() => setShowAllRefrainVoters(true)}
+                                                >
+                                                    View All
+                                                </button>
+                                            )}
+
+                                            {showAllRefrainVoters && (
+                                                <button
+                                                    className="name py-2 mt-2 font-bold text-center text-sm"
+                                                    onClick={() => setShowAllRefrainVoters(false)}
+                                                >
+                                                    View Less
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
+
                     <div className="votes md:w-1/4 flex flex-col md:border-t-0 border-t border-gray-500">
                         <div className="flex flex-col justify-around">
                             <div className="text-gray-700 font-semibold lg:text-4xl text-2xl name py-4">Votes</div>
