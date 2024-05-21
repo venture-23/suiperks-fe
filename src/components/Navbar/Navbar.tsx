@@ -14,6 +14,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const wallet = useWallet();
+    const { disconnect } = wallet;
     const { treasuryBalance } = useAppContext();
     const [copyTooltip, setCopyTooltip] = useState("Copy wallet address");
     const { balance: walletBalance = 0n } = useAccountBalance();
@@ -49,6 +50,10 @@ const Navbar = () => {
     const mobileNavigate = (url: string) => {
         navigate(url);
         setMenuOpen(false);
+    };
+
+    const handleDisconnect = () => {
+        disconnect();
     };
 
     const copyToClipboard = (text: string) => {
@@ -138,7 +143,9 @@ const Navbar = () => {
                                                     {formatWalletBalance(walletBalance)} SUI
                                                 </span>
                                             </div>
-                                            <div className="py-3 text-center">Disconnect</div>
+                                            <div className="py-3 text-center cursor-pointer" onClick={handleDisconnect}>
+                                                Disconnect
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -152,28 +159,78 @@ const Navbar = () => {
 
             <div className="mobile-navbar">
                 <div className="mobile-navbar-content">
-                    <div className="connect-wallet pl-4">
-                        <ConnectButton>Connect Wallet</ConnectButton>
+                    <div
+                        onClick={() => mobileNavigate("/")}
+                        className="font-bold text-xl text-black py-3"
+                        style={{ fontFamily: "Capriola, sans-serif" }}
+                    >
+                        EthenaDAO
                     </div>
 
-                    <div className="toggle pr-4">
-                        {menuOpen ? (
-                            <img src={CloseImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
+                    <div className="flex items-center gap-3 pr-4">
+                        {wallet.connected ? (
+                            <div className="relative">
+                                <img
+                                    src={UserImg}
+                                    className="w-[30px] h-[30px] cursor-pointer"
+                                    onClick={toggleUserDropdown}
+                                />
+                                {userDropdownOpen && (
+                                    <div className="absolute text-black right-0 mt-4 w-48 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+                                        <div className="flex justify-around font-bold py-3 border-b border-gray-800">
+                                            <div>
+                                                {wallet.address
+                                                    ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
+                                                    : "Address not available"}
+                                            </div>
+                                            <div
+                                                onClick={() => wallet.address && copyToClipboard(wallet.address)}
+                                                title={copyTooltip}
+                                            >
+                                                <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
+                                            </div>
+                                        </div>
+
+                                        <div className="py-3 text-center font-normal text-base border-b border-gray-800">
+                                            Balance&nbsp;
+                                            <span className="font-bold text-lg">
+                                                {formatWalletBalance(walletBalance)} SUI
+                                            </span>
+                                        </div>
+                                        <div className="py-3 text-center cursor-pointer" onClick={handleDisconnect}>
+                                            Disconnect
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         ) : (
-                            <img src={MenuImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
+                            <div className="relative">
+                                <img
+                                    src={UserImg}
+                                    className="w-[30px] h-[30px] cursor-pointer"
+                                    onClick={toggleUserDropdown}
+                                />
+                                {userDropdownOpen && (
+                                    <div className="absolute right-0 mt-4 bg-white border border-gray-300 rounded-lg shadow-lg p-2">
+                                        <div>
+                                            <ConnectButton>Connect Wallet </ConnectButton>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
+                        <div>
+                            {menuOpen ? (
+                                <img src={CloseImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
+                            ) : (
+                                <img src={MenuImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
+                            )}
+                        </div>
                     </div>
 
                     {menuOpen && <div className="overlay" onClick={toggleMenu}></div>}
                     {menuOpen && (
                         <div className="dropdown-menu">
-                            <div
-                                onClick={() => mobileNavigate("/")}
-                                className="font-bold text-xl text-black py-3"
-                                style={{ fontFamily: "Capriola, sans-serif" }}
-                            >
-                                EthenaDAO
-                            </div>
                             <div onClick={() => mobileNavigate("/proposals")}>
                                 <div className="mobile-nav-link">Proposals</div>
                             </div>
