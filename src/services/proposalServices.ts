@@ -13,7 +13,7 @@ export enum Status {
     FAILED = "Failed",
     QUEUE = "Queue",
     EXECUTED = "Executed",
-    INITIAL = "Initial"
+    INITIAL = "Initial",
 }
 
 export interface Proposal {
@@ -221,5 +221,15 @@ export const revokeVoteTxb = (userNFTId: string, proposalId: string) => {
     } catch (err) {
         console.log(err);
         throw err;
+    }
+};
+
+export const updateProposalFailStatus = async (proposalId: string) => {
+    const res = await axios.post(`${BACKEND_URL}/v1/proposal/failed`, {
+        proposalId: proposalId,
+    });
+
+    if (res.status === 200) {
+        return true;
     }
 };
