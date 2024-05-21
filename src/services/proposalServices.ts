@@ -30,6 +30,7 @@ export interface Proposal {
     executable: boolean;
     status: Status;
     forVoterList: any[];
+    refrainVoterList: any[];
     againstVoterList: any[];
     createdAt: string;
     __v: number;

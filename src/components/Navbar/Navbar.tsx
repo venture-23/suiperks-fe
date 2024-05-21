@@ -14,6 +14,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const wallet = useWallet();
+    const { disconnect } = wallet;
     const { treasuryBalance } = useAppContext();
     const [copyTooltip, setCopyTooltip] = useState("Copy wallet address");
     const { balance: walletBalance = 0n } = useAccountBalance();
@@ -49,6 +50,10 @@ const Navbar = () => {
     const mobileNavigate = (url: string) => {
         navigate(url);
         setMenuOpen(false);
+    };
+
+    const handleDisconnect = () => {
+        disconnect();
     };
 
     const copyToClipboard = (text: string) => {
@@ -138,13 +143,17 @@ const Navbar = () => {
                                                     {formatWalletBalance(walletBalance)} SUI
                                                 </span>
                                             </div>
-                                            <div className="py-3 text-center">Disconnect</div>
+                                            <div className="py-3 text-center cursor-pointer" onClick={handleDisconnect}>
+                                                Disconnect
+                                            </div>
                                         </div>
                                     )}
                                 </div>
                             </>
                         ) : (
-                            <ConnectButton>Connect Wallet</ConnectButton>
+                            <div className="rounded-md border-2 border-gray-400">
+                                <ConnectButton>Connect Wallet</ConnectButton>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -152,11 +161,15 @@ const Navbar = () => {
 
             <div className="mobile-navbar">
                 <div className="mobile-navbar-content">
-                    <div className="connect-wallet pl-4">
-                        <ConnectButton>Connect Wallet</ConnectButton>
+                    <div
+                        onClick={() => mobileNavigate("/")}
+                        className="font-bold text-xl text-black py-3"
+                        style={{ fontFamily: "Capriola, sans-serif" }}
+                    >
+                        EthenaDAO
                     </div>
 
-                    <div className="toggle pr-4">
+                    <div className="flex items-center gap-3 pr-4">
                         {menuOpen ? (
                             <img src={CloseImg} className="w-[30px] h-[30px]" onClick={toggleMenu} />
                         ) : (
@@ -167,13 +180,6 @@ const Navbar = () => {
                     {menuOpen && <div className="overlay" onClick={toggleMenu}></div>}
                     {menuOpen && (
                         <div className="dropdown-menu">
-                            <div
-                                onClick={() => mobileNavigate("/")}
-                                className="font-bold text-xl text-black py-3"
-                                style={{ fontFamily: "Capriola, sans-serif" }}
-                            >
-                                EthenaDAO
-                            </div>
                             <div onClick={() => mobileNavigate("/proposals")}>
                                 <div className="mobile-nav-link">Proposals</div>
                             </div>
@@ -187,7 +193,7 @@ const Navbar = () => {
                                 <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
                             </div>
 
-                            {wallet.connected && (
+                            {wallet.connected ? (
                                 <>
                                     <div onClick={() => mobileNavigate("/user-dashboard")}>
                                         <div className="mobile-nav-link">Dashboard</div>
@@ -196,7 +202,33 @@ const Navbar = () => {
                                     <div className="text-black py-3">
                                         <ActiveNFTDropDown />
                                     </div>
+                                    <div className="flex justify-around font-bold py-3 text-black">
+                                        <div>
+                                            {wallet.address
+                                                ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
+                                                : "Address not available"}
+                                        </div>
+                                        <div
+                                            onClick={() => wallet.address && copyToClipboard(wallet.address)}
+                                            title={copyTooltip}
+                                        >
+                                            <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
+                                        </div>
+                                    </div>
+                                    <div className="py-3  text-black">
+                                        Balance&nbsp;
+                                        <span className="font-bold text-lg">
+                                            {formatWalletBalance(walletBalance)} SUI
+                                        </span>
+                                    </div>
+                                    <div className="py-3  cursor-pointer text-black" onClick={handleDisconnect}>
+                                        Disconnect
+                                    </div>
                                 </>
+                            ) : (
+                                <div className="py-3  text-black">
+                                    <ConnectButton>Connect Wallet</ConnectButton>
+                                </div>
                             )}
                         </div>
                     )}
