@@ -101,7 +101,7 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-center bg-gray-200 px-4 py-2 rounded-lg">
+                    <div className="flex items-center bg-[rgba(235,235,235,0.8)] px-4 py-2 rounded-lg">
                         <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
                     </div>
 
@@ -122,36 +122,47 @@ const Navbar = () => {
                                         onClick={toggleUserDropdown}
                                     />
                                     {userDropdownOpen && (
-                                        <div className="absolute right-0 mt-4 w-48 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-                                            <div className="flex justify-around font-bold py-3 border-b border-gray-800">
-                                                <div>
-                                                    {wallet.address
-                                                        ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
-                                                        : "Address not available"}
-                                                </div>
-                                                <div
-                                                    onClick={() => wallet.address && copyToClipboard(wallet.address)}
-                                                    title={copyTooltip}
-                                                >
-                                                    <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
+                                        <div className="user-details absolute right-0 mt-4 min-w-[250px] flex flex-col gap-3 bg-[rgba(255,255,255,0.7)] border border-gray-300 rounded-lg shadow-lg p-4">
+                                            <div className="font-bold text-black">
+                                                <p className="text-[10px] text-[#7f7f7f]">Wallet Address</p>
+                                                <div className="flex gap-1">
+                                                    <div>
+                                                        {wallet.address
+                                                            ? `${wallet.address.substring(0, 6)}...${wallet.address.substring(wallet.address.length - 6)}`
+                                                            : "Address not available"}
+                                                    </div>
+                                                    <div
+                                                        onClick={() =>
+                                                            wallet.address && copyToClipboard(wallet.address)
+                                                        }
+                                                        title={copyTooltip}
+                                                    >
+                                                        <img
+                                                            src={CopyIcon}
+                                                            className="h-6"
+                                                            style={{ cursor: "pointer" }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-
-                                            <div className="py-3 text-center font-normal text-base border-b border-gray-800">
-                                                Balance&nbsp;
+                                            <div className="text-black">
+                                                Balance:&nbsp;
                                                 <span className="font-bold text-lg">
                                                     {formatWalletBalance(walletBalance)} SUI
                                                 </span>
                                             </div>
-                                            <div className="py-3 text-center cursor-pointer" onClick={handleDisconnect}>
+                                            <button
+                                                className="text-white bg-red-500 p-2 rounded-lg w-full"
+                                                onClick={handleDisconnect}
+                                            >
                                                 Disconnect
-                                            </div>
+                                            </button>
                                         </div>
                                     )}
                                 </div>
                             </>
                         ) : (
-                            <div className="rounded-md border-2 border-gray-400">
+                            <div>
                                 <ConnectButton>Connect Wallet</ConnectButton>
                             </div>
                         )}
@@ -180,14 +191,14 @@ const Navbar = () => {
                     {menuOpen && <div className="overlay" onClick={toggleMenu}></div>}
                     {menuOpen && (
                         <div className="dropdown-menu">
-                            <div onClick={() => mobileNavigate("/proposals")}>
-                                <div className="mobile-nav-link">Proposals</div>
+                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/proposals")}>
+                                Proposals
                             </div>
-                            <div onClick={() => mobileNavigate("/admin")}>
-                                <div className="mobile-nav-link">Admin</div>
+                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/admin")}>
+                                Admin
                             </div>
-                            <div onClick={() => mobileNavigate("/history")}>
-                                <div className="mobile-nav-link">History</div>
+                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/history")}>
+                                History
                             </div>
                             <div className="text-black py-3">
                                 <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
@@ -195,38 +206,47 @@ const Navbar = () => {
 
                             {wallet.connected ? (
                                 <>
-                                    <div onClick={() => mobileNavigate("/user-dashboard")}>
-                                        <div className="mobile-nav-link">Dashboard</div>
+                                    <div className="mobile-nav-link" onClick={() => mobileNavigate("/user-dashboard")}>
+                                        Dashboard
                                     </div>
 
                                     <div className="text-black py-3">
                                         <ActiveNFTDropDown />
                                     </div>
-                                    <div className="flex justify-around font-bold py-3 text-black">
-                                        <div>
-                                            {wallet.address
-                                                ? `${wallet.address.substring(0, 4)}...${wallet.address.substring(wallet.address.length - 4)}`
-                                                : "Address not available"}
+
+                                    <div className="user-details-mobile flex flex-col items-center bg-[#f0e7e7] w-full max-w-[400px] rounded-lg mb-4 p-4 gap-3">
+                                        <div className="font-bold text-black">
+                                            <p className="text-[10px] text-[#7f7f7f] text-center">Wallet Address</p>
+                                            <div className="flex gap-1">
+                                                <div>
+                                                    {wallet.address
+                                                        ? `${wallet.address.substring(0, 6)}...${wallet.address.substring(wallet.address.length - 6)}`
+                                                        : "Address not available"}
+                                                </div>
+                                                <div
+                                                    onClick={() => wallet.address && copyToClipboard(wallet.address)}
+                                                    title={copyTooltip}
+                                                >
+                                                    <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div
-                                            onClick={() => wallet.address && copyToClipboard(wallet.address)}
-                                            title={copyTooltip}
+                                        <div className="text-black">
+                                            Balance:&nbsp;
+                                            <span className="font-bold text-lg">
+                                                {formatWalletBalance(walletBalance)} SUI
+                                            </span>
+                                        </div>
+                                        <button
+                                            className="text-white bg-red-500 p-2 rounded-lg w-full"
+                                            onClick={handleDisconnect}
                                         >
-                                            <img src={CopyIcon} className="h-6" style={{ cursor: "pointer" }} />
-                                        </div>
-                                    </div>
-                                    <div className="py-3  text-black">
-                                        Balance&nbsp;
-                                        <span className="font-bold text-lg">
-                                            {formatWalletBalance(walletBalance)} SUI
-                                        </span>
-                                    </div>
-                                    <div className="py-3  cursor-pointer text-black" onClick={handleDisconnect}>
-                                        Disconnect
+                                            Disconnect
+                                        </button>
                                     </div>
                                 </>
                             ) : (
-                                <div className="py-3  text-black">
+                                <div>
                                     <ConnectButton>Connect Wallet</ConnectButton>
                                 </div>
                             )}
