@@ -8,6 +8,8 @@ import {
 } from "../../services/proposalServices";
 import { useWallet } from "@suiet/wallet-kit";
 import { toast } from "react-toastify";
+import { getContractCallErrorMessage } from "../../utils/getContractErrorCode";
+import { PROPOSAL_MANAGEMENT_ERROR_CODES } from "../../constants/proposalErrorCodes";
 
 const QueueTable = () => {
     const [updatedProposals, setUpdatedProposals] = useState<Proposal[]>([]);
@@ -34,10 +36,19 @@ const QueueTable = () => {
                 }
             }
         } catch (err) {
-            console.log("Settle failed.", err);
-            toast.error("Proposal queue failed");
+            console.log("Queue failed.", err);
 
             // Add queue failed API call here.
+            const { errorCode, errorMessage } = getContractCallErrorMessage(
+                err as Error,
+                PROPOSAL_MANAGEMENT_ERROR_CODES
+            );
+
+            if (errorCode >= 0) {
+                toast.error(errorMessage);
+            } else {
+                toast.error("Proposal queue failed");
+            }
         }
     };
 
