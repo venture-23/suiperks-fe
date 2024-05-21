@@ -17,7 +17,7 @@ const ProposalPage = () => {
             case Status.FAILED:
                 return "#e40536";
             case Status.QUEUE:
-                return "#8c8d92";
+                return "#FFA500";
             case Status.WAITING:
                 return "#6c757d";
             case Status.EXECUTED:
