@@ -24,11 +24,15 @@ const AuctionHistoryPage = () => {
     }, []);
 
     return (
-        <div className="auction-history max-w-[1200px] m-auto my-8 p-4">
+        <div className="auction-history w-full max-w-[1200px] mx-auto  my-8 p-4">
+            <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
             <h3 className="text-4xl font-bold">Auction History</h3>
-
+            {loading && (
+                <div className="loading-state my-10">
+                    <h1 className="name text-xl font-bold">Loading auction history...</h1>
+                </div>
+            )}
             <div className="mt-6">
-                {loading && <div>Loading...</div>}
                 {!loading && historyData.length === 0 && <div>Nothing to display.</div>}
 
                 <div className="auction-items flex flex-col gap-4">
