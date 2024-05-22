@@ -16,6 +16,16 @@ import { toast } from "react-toastify";
 // Todo: Update Testnet value
 const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
 
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes} ${day}-${month}-${year}`;
+};
+
 const VotePage = () => {
     const { proposalId } = useParams<{ proposalId?: string }>() ?? { proposalId: "" };
     const [proposal, setProposal] = useState<Proposal>({
@@ -48,6 +58,7 @@ const VotePage = () => {
     const [showAllForVoters, setShowAllForVoters] = useState(false);
     const [showAllRefrainVoters, setShowAllRefrainVoters] = useState(false);
     const [showAllAgainstVoters, setShowAllAgainstVoters] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const wallet = useWallet();
     const { activeNFT } = useAppContext();
@@ -82,12 +93,14 @@ const VotePage = () => {
     };
 
     const fetchProposal = async () => {
+        setLoading(true);
         if (proposalId) {
             const proposalDetails = await fetchProposalDetails(proposalId);
             if (proposalDetails) {
                 setProposal(proposalDetails);
                 initializeVotes(proposalDetails);
             }
+            setLoading(false);
         }
     };
 
@@ -169,6 +182,10 @@ const VotePage = () => {
         fetchProposal();
     }, [proposalId]);
 
+    if (loading) {
+        return <div className="name w-full max-w-[1200px] mx-auto p-4 py-10 text-xl">Loading...</div>;
+    }
+
     return (
         <>
             <div className="proposal-page w-full max-w-[1200px] mx-auto p-4 py-10">
@@ -182,7 +199,7 @@ const VotePage = () => {
                     </div>
                 </div> */}
 
-                <div className="flex items-center justify-between border-b border-gray-500 mb-4">
+                <div className="flex flex-col md:flex-row items-center justify-between border-b border-gray-500 mb-4">
                     <div className="flex items-center gap-2">
                         <div className="name md:text-4xl text-2xl">{proposal.title.replace(/^#\s*/, "")}</div>
                         <div
@@ -245,7 +262,7 @@ const VotePage = () => {
                     )}
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex md:flex-row flex-col gap-4 items-center">
                     <div>
                         <Link to={`${SUI_EXPLORER_URL}/object/${proposal.objectId}`} target="_blank">
                             {proposal?.objectId ? (
@@ -447,7 +464,7 @@ const VotePage = () => {
                                     <p> {proposal.status === Status.ACTIVE ? "Ends On" : "Ended"}</p>
                                 </div>
                                 <div className="flex flex-col justify-end">
-                                    <p className="text-xs font-bold">{proposal.endTime}</p>
+                                    <p className="text-xs font-bold">{formatDate(proposal.endTime)}</p>
                                 </div>
                             </div>
                             {proposal.status === Status.EXECUTED && proposal.executedHash && (
