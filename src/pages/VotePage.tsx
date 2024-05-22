@@ -56,7 +56,7 @@ const VotePage = () => {
     });
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
     const [showAllForVoters, setShowAllForVoters] = useState(false);
-    const [showAllRefrainVoters, setShowAllRefrainVoters] = useState(false);
+    // const [showAllRefrainVoters, setShowAllRefrainVoters] = useState(false);
     const [showAllAgainstVoters, setShowAllAgainstVoters] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -65,8 +65,9 @@ const VotePage = () => {
     const votedNFTList = useMemo(() => {
         const forVoters = proposal.forVoterList.map((item) => item.nftId);
         const againstVoters = proposal.againstVoterList.map((item) => item.nftId);
-        return [...forVoters, ...againstVoters];
-    }, [proposal.forVoterList, proposal.againstVoterList]);
+        const refrainVoterList = proposal.refrainVoterList.map((item) => item.nftId);
+        return [...forVoters, ...againstVoters, ...refrainVoterList];
+    }, [proposal.forVoterList, proposal.againstVoterList, proposal.refrainVoterList]);
     const nftHasVoted = votedNFTList.includes(activeNFT?.nftId);
 
     const initializeVotes = (proposal: Proposal) => {
@@ -174,9 +175,9 @@ const VotePage = () => {
     const AgainstVotersToDisplay = showAllAgainstVoters
         ? proposal.againstVoterList
         : proposal.againstVoterList.slice(0, 4);
-    const RefrainVotersToDisplay = showAllRefrainVoters
-        ? proposal.refrainVoterList
-        : proposal.refrainVoterList.slice(0, 4);
+    // const RefrainVotersToDisplay = showAllRefrainVoters
+    //     ? proposal.refrainVoterList
+    //     : proposal.refrainVoterList.slice(0, 4);
 
     useEffect(() => {
         fetchProposal();
@@ -234,21 +235,27 @@ const VotePage = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        onClick={() => handleChangeVote()}
-                                                        className="proposal-button px-4 py-4 bg-yellow-500 hover:bg-blue-500 text-white rounded-md"
-                                                    >
-                                                        Change Vote
-                                                    </button>
+                                                {proposal.refrainVoterList
+                                                    .map((item) => item.nftId)
+                                                    .includes(activeNFT?.nftId) ? (
+                                                    <div>You have refrained from voting.</div>
+                                                ) : (
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => handleChangeVote()}
+                                                            className="proposal-button px-4 py-4 bg-yellow-500 hover:bg-blue-500 text-white rounded-md"
+                                                        >
+                                                            Change Vote
+                                                        </button>
 
-                                                    <button
-                                                        onClick={() => handleRevokeVote()}
-                                                        className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
-                                                    >
-                                                        Refrain Vote
-                                                    </button>
-                                                </div>
+                                                        <button
+                                                            onClick={() => handleRevokeVote()}
+                                                            className="proposal-button px-4 py-4 bg-red-600 hover:bg-blue-500 text-white rounded-md"
+                                                        >
+                                                            Refrain Vote
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </>
                                         )}
                                     </>
@@ -320,15 +327,15 @@ const VotePage = () => {
                                     <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">In Favor</h4>
                                         {proposal.forVotes !== 0 ? (
-                                            <ul>
+                                            <ul className="flex flex-col gap-2">
                                                 {ForVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/account/${voter.address}`}
+                                                        to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
                                                     >
                                                         <li className="py-3 underline">
-                                                            {voter.address.slice(0, 6)}...{voter.address.slice(-6)}
+                                                            {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>
                                                     </Link>
                                                 ))}
@@ -358,15 +365,15 @@ const VotePage = () => {
                                     <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">Against</h4>
                                         {proposal.againstVotes !== 0 ? (
-                                            <ul>
+                                            <ul className="flex flex-col gap-2">
                                                 {AgainstVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/account/${voter.address}`}
+                                                        to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
                                                     >
                                                         <li className="py-3 underline">
-                                                            {voter.address.slice(0, 6)}...{voter.address.slice(-6)}
+                                                            {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>
                                                     </Link>
                                                 ))}
@@ -392,18 +399,19 @@ const VotePage = () => {
                                             </button>
                                         )}
                                     </div>
-                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
+
+                                    {/* <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">Refrain</h4>
                                         {proposal.refrainVotes !== 0 ? (
                                             <ul className="list-none list-inside">
                                                 {RefrainVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/account/${voter.address}`}
+                                                        to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
                                                     >
                                                         <li className="py-3 underline">
-                                                            {voter.address.slice(0, 6)}...{voter.address.slice(-6)}
+                                                            {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>
                                                     </Link>
                                                 ))}
@@ -430,7 +438,7 @@ const VotePage = () => {
                                                 </button>
                                             )}
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         )}
