@@ -333,7 +333,19 @@ const VotePage = () => {
                                                         to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
+                                                        className="flex items-center gap-2"
                                                     >
+                                                        <div
+                                                            className="w-[40px] h-[40px]"
+                                                            style={{ borderRadius: "50%" }}
+                                                        >
+                                                            <img
+                                                                src={voter.nftImage}
+                                                                alt=""
+                                                                className="w-full h-full object-cover"
+                                                                style={{ borderRadius: "inherit" }}
+                                                            />
+                                                        </div>
                                                         <li className="py-3 underline">
                                                             {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>
@@ -371,7 +383,19 @@ const VotePage = () => {
                                                         to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
+                                                        className="flex items-center gap-2"
                                                     >
+                                                        <div
+                                                            className="w-[40px] h-[40px]"
+                                                            style={{ borderRadius: "50%" }}
+                                                        >
+                                                            <img
+                                                                src={voter.nftImage}
+                                                                alt=""
+                                                                className="w-full h-full object-cover"
+                                                                style={{ borderRadius: "inherit" }}
+                                                            />
+                                                        </div>
                                                         <li className="py-3 underline">
                                                             {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>
