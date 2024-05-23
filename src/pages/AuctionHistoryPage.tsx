@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { AuctionDetails, getAuctionHistory } from "../services/auctionHistoryServices";
+import { Link } from "react-router-dom";
+
+const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
 
 const AuctionHistoryPage = () => {
     const [historyData, setHistoryData] = useState<AuctionDetails[]>([]);
@@ -26,7 +29,7 @@ const AuctionHistoryPage = () => {
     return (
         <div className="auction-history w-full max-w-[1200px] mx-auto  my-8 p-4">
             <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
-            <h3 className="text-4xl font-bold">Auction History</h3>
+            <h3 className="name md:text-6xl text-3xl">Auction History</h3>
             {loading && (
                 <div className="loading-state my-10">
                     <h1 className="name text-xl font-bold">Loading auction history...</h1>
@@ -52,8 +55,18 @@ const AuctionHistoryPage = () => {
                                     <div>{auctionData.description}</div>
                                     <div>NFT: {auctionData.nftName}</div>
                                     <div>NFT Description: {auctionData.nftDescription}</div>
+                                    <div>
+                                        NFT Id:{" "}
+                                        <Link
+                                            to={`${SUI_EXPLORER_URL}/object/${auctionData.nftId}`}
+                                            target="_blank"
+                                            className="underline"
+                                        >
+                                            {auctionData.nftId}
+                                        </Link>
+                                    </div>
                                     <div>Winner: {auctionData.highestBidder}</div>
-                                    <div>Bidding Price: {auctionData.amount}</div>
+                                    <div>Bidding Price: {auctionData.amount * 10 ** -9} SUI</div>
                                 </div>
                             </div>
                         ))}

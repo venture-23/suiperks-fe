@@ -4,6 +4,7 @@ const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL as string;
 
 export interface AuctionDetails {
     _id: string;
+    nftId: string;
     nftImage: string;
     nftName: string;
     nftDescription: string;
