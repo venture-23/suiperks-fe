@@ -96,7 +96,7 @@ const QueueTable = () => {
     }, []);
 
     return (
-        <div className="md:w-3/5 w-4/5 mx-auto my-5">
+        <div className="queue-table w-full">
             <table className="table-auto w-full border-collapse border border-black rounded-md">
                 <thead>
                     <tr>
