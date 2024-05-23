@@ -46,7 +46,6 @@ const ActiveBid = () => {
     const [showViewAllBidsModal, setShowViewAllBidsModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showCountdown, setShowCountdown] = useState(true);
-    const [minBidIncrementPercentage, setMinBidIncrementPercentage] = useState<number>(0);
     const [hasActiveAuction, setHasActiveAuction] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -70,6 +69,7 @@ const ActiveBid = () => {
         __v: 0,
         highestBidder: "",
     });
+    const latestMinBid = auctionItemDetails.amount === 0 ? auctionItemDetails.reservePrice : auctionItemDetails.amount;
 
     const countdownTimer = useCountdown(new Date(auctionItemDetails.endTime));
 
@@ -112,12 +112,10 @@ const ActiveBid = () => {
             const auctionData = await getActiveAuctionDetails();
             if (auctionData) {
                 setAuctionItemDetails(auctionData);
-                setMinBidIncrementPercentage(auctionData.minBidIncrementPercentage / 100);
 
-                if (auctionData.amount === 0) {
-                    setCurrentBid((auctionData.reservePrice * 10 ** -9).toString());
-                } else {
-                    setCurrentBid((auctionData.amount * 10 ** -9).toString());
+                if (auctionData.funds.length > 0) {
+                    const highestBid = auctionData.funds[auctionData.funds.length - 1].balance * 10 ** -9;
+                    setCurrentBid(`${highestBid}`);
                 }
                 setHasActiveAuction(true);
             } else {
@@ -133,21 +131,16 @@ const ActiveBid = () => {
     };
 
     const handleSubmit = async () => {
-        const amount = Number(inputBid) * 10 ** 9;
-        const input = Number(inputBid);
-        const bidAmount = parseFloat(`${amount}`);
+        const biddingAmount = Number(inputBid) * 10 ** 9;
 
-        const intBidAmount = Math.floor(bidAmount);
-        const minBid = parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage;
-
-        if (input < minBid) {
-            setErrorMessage(`Bid amount must be at least ${minBid.toFixed(4)}.`);
+        if (biddingAmount < latestMinBid) {
+            setErrorMessage(`Bid amount must be at least ${(latestMinBid * 10 ** -9).toFixed(5)}.`);
             return;
         }
 
-        if (!isNaN(bidAmount) && bidAmount >= minBid) {
+        if (!isNaN(biddingAmount) && biddingAmount >= latestMinBid) {
             try {
-                const txb = createBidAuctionTxb(intBidAmount, auctionItemDetails.uid);
+                const txb = createBidAuctionTxb(biddingAmount, auctionItemDetails.uid);
                 const txnResponse = await wallet.signAndExecuteTransactionBlock({
                     // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                     transactionBlock: txb,
@@ -159,14 +152,14 @@ const ActiveBid = () => {
                     setErrorMessage("");
                     setTimeout(() => {
                         fetchAuctionDetails();
-                    }, 3000);
+                    }, 5000);
                 }
             } catch (error) {
                 console.error("Error placing bid:", error);
                 setErrorMessage("Error placing bid. Please try again later.");
             }
         } else {
-            setErrorMessage(`Bid amount must be at least ${(minBid / 10 ** 9).toFixed(4)}.`);
+            setErrorMessage(`Bid amount must be at least ${(latestMinBid * 10 ** -9).toFixed(5)}.`);
             setTimeout(() => {
                 setErrorMessage("");
             }, 3000);
@@ -268,7 +261,7 @@ const ActiveBid = () => {
                                 type="text"
                                 value={inputBid}
                                 onChange={handleInputChange}
-                                placeholder={`${(parseFloat(currentBid) + parseFloat(currentBid) * minBidIncrementPercentage).toFixed(4)} or more`}
+                                placeholder={`${(latestMinBid * 10 ** -9).toFixed(5)} or more`}
                                 className="input-field"
                                 disabled={isAuctionEnded}
                             />
@@ -279,6 +272,7 @@ const ActiveBid = () => {
                                     balance === undefined ||
                                     balance === null ||
                                     parseFloat(inputBid) * 10 ** 9 > balance ||
+                                    parseFloat(inputBid) * 10 ** 9 < latestMinBid ||
                                     isAuctionEnded
                                 }
                             >
