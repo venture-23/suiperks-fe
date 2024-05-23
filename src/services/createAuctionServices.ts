@@ -42,7 +42,6 @@ export const createAuction = async (body: createAuctionReqBody) => {
         }
     } catch (err) {
         console.error("Error creating auction:", err);
-        return err;
     }
 };
 
@@ -66,6 +65,5 @@ export const settleAuction = async (body: settleAuctionReqBody) => {
         }
     } catch (err) {
         console.error("Error settling auction:", err);
-        return err;
     }
 };

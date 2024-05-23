@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createAuction, settleAuction } from "../services/createAuctionServices";
 import QueueTable from "../components/Admin/QueueTable";
+import { getActiveAuctionDetails } from "../services/activeBidServices";
 
 const AdminPage = () => {
     const [loading, setLoading] = useState(false);
@@ -122,9 +123,23 @@ const AdminPage = () => {
         }
     };
 
+    useEffect(() => {
+        (async () => {
+            const auctionData = await getActiveAuctionDetails();
+            if (auctionData) {
+                setSettleInputValues({
+                    auctionInfo: auctionData.uid,
+                    nftName: auctionData.nftName,
+                    nftDescription: auctionData.nftDescription,
+                    nftImage: auctionData.nftImage,
+                });
+            }
+        })();
+    }, []);
+
     return (
-        <div className="admin-page w-full">
-            <div className="md:mx-40 my-10 mx-4">
+        <div className="admin-page w-full max-w-[1200px] my-8 mx-auto p-4">
+            <div>
                 <div className="name text-gray-500 text-2xl">EthenaDAO</div>
                 <div className="name text-6xl">Admin</div>
                 <div className="my-4">Create and Settle Auctions.</div>
@@ -285,7 +300,9 @@ const AdminPage = () => {
                 </div>
             </div>
 
-            <QueueTable />
+            <div className="mt-8">
+                <QueueTable />
+            </div>
         </div>
     );
 };
