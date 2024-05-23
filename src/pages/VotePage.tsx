@@ -56,7 +56,7 @@ const VotePage = () => {
     });
     const [votes, setVotes] = useState<Votes>({ for: 0, against: 0, abstain: 0 });
     const [showAllForVoters, setShowAllForVoters] = useState(false);
-    // const [showAllRefrainVoters, setShowAllRefrainVoters] = useState(false);
+    const [showAllRefrainVoters, setShowAllRefrainVoters] = useState(false);
     const [showAllAgainstVoters, setShowAllAgainstVoters] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -175,9 +175,9 @@ const VotePage = () => {
     const AgainstVotersToDisplay = showAllAgainstVoters
         ? proposal.againstVoterList
         : proposal.againstVoterList.slice(0, 4);
-    // const RefrainVotersToDisplay = showAllRefrainVoters
-    //     ? proposal.refrainVoterList
-    //     : proposal.refrainVoterList.slice(0, 4);
+    const RefrainVotersToDisplay = showAllRefrainVoters
+        ? proposal.refrainVoterList
+        : proposal.refrainVoterList.slice(0, 4);
 
     useEffect(() => {
         fetchProposal();
@@ -330,7 +330,7 @@ const VotePage = () => {
                                             <ul className="flex flex-col gap-2">
                                                 {ForVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
+                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
                                                         className="flex items-center gap-2"
@@ -380,7 +380,7 @@ const VotePage = () => {
                                             <ul className="flex flex-col gap-2">
                                                 {AgainstVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
+                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
                                                         className="flex items-center gap-2"
@@ -424,13 +424,13 @@ const VotePage = () => {
                                         )}
                                     </div>
 
-                                    {/* <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
+                                    <div className="mb-4 bg-gray-200 rounded-lg px-8 py-6 md:w-1/3">
                                         <h4 className="name text-lg font-semibold mb-2">Refrain</h4>
                                         {proposal.refrainVotes !== 0 ? (
                                             <ul className="list-none list-inside">
                                                 {RefrainVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/account/${voter.nftId}`}
+                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
                                                         target="_blank"
                                                         key={index}
                                                     >
@@ -462,7 +462,7 @@ const VotePage = () => {
                                                 </button>
                                             )}
                                         </div>
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         )}
