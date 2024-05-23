@@ -43,7 +43,7 @@ const ProposalPage = () => {
         <div className="proposals-page w-full max-w-[1200px] my-8 mx-auto p-4">
             <div className="name text-gray-500 md:text-2xl text-lg">Governance</div>
             <div className="name md:text-6xl text-3xl">Proposals</div>
-            <div className="my-4 flex md:justify-end py-4 ">
+            <div className="my-4 flex md:justify-end py-4">
                 <div>
                     {wallet.connected ? (
                         userOwnedNFTs.length === 0 ? (
@@ -80,12 +80,12 @@ const ProposalPage = () => {
 
             {proposals === null ? (
                 <div className="loading-state">
-                    <h1 className="name text-xl font-bold">Loading proposals...</h1>
+                    <h1 className="text-lg font-semibold">Loading proposals...</h1>
                 </div>
             ) : (
                 <>
                     {proposals.length === 0 ? (
-                        <div className="mt-4 pt-4 text-lg text-center border-t border-gray-500">
+                        <div className="mt-4 pt-4 text-lg font-semibold border-t border-gray-500">
                             There are no proposals to display.
                         </div>
                     ) : (
