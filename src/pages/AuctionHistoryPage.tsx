@@ -36,10 +36,10 @@ const AuctionHistoryPage = () => {
                 {!loading && historyData.length === 0 && (
                     <div className="text-lg font-semibold">Nothing to display.</div>
                 )}{" "}
-                <div className="auction-items flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                     {historyData?.length > 0 &&
                         historyData.map((auctionData) => (
-                            <div className="auction-item flex bg-[rgba(255,255,255,0.4)] rounded-md gap-4 p-4 overflow-auto">
+                            <div className="lg:w-[50vw] w-[80vw] mx-auto md:mx-0 flex md:flex-row flex-col items-start bg-[rgba(255,255,255,0.4)] rounded-md gap-4 p-4 overflow-auto">
                                 <div className="w-[100px] h-[100px] flex-shrink-0">
                                     <img
                                         src={auctionData.nftImage}
@@ -48,11 +48,18 @@ const AuctionHistoryPage = () => {
                                     />
                                 </div>
 
-                                <div>
-                                    <div>{auctionData.title}</div>
-                                    <div>{auctionData.description}</div>
-                                    <div>NFT: {auctionData.nftName}</div>
-                                    <div>NFT Description: {auctionData.nftDescription}</div>
+                                <div className="flex flex-col gap-3">
+                                    <div className="text-xl text-gray-500 font-bold">{auctionData.title}</div>
+                                    <div className=" text-sm">{auctionData.description}</div>
+                                    <div>
+                                        NFT:&nbsp;
+                                        <span className="name my-2 md:text-2xl text-lg font-bold">
+                                            {auctionData.nftName}
+                                        </span>
+                                    </div>
+                                    <div className="md:text-lg text-sm">
+                                        NFT Description: {auctionData.nftDescription}
+                                    </div>
                                     <div>
                                         NFT Id:{" "}
                                         <Link
@@ -60,11 +67,25 @@ const AuctionHistoryPage = () => {
                                             target="_blank"
                                             className="underline"
                                         >
-                                            {auctionData.nftId}
+                                            {auctionData.nftId.slice(0, 6)}...{auctionData.nftId.slice(-6)}
                                         </Link>
                                     </div>
-                                    <div>Winner: {auctionData.highestBidder}</div>
-                                    <div>Bidding Price: {auctionData.amount * 10 ** -9} SUI</div>
+                                    <div>
+                                        Winner:{" "}
+                                        <Link
+                                            to={`${SUI_EXPLORER_URL}/account/${auctionData.highestBidder}`}
+                                            target="_blank"
+                                            className="underline"
+                                        >
+                                            {" "}
+                                            {auctionData.highestBidder.slice(0, 6)}...
+                                            {auctionData.highestBidder.slice(-6)}
+                                        </Link>
+                                    </div>
+                                    <div className="text-xl">
+                                        Bidding Price:{" "}
+                                        <span className="font-bold">{auctionData.amount * 10 ** -9} SUI</span>
+                                    </div>
                                 </div>
                             </div>
                         ))}
