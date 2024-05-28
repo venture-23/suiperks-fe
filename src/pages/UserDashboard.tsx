@@ -5,7 +5,7 @@ const UserDashboard = () => {
 
     return (
         <div className="dashboard w-full max-w-[1200px] my-8 mx-auto p-4">
-            <div className="name text-gray-500 md:text-2xl text-lg">EthenaDAO</div>
+            <div className="name text-gray-500 md:text-2xl text-lg">SUI Perks</div>
             <div className="name md:text-6xl text-3xl">Owned NFTs</div>
 
             <div className="mt-8">

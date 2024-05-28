@@ -76,7 +76,7 @@ const Navbar = () => {
                 <div className="navbar-contents">
                     <div className="logos-and-links">
                         <NavLink to="/" className="font-bold text-xl" style={{ fontFamily: "Capriola, sans-serif" }}>
-                            EthenaDAO
+                            SUI Perks
                         </NavLink>
 
                         <div className="nav-links ">
@@ -85,12 +85,6 @@ const Navbar = () => {
                                 className={`nav-link ${location.pathname === "/proposals" ? "active" : ""}`}
                             >
                                 Proposals
-                            </NavLink>
-                            <NavLink
-                                to="/admin"
-                                className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}
-                            >
-                                Admin
                             </NavLink>
                             <NavLink
                                 to="/history"
@@ -177,7 +171,7 @@ const Navbar = () => {
                         className="font-bold text-xl text-black py-3"
                         style={{ fontFamily: "Capriola, sans-serif" }}
                     >
-                        EthenaDAO
+                        SUI Perks
                     </div>
 
                     <div className="flex items-center gap-3 pr-4">
@@ -193,9 +187,6 @@ const Navbar = () => {
                         <div className="dropdown-menu">
                             <div className="mobile-nav-link" onClick={() => mobileNavigate("/proposals")}>
                                 Proposals
-                            </div>
-                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/admin")}>
-                                Admin
                             </div>
                             <div className="mobile-nav-link" onClick={() => mobileNavigate("/history")}>
                                 History

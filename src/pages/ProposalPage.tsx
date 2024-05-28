@@ -45,7 +45,11 @@ const ProposalPage = () => {
         const fetchData = async () => {
             const proposalsData = await fetchAllProposals();
             if (proposalsData) {
-                setProposals(proposalsData);
+                const proposalDataWithId = proposalsData.map((proposal, index) => {
+                    return { ...proposal, index_id: index + 1 };
+                });
+                const proposalDataDesc = proposalDataWithId.reverse();
+                setProposals(proposalDataDesc);
             }
         };
         fetchData();
@@ -103,9 +107,10 @@ const ProposalPage = () => {
                     ) : (
                         <ul className="my-10 w-full max-w-[800px] mx-auto">
                             {proposals.map((proposal) => (
-                                <li key={proposal._id} className="single-list-container mb-3 px-10 py-4">
-                                    <Link to={`/vote/${proposal._id}`}>
-                                        <div className="flex flex-col gap-4">
+                                <li key={proposal._id} className="single-list-container box-shadow mb-5 px-10 py-4">
+                                    <Link to={`/vote/${proposal._id}`} className="flex gap-8">
+                                        <div className="flex mt-[18px] text-xl font-semibold">{proposal.index_id}.</div>
+                                        <div className="w-full flex flex-col gap-1">
                                             <div className="flex items-center justify-between">
                                                 <span className="font-semibold md:text-2xl text-lg">
                                                     {proposal.title.replace(/^#\s*/, "")}

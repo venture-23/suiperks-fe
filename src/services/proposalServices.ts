@@ -17,6 +17,7 @@ export enum Status {
 }
 
 export interface Proposal {
+    index_id?: number;
     _id: string;
     title: string;
     details: string;

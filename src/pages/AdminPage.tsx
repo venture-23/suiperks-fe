@@ -140,7 +140,7 @@ const AdminPage = () => {
     return (
         <div className="admin-page w-full max-w-[1200px] my-8 mx-auto p-4">
             <div>
-                <div className="name text-gray-500 text-2xl">EthenaDAO</div>
+                <div className="name text-gray-500 text-2xl">SUI Perks</div>
                 <div className="name text-6xl">Admin</div>
                 <div className="my-4">Create and Settle Auctions.</div>
 
