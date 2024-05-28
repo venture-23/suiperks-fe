@@ -5,6 +5,18 @@ import { fetchAllProposals, Proposal, Status } from "../services/proposalService
 import { useWallet } from "@suiet/wallet-kit";
 import { useAppContext } from "../context/AppContext";
 
+const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
+
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes} ${day}-${month}-${year}`;
+};
+
 const ProposalPage = () => {
     const wallet = useWallet();
     const { userOwnedNFTs } = useAppContext();
@@ -92,21 +104,54 @@ const ProposalPage = () => {
                         <ul className="my-10 w-full max-w-[800px] mx-auto">
                             {proposals.map((proposal) => (
                                 <li key={proposal._id} className="single-list-container mb-3 px-10 py-4">
-                                    <Link
-                                        to={`/vote/${proposal._id}`}
-                                        className="proposal-content flex justify-between items-center text-lg md:text-xl"
-                                    >
-                                        <div className="flex gap-4">
-                                            <span className="font-semibold">{proposal.title.replace(/^#\s*/, "")}</span>
-                                        </div>
-                                        <div
-                                            className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
-                                            style={{
-                                                backgroundColor: getStatusColor(proposal.status),
-                                                borderRadius: "4px",
-                                            }}
-                                        >
-                                            {proposal.status}
+                                    <Link to={`/vote/${proposal._id}`}>
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-semibold md:text-2xl text-lg">
+                                                    {proposal.title.replace(/^#\s*/, "")}
+                                                </span>
+                                                <div
+                                                    className="proposal-status p-3 m-2 text-white font-bold md:text-base text-xs"
+                                                    style={{
+                                                        backgroundColor: getStatusColor(proposal.status),
+                                                        borderRadius: "4px",
+                                                    }}
+                                                >
+                                                    {proposal.status}
+                                                </div>
+                                            </div>
+                                            <div className="flex md:flex-row flex-col md:items-center items-start justify-between text-sm md:text-base">
+                                                <span>
+                                                    Proposed By:{" "}
+                                                    <Link
+                                                        to={`${SUI_EXPLORER_URL}/account/${proposal.proposer}`}
+                                                        target="_blank"
+                                                        className="underline"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        {proposal.proposer.slice(0, 6)}...{proposal.proposer.slice(-6)}
+                                                    </Link>
+                                                </span>
+                                                {proposal.forVotes + proposal.againstVotes + proposal.refrainVotes >
+                                                0 ? (
+                                                    <span className="name text-lg font-semibold">
+                                                        {proposal.forVotes +
+                                                            proposal.againstVotes +
+                                                            proposal.refrainVotes}
+                                                        &nbsp; votes
+                                                    </span>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </div>
+                                            <div className="flex md:flex-row flex-col md:items-center items-end justify-between text-sm md:text-base">
+                                                <span>Start Time: {formatDate(proposal.startTime)}</span>
+                                                <span>End Time: {formatDate(proposal.endTime)}</span>
+                                            </div>
+
+                                            <span className="font-semibold md:text-lg text-base">
+                                                Seeking Amount: {proposal.seekAmount * 10 ** -9}
+                                            </span>
                                         </div>
                                     </Link>
                                 </li>
