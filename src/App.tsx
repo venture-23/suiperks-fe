@@ -10,6 +10,7 @@ import AuctionHistoryPage from "./pages/AuctionHistoryPage";
 import VotePage from "./pages/VotePage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ActiveBid from "./pages/ActiveBid";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                 <div className="pt-[80px] w-full flex flex-1">
                     <Routes>
                         <Route path="/proposals" element={<ProposalPage />} />
+                        <Route path="/active-bid" element={<ActiveBid />} />
                         <Route path="/admin" element={<AdminPage />} />
                         <Route path="/user-dashboard" element={<UserDashboard />} />
                         <Route path="/proposal-submit" element={<ProposalForm />} />

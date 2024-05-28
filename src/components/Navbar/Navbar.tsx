@@ -81,6 +81,12 @@ const Navbar = () => {
 
                         <div className="nav-links ">
                             <NavLink
+                                to="/active-bid"
+                                className={`nav-link ${location.pathname === "/active-bid" ? "active" : ""}`}
+                            >
+                                Active Bid
+                            </NavLink>
+                            <NavLink
                                 to="/proposals"
                                 className={`nav-link ${location.pathname === "/proposals" ? "active" : ""}`}
                             >
@@ -185,6 +191,9 @@ const Navbar = () => {
                     {menuOpen && <div className="overlay" onClick={toggleMenu}></div>}
                     {menuOpen && (
                         <div className="dropdown-menu">
+                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/active-bid")}>
+                                Active Bid
+                            </div>
                             <div className="mobile-nav-link" onClick={() => mobileNavigate("/proposals")}>
                                 Proposals
                             </div>
