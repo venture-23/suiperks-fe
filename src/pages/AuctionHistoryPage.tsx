@@ -67,6 +67,7 @@ const AuctionHistoryPage = () => {
                                                 to={`${SUI_EXPLORER_URL}/object/${auctionData.nftId}`}
                                                 target="_blank"
                                                 className="underline"
+                                                onClick={(e) => e.stopPropagation()}
                                             >
                                                 {auctionData.nftId.slice(0, 6)}...{auctionData.nftId.slice(-6)}
                                             </Link>
@@ -77,6 +78,7 @@ const AuctionHistoryPage = () => {
                                                 to={`${SUI_EXPLORER_URL}/account/${auctionData.highestBidder}`}
                                                 target="_blank"
                                                 className="underline"
+                                                onClick={(e) => e.stopPropagation()}
                                             >
                                                 {" "}
                                                 {auctionData?.highestBidder?.slice(0, 6)}...
