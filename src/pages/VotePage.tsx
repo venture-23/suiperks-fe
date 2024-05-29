@@ -330,8 +330,7 @@ const VotePage = () => {
                                             <ul className="flex flex-col gap-2">
                                                 {ForVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
-                                                        target="_blank"
+                                                        to={`/nft-activities/${voter.nftId}`}
                                                         key={index}
                                                         className="flex items-center gap-2"
                                                     >
@@ -380,8 +379,7 @@ const VotePage = () => {
                                             <ul className="flex flex-col gap-2">
                                                 {AgainstVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
-                                                        target="_blank"
+                                                        to={`/nft-activities/${voter.nftId}`}
                                                         key={index}
                                                         className="flex items-center gap-2"
                                                     >
@@ -429,11 +427,7 @@ const VotePage = () => {
                                         {proposal.refrainVotes !== 0 ? (
                                             <ul className="list-none list-inside">
                                                 {RefrainVotersToDisplay.map((voter, index) => (
-                                                    <Link
-                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
-                                                        target="_blank"
-                                                        key={index}
-                                                    >
+                                                    <Link to={`/nft-activities/${voter.nftId}`} key={index}>
                                                         <li className="py-3 underline">
                                                             {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>
