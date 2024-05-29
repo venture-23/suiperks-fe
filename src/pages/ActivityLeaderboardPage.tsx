@@ -7,9 +7,11 @@ import {
 } from "../services/rewardsServices";
 import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
+import { useAppContext } from "../context/AppContext";
 
 const ActivityLeaderboard = () => {
     const wallet = useWallet();
+    const { rewardsClaimStatus } = useAppContext();
     const [data, setData] = useState<LeaderboardItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [points, setPoints] = useState<number>(0);
@@ -26,25 +28,25 @@ const ActivityLeaderboard = () => {
         }
     };
 
-    // const handleClaim = async () => {
-    //     if (!wallet.address) return;
+    const handleClaim = async () => {
+        if (!wallet.address) return;
 
-    //     try {
-    //         const txb = createClaimRewardTxb(wallet.address);
-    //         const txnResponse = await wallet.signAndExecuteTransactionBlock({
-    //             // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
-    //             transactionBlock: txb,
-    //         });
-    //         console.log("txnResponse", txnResponse);
-    //         if (txnResponse?.digest) {
-    //             toast.success("Rewards Claim Success.");
-    //             getUserPoints(wallet.address);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error placing bid:", error);
-    //         toast.error("Rewards Claim Failed.");
-    //     }
-    // };
+        try {
+            const txb = createClaimRewardTxb(wallet.address);
+            const txnResponse = await wallet.signAndExecuteTransactionBlock({
+                // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
+                transactionBlock: txb,
+            });
+            console.log("txnResponse", txnResponse);
+            if (txnResponse?.digest) {
+                toast.success("Rewards Claim Success.");
+                getUserPoints(wallet.address);
+            }
+        } catch (error) {
+            console.error("Error placing bid:", error);
+            toast.error("Rewards Claim Failed.");
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -75,14 +77,14 @@ const ActivityLeaderboard = () => {
                         <div className="md:text-xl text-lg font-semibold">Accumulated Points: {points}</div>
                         <div className="">You have no points yet. Please participate in activities to earn points.</div>
                     </div>
-                    {/* {points > 0 && (
+                    {rewardsClaimStatus && points > 0 && (
                         <button
                             className="px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
                             onClick={handleClaim}
                         >
                             Claim
                         </button>
-                    )} */}
+                    )}
                 </div>
             </div>
 

@@ -2,6 +2,7 @@ import "./App.scss";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAppContext } from "./context/AppContext";
 import Navbar from "./components/Navbar";
 
 import LandingPage from "./pages/LandingPage";
@@ -15,20 +16,22 @@ import ActiveBid from "./pages/ActiveBid";
 import ActivityLeaderboard from "./pages/ActivityLeaderboardPage";
 
 function App() {
+    const { rewardsClaimStatus } = useAppContext();
+
     return (
         <div className="app">
             <BrowserRouter>
                 <Navbar />
 
                 <div className="pt-[80px] w-full flex flex-1 flex-col">
-                    {false && (
+                    {rewardsClaimStatus && (
                         <div className="mb-4">
                             <div className="max-w-[800px] w-full bg-[#28a538] text-white text-center m-auto rounded-lg p-2">
                                 Rewards claiming is Live now. Visit{" "}
-                                <Link to="/dashboard" className="underline">
-                                    Dashboard
+                                <Link to="/leaderboard" className="underline">
+                                    Leaderboard
                                 </Link>{" "}
-                                to claim your eligible rewards.
+                                to see your rewards.
                             </div>
                         </div>
                     )}

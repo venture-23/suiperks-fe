@@ -45,9 +45,14 @@ export const fetchUserPoints = async (walletAddress: string): Promise<UserPoints
     }
 };
 
-export const fetchRewardsClaimingStatus = async (): Promise<number | undefined> => {
+export interface ClaimingStatus {
+    status: boolean;
+    messsage: string;
+}
+
+export const fetchRewardsClaimingStatus = async (): Promise<ClaimingStatus | undefined> => {
     try {
-        const response = await axios.get(`${BACKEND_URL}/v1/token/`);
+        const response = await axios.get(`${BACKEND_URL}/v1/token/claimable/status`);
         return response.data;
     } catch (err) {
         console.error("Error fetching rewards claim state.", err);
