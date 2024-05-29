@@ -103,7 +103,16 @@ const ActivityLeaderboard = () => {
                         <tbody>
                             {data?.length > 0 &&
                                 data.map((leaderboardItem, index) => (
-                                    <tr className="border-b border-gray-200 dark:border-gray-700" key={index}>
+                                    <tr
+                                        className="border-b border-gray-200 dark:border-gray-700"
+                                        style={{
+                                            background:
+                                                leaderboardItem.walletAddress === wallet.address
+                                                    ? "rgba(0, 0, 0, 0.2)"
+                                                    : "",
+                                        }}
+                                        key={index}
+                                    >
                                         <td className="px-4 py-3 font-medium">{index + 1}</td>
                                         <td className="px-4 py-3">{leaderboardItem.walletAddress}</td>
                                         <td className="px-4 py-3 font-bold">{leaderboardItem.point}</td>
