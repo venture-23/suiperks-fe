@@ -15,6 +15,7 @@ const ActivityLeaderboard = () => {
     const [data, setData] = useState<LeaderboardItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [points, setPoints] = useState<number>(0);
+    const [claimed, setClaimed] = useState<boolean>(false);
 
     const getUserPoints = async (walletAddress: string) => {
         try {
@@ -22,6 +23,7 @@ const ActivityLeaderboard = () => {
             if (userPoints && userPoints?.gain >= 0) {
                 const pointsInSui = userPoints.gain;
                 setPoints(pointsInSui);
+                setClaimed(userPoints.claimable === 0 ? true : false);
             }
         } catch (error) {
             console.error("Error fetching points", error);
@@ -41,6 +43,7 @@ const ActivityLeaderboard = () => {
             if (txnResponse?.digest) {
                 toast.success("Rewards Claim Success.");
                 getUserPoints(wallet.address as string);
+                setClaimed(true);
             }
         } catch (error) {
             console.error("Error placing bid:", error);
@@ -75,12 +78,16 @@ const ActivityLeaderboard = () => {
                 <div className="flex gap-10 items-center my-4">
                     <div>
                         <div className="md:text-xl text-lg font-semibold">Accumulated Points: {points}</div>
-                        <div className="">You have no points yet. Please participate in activities to earn points.</div>
+                        {points === 0 && (
+                            <div>You have no points yet. Please participate in activities to earn rewards.</div>
+                        )}
+                        {claimed && <div>You have already claimed your rewards for this session.</div>}
                     </div>
-                    {rewardsClaimStatus && points > 0 && (
+                    {rewardsClaimStatus && points > 0 && !claimed && (
                         <button
-                            className="px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
+                            className="w-[100px] bg-blue-700 hover:bg-blue-500 text-white rounded-md px-4 py-2"
                             onClick={handleClaim}
+                            disabled={claimed}
                         >
                             Claim
                         </button>
