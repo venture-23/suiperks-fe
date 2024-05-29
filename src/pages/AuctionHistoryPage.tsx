@@ -87,7 +87,9 @@ const AuctionHistoryPage = () => {
                                         </div>
                                         <div className="text-xl">
                                             Bidding Price:{" "}
-                                            <span className="font-bold">{auctionData.amount * 10 ** -9} SUI</span>
+                                            <span className="font-bold">
+                                                {(auctionData.amount * 10 ** -9).toFixed(5)} SUI
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

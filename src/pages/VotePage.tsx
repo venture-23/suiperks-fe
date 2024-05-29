@@ -301,6 +301,8 @@ const VotePage = () => {
                     </div>
                 </div>
 
+                <div className="font-semibold">Seeking Amount: {proposal.seekAmount * 10 ** -9} SUI</div>
+
                 <div className="flex md:flex-row flex-col gap-10">
                     <div className="md:w-3/4">
                         <div>
@@ -318,6 +320,7 @@ const VotePage = () => {
                                 {proposal.details}
                             </ReactMarkdown>
                         </div>
+
                         {(proposal.forVotes !== 0 || proposal.againstVotes !== 0 || proposal.refrainVotes !== 0) && (
                             <div className="mt-8 border-t border-gray-500">
                                 <h3 className="text-[#1c0971] font-semibold md:text-4xl text-2xl name py-4">
