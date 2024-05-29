@@ -301,6 +301,8 @@ const VotePage = () => {
                     </div>
                 </div>
 
+                <div className="font-semibold">Seeking Amount: {proposal.seekAmount * 10 ** -9} SUI</div>
+
                 <div className="flex md:flex-row flex-col gap-10">
                     <div className="md:w-3/4">
                         <div>
@@ -318,6 +320,7 @@ const VotePage = () => {
                                 {proposal.details}
                             </ReactMarkdown>
                         </div>
+
                         {(proposal.forVotes !== 0 || proposal.againstVotes !== 0 || proposal.refrainVotes !== 0) && (
                             <div className="mt-8 border-t border-gray-500">
                                 <h3 className="text-[#1c0971] font-semibold md:text-4xl text-2xl name py-4">
@@ -330,8 +333,7 @@ const VotePage = () => {
                                             <ul className="flex flex-col gap-2">
                                                 {ForVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
-                                                        target="_blank"
+                                                        to={`/nft-activities/${voter.nftId}`}
                                                         key={index}
                                                         className="flex items-center gap-2"
                                                     >
@@ -380,8 +382,7 @@ const VotePage = () => {
                                             <ul className="flex flex-col gap-2">
                                                 {AgainstVotersToDisplay.map((voter, index) => (
                                                     <Link
-                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
-                                                        target="_blank"
+                                                        to={`/nft-activities/${voter.nftId}`}
                                                         key={index}
                                                         className="flex items-center gap-2"
                                                     >
@@ -429,11 +430,7 @@ const VotePage = () => {
                                         {proposal.refrainVotes !== 0 ? (
                                             <ul className="list-none list-inside">
                                                 {RefrainVotersToDisplay.map((voter, index) => (
-                                                    <Link
-                                                        to={`${SUI_EXPLORER_URL}/object/${voter.nftId}`}
-                                                        target="_blank"
-                                                        key={index}
-                                                    >
+                                                    <Link to={`/nft-activities/${voter.nftId}`} key={index}>
                                                         <li className="py-3 underline">
                                                             {voter.nftId.slice(0, 6)}...{voter.nftId.slice(-6)}
                                                         </li>

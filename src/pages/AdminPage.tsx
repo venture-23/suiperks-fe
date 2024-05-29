@@ -4,6 +4,7 @@ import QueueTable from "../components/Admin/QueueTable";
 import { getActiveAuctionDetails } from "../services/activeBidServices";
 import { toast } from "react-toastify";
 import { makeAirdrop, updateRewardsClaimStatus } from "../services/rewardsServices";
+import { useAppContext } from "../context/AppContext";
 
 const AdminPage = () => {
     const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const AdminPage = () => {
         nftDescription: "",
         nftImage: "",
     });
-    const [claimingStatus, setClaimingStatus] = useState<boolean | null>(null);
+    const { rewardsClaimStatus } = useAppContext();
 
     const handleCreateInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -128,10 +129,7 @@ const AdminPage = () => {
 
     const handleRewardsClaimStatusChange = async () => {
         try {
-            if (claimingStatus === null) {
-                throw new Error("Claiming status is not set yet.");
-            }
-            const updatedStatus = !claimingStatus;
+            const updatedStatus = !rewardsClaimStatus;
             const res = await updateRewardsClaimStatus(updatedStatus);
             if (res) {
                 toast.success("Successfully updated rewards claim status.");
@@ -342,9 +340,7 @@ const AdminPage = () => {
                     <div>
                         <div className="mb-2">
                             Rewards Claim Status:{" "}
-                            <span className="font-bold">
-                                {claimingStatus === null ? "..." : claimingStatus ? "TRUE" : "FALSE"}
-                            </span>
+                            <span className="font-bold">{rewardsClaimStatus ? "ACTIVE" : "INACTIVE"}</span>
                         </div>
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

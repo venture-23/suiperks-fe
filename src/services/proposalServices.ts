@@ -84,13 +84,14 @@ export const fetchProposalDetails = async (proposal_id: string): Promise<Proposa
     }
 };
 
-export const createProposal = async (title: string, details: string): Promise<ProposalCreate | null> => {
+export const createProposal = async (title: string, details: string, nftId: string): Promise<ProposalCreate | null> => {
     try {
         const response: AxiosResponse<ProposalCreate> = await axios.post<ProposalCreate>(
             `${BACKEND_URL}/v1/proposal/create`,
             {
                 title: title,
                 details: details,
+                nftId: nftId,
             }
         );
         console.log(response);

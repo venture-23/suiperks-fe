@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, ReactNode, useEffect } from
 import { UserOwnedNFT, fetchUserOwnedNFTs } from "../services/userServices";
 import { useWallet } from "@suiet/wallet-kit";
 import { TreasuryBalanceResponse, fetchTreasuryBalance } from "../services/treauryService";
+import { fetchRewardsClaimingStatus } from "../services/rewardsServices";
 
 interface AppContextType {
     userOwnedNFTs: UserOwnedNFT[];
@@ -10,6 +11,8 @@ interface AppContextType {
     updateTreasuryBalance: () => void;
     activeNFT: UserOwnedNFT | null;
     updateActiveNFT: (nftDetails: UserOwnedNFT) => void;
+    rewardsClaimStatus: boolean;
+    updateRewardsClaimPeriodStatus: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -23,6 +26,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [userOwnedNFTs, setUserOwnedNFTs] = useState<UserOwnedNFT[]>([]);
     const [activeNFT, setActiveNFT] = useState<UserOwnedNFT | null>(null);
     const [treasuryBalance, setTreasuryBalance] = useState<number | undefined>(undefined);
+    const [rewardsClaimStatus, setRewardsClaimStatus] = useState<boolean>(false);
 
     const updatedUserOwnedNFTs = (nfts: UserOwnedNFT[]) => {
         setUserOwnedNFTs(nfts);
@@ -42,6 +46,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         setActiveNFT(nftDetails);
     };
 
+    const updateRewardsClaimPeriodStatus = async () => {
+        try {
+            const response = await fetchRewardsClaimingStatus();
+            if (response) {
+                const isPaused = response.status;
+                setRewardsClaimStatus(!isPaused);
+            }
+        } catch (error) {
+            console.error("Error updating treasury balance:", error);
+        }
+    };
+
     const contextValue: AppContextType = {
         userOwnedNFTs,
         updatedUserOwnedNFTs,
@@ -49,6 +65,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         updateTreasuryBalance,
         activeNFT,
         updateActiveNFT,
+        rewardsClaimStatus,
+        updateRewardsClaimPeriodStatus,
     };
 
     useEffect(() => {
@@ -71,6 +89,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     useEffect(() => {
         updateTreasuryBalance();
+        updateRewardsClaimPeriodStatus();
     }, []);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
