@@ -19,8 +19,8 @@ const ActivityLeaderboard = () => {
     const getUserPoints = async (walletAddress: string) => {
         try {
             const userPoints = await fetchUserPoints(walletAddress);
-            if (userPoints && userPoints?.point >= 0) {
-                const pointsInSui = userPoints.point;
+            if (userPoints && userPoints?.gain >= 0) {
+                const pointsInSui = userPoints.gain;
                 setPoints(pointsInSui);
             }
         } catch (error) {
@@ -115,7 +115,7 @@ const ActivityLeaderboard = () => {
                                     >
                                         <td className="px-4 py-3 font-medium">{index + 1}</td>
                                         <td className="px-4 py-3">{leaderboardItem.walletAddress}</td>
-                                        <td className="px-4 py-3 font-bold">{leaderboardItem.point}</td>
+                                        <td className="px-4 py-3 font-bold">{leaderboardItem.gain}</td>
                                     </tr>
                                 ))}
                         </tbody>

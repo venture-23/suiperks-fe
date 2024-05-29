@@ -9,6 +9,7 @@ export interface LeaderboardItem {
     _id: string;
     walletAddress: string;
     __v: number;
+    gain: number;
     point: number;
     consumedPoint: number;
     claimable: number;
@@ -29,6 +30,7 @@ export interface UserPoints {
     _id: string;
     walletAddress: string;
     __v: number;
+    gain: number;
     point: number;
     consumedPoint: number;
     claimable: number;
@@ -61,7 +63,8 @@ export const fetchRewardsClaimingStatus = async (): Promise<ClaimingStatus | und
 
 export const updateRewardsClaimStatus = async (status: boolean): Promise<boolean> => {
     try {
-        await axios.get(`${BACKEND_URL}/v1/token/action?pause=${status}`);
+        const pauseValue = status ? 0 : 1;
+        await axios.get(`${BACKEND_URL}/v1/token/action?pause=${pauseValue}`);
         return true;
     } catch (err) {
         console.error("Error updating rewards claim state.", err);
