@@ -14,8 +14,8 @@ const Card: React.FC<CardProps> = ({ imageSrc, title, description }) => {
                     <img src={imageSrc} alt={title} />
                 </div>
             </div>
-            <div className="pt-8">
-                <div className="name md:text-[32px] text-xl mb-3">{title}</div>
+            <div className="pt-8 flex flex-col justify-center items-center">
+                <div className="name md:text-[28px] text-xl mb-3">{title}</div>
                 <p className="font-semibold text-base max-w-[331px]">{description}</p>
             </div>
         </div>
