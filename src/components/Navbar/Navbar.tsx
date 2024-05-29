@@ -102,6 +102,12 @@ const Navbar = () => {
                             >
                                 History
                             </NavLink>
+                            <NavLink
+                                to="/leaderboard"
+                                className={`nav-link ${location.pathname === "/leaderboard" ? "active" : ""}`}
+                            >
+                                Leaderboard
+                            </NavLink>
                         </div>
                     </div>
 
@@ -204,6 +210,10 @@ const Navbar = () => {
                             <div className="mobile-nav-link" onClick={() => mobileNavigate("/history")}>
                                 History
                             </div>
+                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/leaderboard")}>
+                                Leaderboard
+                            </div>
+
                             <div className="text-black py-3">
                                 <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
                             </div>
