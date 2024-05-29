@@ -340,7 +340,7 @@ const AdminPage = () => {
                     <div>
                         <div className="mb-2">
                             Rewards Claim Status:{" "}
-                            <span className="font-bold">{rewardsClaimStatus ? "TRUE" : "FALSE"}</span>
+                            <span className="font-bold">{rewardsClaimStatus ? "ACTIVE" : "INACTIVE"}</span>
                         </div>
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
