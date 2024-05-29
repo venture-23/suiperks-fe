@@ -29,7 +29,7 @@ const AuctionHistoryPage = () => {
     return (
         <div className="auction-history w-full max-w-[1200px] mx-auto my-8 p-4">
             <div className="name text-gray-500 md:text-2xl text-lg">SUI Perks</div>
-            <h3 className="name md:text-6xl text-3xl">Auction History</h3>
+            <h3 className="name text-[#1c0971] md:text-6xl text-3xl">Auction History</h3>
 
             <div className="mt-8">
                 {loading && <h1 className="text-lg font-semibold">Loading auction history...</h1>}
@@ -49,11 +49,11 @@ const AuctionHistoryPage = () => {
                                 </div>
 
                                 <div className="flex flex-col gap-1">
-                                    <div className="text-xl text-gray-500 font-bold">{auctionData.title}</div>
+                                    <div className="text-xl text-[#1c0971] font-bold">{auctionData.title}</div>
                                     <div className=" text-sm">{auctionData.description}</div>
                                     <div>
                                         NFT:&nbsp;
-                                        <span className="name my-2 md:text-2xl text-lg font-bold">
+                                        <span className="name text-[#1c0971] my-2 md:text-2xl text-lg font-bold">
                                             {auctionData.nftName}
                                         </span>
                                     </div>

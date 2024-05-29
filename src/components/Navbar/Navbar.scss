@@ -33,11 +33,11 @@
                     cursor: pointer;
 
                     &:hover {
-                        color: #494949;
+                        color: wheat;
                     }
                 }
                 .nav-link.active {
-                    border-bottom: 2px solid #4a5568;
+                    border-bottom: 2px solid white;
                 }
             }
         }
@@ -51,11 +51,11 @@
                 padding: 12px 8px;
                 cursor: pointer;
                 &:hover {
-                    color: #494949;
+                    color: wheat;
                 }
             }
             .nav-link.dashboard.active {
-                border-bottom: 2px solid #4a5568;
+                border-bottom: 2px solid white;
             }
         }
     }
@@ -72,7 +72,7 @@
     align-items: center;
     justify-content: center;
     // background: linear-gradient(to bottom, #e9dcdc 0%, #e7d8d8 20%);
-    background: rgba(255, 255, 255, 0.8);
+    background: #1c0971;
     position: fixed;
     top: 0;
     z-index: 1000;
@@ -120,7 +120,7 @@
             justify-content: center;
             width: 100%;
             // background-color: #e9dcdc;
-            background: rgba(255,255,255,1);
+            background: rgba(255, 255, 255, 1);
             border-bottom: 1px solid #e7d8d8;
             border-radius: 10px;
             z-index: 1000;
@@ -128,7 +128,7 @@
             padding: 4px 16px;
 
             .dropdown-item {
-                border-bottom: 1px solid #e7d8d8;
+                border-bottom: 1px solid #1c0971;
                 width: 100%;
             }
 
@@ -147,7 +147,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border-bottom: 1px solid rgb(190, 190, 190);
+                border-bottom: 1px solid #1c0971;
 
                 &:hover {
                     background-color: #e7d8d8;

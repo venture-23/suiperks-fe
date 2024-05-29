@@ -7,7 +7,7 @@ import ActiveNFTDropDown from "../ActiveNFTDropDown";
 
 import MenuImg from "../../assets/images/menu.png";
 import CloseImg from "../../assets/images/crossIcon.png";
-import UserImg from "../../assets/images/usericon.png";
+import UserImg from "../../assets/images/user-icon-on-transparent-backgro.png";
 import CopyIcon from "../../assets/images/copyIcon.png";
 
 const Navbar = () => {
@@ -72,14 +72,24 @@ const Navbar = () => {
 
     return (
         <>
-            <div className="navbar">
+            <div className="navbar bg-[#1c0971]">
                 <div className="navbar-contents">
                     <div className="logos-and-links">
-                        <NavLink to="/" className="font-bold text-xl" style={{ fontFamily: "Capriola, sans-serif" }}>
+                        <NavLink
+                            to="/"
+                            className="font-bold text-xl text-white"
+                            style={{ fontFamily: "Capriola, sans-serif" }}
+                        >
                             SUI Perks
                         </NavLink>
 
-                        <div className="nav-links ">
+                        <div className="nav-links text-white ">
+                            <NavLink
+                                to="/auction"
+                                className={`nav-link ${location.pathname === "/auction" ? "active" : ""}`}
+                            >
+                                Auction
+                            </NavLink>
                             <NavLink
                                 to="/proposals"
                                 className={`nav-link ${location.pathname === "/proposals" ? "active" : ""}`}
@@ -104,7 +114,7 @@ const Navbar = () => {
                             <>
                                 <NavLink
                                     to="/user-dashboard"
-                                    className={`nav-link dashboard ${location.pathname === "/user-dashboard" ? "active" : ""}`}
+                                    className={`text-white nav-link dashboard ${location.pathname === "/user-dashboard" ? "active" : ""}`}
                                 >
                                     Dashboard
                                 </NavLink>
@@ -112,7 +122,7 @@ const Navbar = () => {
                                 <div className="relative">
                                     <img
                                         src={UserImg}
-                                        className="w-[30px] h-[30px] cursor-pointer"
+                                        className="w-auto h-[40px] cursor-pointer text-white"
                                         onClick={toggleUserDropdown}
                                     />
                                     {userDropdownOpen && (
@@ -168,7 +178,7 @@ const Navbar = () => {
                 <div className="mobile-navbar-content">
                     <div
                         onClick={() => mobileNavigate("/")}
-                        className="font-bold text-xl text-black py-3"
+                        className="font-bold text-xl text-white py-3"
                         style={{ fontFamily: "Capriola, sans-serif" }}
                     >
                         SUI Perks
@@ -185,6 +195,9 @@ const Navbar = () => {
                     {menuOpen && <div className="overlay" onClick={toggleMenu}></div>}
                     {menuOpen && (
                         <div className="dropdown-menu">
+                            <div className="mobile-nav-link" onClick={() => mobileNavigate("/auction")}>
+                                Auction
+                            </div>
                             <div className="mobile-nav-link" onClick={() => mobileNavigate("/proposals")}>
                                 Proposals
                             </div>

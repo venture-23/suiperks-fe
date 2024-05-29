@@ -77,7 +77,7 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
         <div className="new-proposal w-full md:mx-10 my-10 mx-4">
             <div className="container h-full mx-auto max-w-7xl p-8 bg-[rgba(255,255,255,0.3)] rounded-md shadow-md flex flex-col md:flex-row">
                 <div className="form-input-section flex flex-col w-full md:w-1/2 mr-4">
-                    <div className="name text-gray-500 md:text-2xl text-lg">SUI Perks</div>
+                    <div className="name text-[#1c0971] md:text-2xl text-lg">SUI Perks</div>
                     <div className="name md:text-3xl text-xl">Submit your proposal</div>
                     <form onSubmit={handleSubmit} className="input-form flex flex-col flex-1 mt-5">
                         <div className="mb-4 flex-1">
@@ -106,14 +106,14 @@ Outline the scope of your proposal here. Detail what your proposal aims to achie
 
                         <button
                             type="submit"
-                            className="w-1/4 bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300"
+                            className="w-1/4 bg-[#1c0971] text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300"
                         >
                             Submit
                         </button>
                     </form>
                 </div>
                 <div className="w-full md:w-1/2 mt-8 md:mt-0 p-4">
-                    <label className="name block text-gray-500 text-2xl font-semibold my-4">Preview</label>
+                    <label className="name block text-[#1c0971] text-2xl font-semibold my-4">Preview</label>
                     <div className="w-full border border-gray-300 rounded-md p-4">
                         <ReactMarkdown
                             components={{

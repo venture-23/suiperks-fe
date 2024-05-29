@@ -304,7 +304,7 @@ const VotePage = () => {
                 <div className="flex md:flex-row flex-col gap-10">
                     <div className="md:w-3/4">
                         <div>
-                            <div className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">
+                            <div className="text-[#1c0971] font-semibold md:text-4xl text-2xl name py-4">
                                 Description
                             </div>
                             <ReactMarkdown
@@ -320,7 +320,7 @@ const VotePage = () => {
                         </div>
                         {(proposal.forVotes !== 0 || proposal.againstVotes !== 0 || proposal.refrainVotes !== 0) && (
                             <div className="mt-8 border-t border-gray-500">
-                                <h3 className="text-gray-700 font-semibold md:text-4xl text-2xl name py-4">
+                                <h3 className="text-[#1c0971] font-semibold md:text-4xl text-2xl name py-4">
                                     Voters List
                                 </h3>
                                 <div className="flex flex-col md:flex-row md:gap-14">
@@ -470,7 +470,7 @@ const VotePage = () => {
 
                     <div className="votes md:w-1/4 flex flex-col md:border-t-0 border-t border-gray-500">
                         <div className="flex flex-col justify-around">
-                            <div className="text-gray-700 font-semibold lg:text-4xl text-2xl name py-4">Votes</div>
+                            <div className="text-[#1c0971] font-semibold lg:text-4xl text-2xl name py-4">Votes</div>
 
                             <p className="text-green-700 lg:text-2xl text-xl font-semibold">
                                 In favor of : <span className="lg:text-3xl text-xl font-normal name">{votes.for}</span>
@@ -485,14 +485,14 @@ const VotePage = () => {
                         </div>
                         <div className="flex flex-col justify-around gap-2 mt-8">
                             <div className="bg-gray-200 rounded-lg px-4 py-6 flex items-center justify-around gap-2">
-                                <p className="text-gray-700 name  text-lg font-semibold">Threshold</p>
+                                <p className="text-[#1c0971] name  text-lg font-semibold">Threshold</p>
                                 <div className="flex flex-col justify-end">
                                     <p className="text-xs">Current Threshold</p>
                                     <p className="text-base font-bold">{proposal.votingQuorumRate}%</p>
                                 </div>
                             </div>
                             <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
-                                <div className="text-gray-700  name  text-lg font-semibold">
+                                <div className="text-[#1c0971]  name  text-lg font-semibold">
                                     <p> {proposal.status === Status.ACTIVE ? "Ends On" : "Ended"}</p>
                                 </div>
                                 <div className="flex flex-col justify-end">
@@ -501,7 +501,7 @@ const VotePage = () => {
                             </div>
                             {proposal.status === Status.EXECUTED && proposal.executedHash && (
                                 <div className="bg-gray-200 rounded-lg p-4 flex items-center justify-around gap-2">
-                                    <p className="text-gray-700 name text-lg font-semibold">Proposal Executed</p>
+                                    <p className="text-[#1c0971] name text-lg font-semibold">Proposal Executed</p>
                                     <div className="flex flex-col justify-end">
                                         <p className="text-xs">Digest</p>
                                         <p className="text-base font-bold underline">

@@ -58,7 +58,7 @@ const ProposalPage = () => {
     return (
         <div className="proposals-page w-full max-w-[1200px] my-8 mx-auto p-4">
             <div className="name text-gray-500 md:text-2xl text-lg">Governance</div>
-            <div className="name md:text-6xl text-3xl">Proposals</div>
+            <div className="name text-[#1c0971] md:text-6xl text-3xl">Proposals</div>
             <div className="my-4 flex md:justify-end py-4">
                 <div>
                     {wallet.connected ? (
@@ -75,7 +75,7 @@ const ProposalPage = () => {
                         ) : (
                             <Link
                                 to="/proposal-submit"
-                                className="proposal-button px-4 py-4 bg-blue-700 hover:bg-blue-500 text-white rounded-md"
+                                className="proposal-button px-4 py-4 bg-[#1c0971] hover:bg-blue-500 text-white rounded-md"
                             >
                                 Submit Proposal
                             </Link>
@@ -96,7 +96,7 @@ const ProposalPage = () => {
 
             {proposals === null ? (
                 <div className="loading-state">
-                    <h1 className="text-lg font-semibold">Loading proposals...</h1>
+                    <h1 className="text-lg font-semibold text-[#1c0971]">Loading proposals...</h1>
                 </div>
             ) : (
                 <>
