@@ -1,0 +1,131 @@
+.name {
+    font-family: "Capriola";
+}
+
+.input-section {
+    display: flex;
+    align-items: center;
+}
+
+.input-field {
+    flex: 1;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid black;
+    border-radius: 6px;
+    background-color: white;
+}
+
+.bid-button {
+    height: 40px;
+    padding: 0 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.bid-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 200px;
+    background-color: red;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    transition: opacity 0.3s;
+}
+
+.bid-button[disabled]:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.bid-list li {
+    //background-color: rgb(225, 215, 213);
+    padding: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 2px solid gray;
+}
+
+.username {
+    font-family: "Signika Negative";
+}
+
+.view-more-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.error-message {
+    color: red;
+}
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal {
+        background-color: whitesmoke;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 2000;
+        position: relative;
+        overflow: hidden;
+        width: 40%;
+
+        @media screen and (max-width: "768px") {
+            width: 80%;
+        }
+
+        .list-container {
+            background-color: #e0e0e7;
+            border-radius: 10px;
+
+            .popup-bid-list li {
+                background-color: white;
+                padding: 6px;
+                margin: 10px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                border-radius: 10px;
+            }
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .modal-content {
+            margin: 0 auto;
+        }
+    }
+}
