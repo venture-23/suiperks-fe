@@ -13,6 +13,7 @@ import ProposalForm from "./components/Form/ProposalSubmit";
 import AuctionHistoryPage from "./pages/AuctionHistoryPage";
 import VotePage from "./pages/VotePage";
 import ActiveBid from "./pages/ActiveBid";
+import NftHistoryPage from "./pages/NftHistoryPage";
 import ActivityLeaderboard from "./pages/ActivityLeaderboardPage";
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
                         <Route path="/history" element={<AuctionHistoryPage />} />
                         <Route path="/vote/:proposalId" element={<VotePage />} />
                         <Route path="/leaderboard" element={<ActivityLeaderboard />} />
+                        <Route path="/nft-activities/:NftId" element={<NftHistoryPage />} />
                         <Route path="/" element={<LandingPage />} />
                     </Routes>
                     <ToastContainer />

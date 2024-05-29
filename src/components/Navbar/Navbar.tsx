@@ -9,6 +9,7 @@ import MenuImg from "../../assets/images/menu.png";
 import CloseImg from "../../assets/images/crossIcon.png";
 import UserImg from "../../assets/images/user-icon-on-transparent-backgro.png";
 import CopyIcon from "../../assets/images/copyIcon.png";
+import Logo from "../../assets/images/suiPerks.png";
 
 const Navbar = () => {
     const location = useLocation();
@@ -72,15 +73,15 @@ const Navbar = () => {
 
     return (
         <>
-            <div className="navbar bg-[#1c0971]">
+            <div className="navbar bg-[#1c0971] z-40">
                 <div className="navbar-contents">
                     <div className="logos-and-links">
                         <NavLink
                             to="/"
-                            className="font-bold text-xl text-white"
+                            //className="font-bold text-xl text-white"
                             style={{ fontFamily: "Capriola, sans-serif" }}
                         >
-                            SUI Perks
+                            <img src={Logo} className="h-10" />
                         </NavLink>
 
                         <div className="nav-links text-white ">
@@ -184,10 +185,10 @@ const Navbar = () => {
                 <div className="mobile-navbar-content">
                     <div
                         onClick={() => mobileNavigate("/")}
-                        className="font-bold text-xl text-white py-3"
+                        // className="font-bold text-xl text-white py-3"
                         style={{ fontFamily: "Capriola, sans-serif" }}
                     >
-                        SUI Perks
+                        <img src={Logo} className="h-10" />
                     </div>
 
                     <div className="flex items-center gap-3 pr-4">
