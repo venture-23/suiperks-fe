@@ -29,3 +29,13 @@ export const fetchUserOwnedNFTs = async (walletAddress: string): Promise<UserOwn
         return [];
     }
 };
+
+export const fetchUserPoints = async (walletAddress: string): Promise<number> => {
+    try {
+        const response: AxiosResponse = await axios.get(`${BACKEND_URL}/v1/point/${walletAddress}`);
+        return response.data.point;
+    } catch (err) {
+        console.error("Error fetching points", err);
+        return 0;
+    }
+};
