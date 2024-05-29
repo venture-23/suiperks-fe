@@ -1,9 +1,49 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL as string;
 const PACKAGE_ID = import.meta.env.VITE_APP_PACKAGE_ID as string;
 const DIRECTORY_ID = import.meta.env.VITE_APP_DIRECTORY_ID as string;
+
+export interface LeaderboardItem {
+    _id: string;
+    walletAddress: string;
+    __v: number;
+    point: number;
+    consumedPoint: number;
+    claimable: number;
+    totalClaimed: number;
+}
+
+export const fetchAccumulatedPointsLeaderboard = async (): Promise<LeaderboardItem[]> => {
+    try {
+        const response = await axios.get(`${BACKEND_URL}/v1/point/leaderboard`);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching leaderboard", err);
+        return [];
+    }
+};
+
+export interface UserPoints {
+    _id: string;
+    walletAddress: string;
+    __v: number;
+    point: number;
+    consumedPoint: number;
+    claimable: number;
+    totalClaimed: number;
+}
+
+export const fetchUserPoints = async (walletAddress: string): Promise<UserPoints | null> => {
+    try {
+        const response: AxiosResponse = await axios.get(`${BACKEND_URL}/v1/point/${walletAddress}`);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching points", err);
+        return null;
+    }
+};
 
 export const fetchRewardsClaimingStatus = async (): Promise<number | undefined> => {
     try {

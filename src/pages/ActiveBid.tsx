@@ -199,7 +199,7 @@ const ActiveBid = () => {
     }, []);
 
     return (
-        <div className="active-bid flex md:flex-row flex-col items-center justify-center gap-10 w-[80vw] mx-auto">
+        <div className="active-bid flex flex-1 md:flex-row flex-col items-center justify-center gap-10 w-[80vw] mx-auto">
             {isLoading ? (
                 <div className="loading-state">
                     <h1 className="text-2xl font-bold text-[#1c0971]">Loading auction details...</h1>

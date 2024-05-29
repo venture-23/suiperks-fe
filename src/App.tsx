@@ -1,6 +1,9 @@
 import "./App.scss";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
+
 import LandingPage from "./pages/LandingPage";
 import ProposalPage from "./pages/ProposalPage";
 import AdminPage from "./pages/AdminPage";
@@ -8,9 +11,8 @@ import UserDashboard from "./pages/UserDashboard";
 import ProposalForm from "./components/Form/ProposalSubmit";
 import AuctionHistoryPage from "./pages/AuctionHistoryPage";
 import VotePage from "./pages/VotePage";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import ActiveBid from "./pages/ActiveBid";
+import ActivityLeaderboard from "./pages/ActivityLeaderboardPage";
 
 function App() {
     return (
@@ -39,6 +41,7 @@ function App() {
                         <Route path="/proposal-submit" element={<ProposalForm />} />
                         <Route path="/history" element={<AuctionHistoryPage />} />
                         <Route path="/vote/:proposalId" element={<VotePage />} />
+                        <Route path="/leaderboard" element={<ActivityLeaderboard />} />
                         <Route path="/" element={<LandingPage />} />
                     </Routes>
                     <ToastContainer />
