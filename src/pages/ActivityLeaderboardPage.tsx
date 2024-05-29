@@ -91,38 +91,40 @@ const ActivityLeaderboard = () => {
             <div className="flex flex-col gap-10 items-center my-8">
                 {loading && <h1 className="text-lg font-semibold">Loading leaderboard...</h1>}
                 {!loading && data.length === 0 && <div className="text-lg font-semibold">Nothing to display.</div>}{" "}
-                <div className="overflow-x-auto w-full">
-                    <table className="w-full text-left table-auto border-collapse">
-                        <thead className="bg-[#1c0971]">
-                            <tr>
-                                <th className="px-4 py-3 font-medium text-white">Rank</th>
-                                <th className="px-4 py-3 font-medium text-white">Wallet Address</th>
-                                <th className="px-4 py-3 font-medium text-white">Points</th>
-                                <th className="px-4 py-3 font-medium text-white">Overall Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data?.length > 0 &&
-                                data.map((leaderboardItem, index) => (
-                                    <tr
-                                        className="border-b border-gray-200 dark:border-gray-700"
-                                        style={{
-                                            background:
-                                                leaderboardItem.walletAddress === wallet.address
-                                                    ? "rgba(0, 0, 0, 0.2)"
-                                                    : "",
-                                        }}
-                                        key={index}
-                                    >
-                                        <td className="px-4 py-3 font-medium">{index + 1}</td>
-                                        <td className="px-4 py-3">{leaderboardItem.walletAddress}</td>
-                                        <td className="px-4 py-3 font-bold">{leaderboardItem.gain}</td>
-                                        <td className="px-4 py-3 font-bold">{leaderboardItem.point}</td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </table>
-                </div>
+                {data.length > 0 && (
+                    <div className="overflow-x-auto w-full">
+                        <table className="w-full text-left table-auto border-collapse">
+                            <thead className="bg-[#1c0971]">
+                                <tr>
+                                    <th className="px-4 py-3 font-medium text-white">Rank</th>
+                                    <th className="px-4 py-3 font-medium text-white">Wallet Address</th>
+                                    <th className="px-4 py-3 font-medium text-white">Current Points</th>
+                                    <th className="px-4 py-3 font-medium text-white">Overall Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data?.length > 0 &&
+                                    data.map((leaderboardItem, index) => (
+                                        <tr
+                                            className="border-b border-gray-200 dark:border-gray-700"
+                                            style={{
+                                                background:
+                                                    leaderboardItem.walletAddress === wallet.address
+                                                        ? "rgba(0, 0, 0, 0.2)"
+                                                        : "",
+                                            }}
+                                            key={index}
+                                        >
+                                            <td className="px-4 py-3 font-medium">{index + 1}</td>
+                                            <td className="px-4 py-3">{leaderboardItem.walletAddress}</td>
+                                            <td className="px-4 py-3 font-bold">{leaderboardItem.gain}</td>
+                                            <td className="px-4 py-3 font-bold">{leaderboardItem.point}</td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
         </div>
     );

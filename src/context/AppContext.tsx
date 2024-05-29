@@ -50,7 +50,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         try {
             const response = await fetchRewardsClaimingStatus();
             if (response) {
-                setRewardsClaimStatus(response.status);
+                const isPaused = response.status;
+                setRewardsClaimStatus(!isPaused);
             }
         } catch (error) {
             console.error("Error updating treasury balance:", error);
