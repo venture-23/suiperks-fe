@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+
 const UserDashboard = () => {
     const { userOwnedNFTs } = useAppContext();
 
@@ -12,7 +14,8 @@ const UserDashboard = () => {
 
                 <div className="flex">
                     {userOwnedNFTs.map((nft) => (
-                        <div
+                        <Link
+                            to={`/nft-activities/${nft.nftId}`}
                             key={nft.nftId}
                             className="bg-white rounded-lg shadow-md p-4 m-2"
                             style={{ width: "300px" }}
@@ -24,7 +27,7 @@ const UserDashboard = () => {
                                 <h2 className="md:text-2xl text-xl font-bold">{nft.nftName}</h2>
                                 <p className="text-gray-800">{nft.nftDescription}</p>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
