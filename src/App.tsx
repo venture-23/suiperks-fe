@@ -11,6 +11,7 @@ import VotePage from "./pages/VotePage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ActiveBid from "./pages/ActiveBid";
+import NftHistoryPage from "./pages/NftHistoryPage";
 
 function App() {
     return (
@@ -39,6 +40,7 @@ function App() {
                         <Route path="/proposal-submit" element={<ProposalForm />} />
                         <Route path="/history" element={<AuctionHistoryPage />} />
                         <Route path="/vote/:proposalId" element={<VotePage />} />
+                        <Route path="/nft/:NftId" element={<NftHistoryPage />} />
                         <Route path="/" element={<LandingPage />} />
                     </Routes>
                     <ToastContainer />
