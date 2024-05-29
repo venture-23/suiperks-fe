@@ -113,8 +113,8 @@ const Navbar = () => {
                         {wallet.connected ? (
                             <>
                                 <NavLink
-                                    to="/user-dashboard"
-                                    className={`text-white nav-link dashboard ${location.pathname === "/user-dashboard" ? "active" : ""}`}
+                                    to="/dashboard"
+                                    className={`nav-link text-white dashboard ${location.pathname === "/dashboard" ? "active" : ""}`}
                                 >
                                     Dashboard
                                 </NavLink>
@@ -210,7 +210,7 @@ const Navbar = () => {
 
                             {wallet.connected ? (
                                 <>
-                                    <div className="mobile-nav-link" onClick={() => mobileNavigate("/user-dashboard")}>
+                                    <div className="mobile-nav-link" onClick={() => mobileNavigate("/dashboard")}>
                                         Dashboard
                                     </div>
 

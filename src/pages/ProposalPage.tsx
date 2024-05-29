@@ -155,7 +155,7 @@ const ProposalPage = () => {
                                             </div>
 
                                             <span className="font-semibold md:text-lg text-base">
-                                                Seeking Amount: {proposal.seekAmount * 10 ** -9}
+                                                Seeking Amount: {proposal.seekAmount * 10 ** -9} SUI
                                             </span>
                                         </div>
                                     </Link>

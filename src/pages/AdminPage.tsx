@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { createAuction, settleAuction } from "../services/createAuctionServices";
 import QueueTable from "../components/Admin/QueueTable";
 import { getActiveAuctionDetails } from "../services/activeBidServices";
+import { toast } from "react-toastify";
+import { makeAirdrop, updateRewardsClaimStatus } from "../services/rewardsServices";
 
 const AdminPage = () => {
     const [loading, setLoading] = useState(false);
@@ -22,6 +24,7 @@ const AdminPage = () => {
         nftDescription: "",
         nftImage: "",
     });
+    const [claimingStatus, setClaimingStatus] = useState<boolean | null>(null);
 
     const handleCreateInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -120,6 +123,34 @@ const AdminPage = () => {
             }
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleRewardsClaimStatusChange = async () => {
+        try {
+            if (claimingStatus === null) {
+                throw new Error("Claiming status is not set yet.");
+            }
+            const updatedStatus = !claimingStatus;
+            const res = await updateRewardsClaimStatus(updatedStatus);
+            if (res) {
+                toast.success("Successfully updated rewards claim status.");
+            }
+        } catch (err) {
+            console.log("Error.", err);
+            toast.error("Failed to update rewards claim status.");
+        }
+    };
+
+    const handleAirdrop = async () => {
+        try {
+            const res = await makeAirdrop();
+            if (res) {
+                toast.success("Airdrop Success.");
+            }
+        } catch (err) {
+            console.log("Error.", err);
+            toast.error("Airdrop Failed.");
         }
     };
 
@@ -301,7 +332,37 @@ const AdminPage = () => {
             </div>
 
             <div className="mt-8">
+                <h3 className="text-lg font-bold mb-2">Manage Proposals</h3>
                 <QueueTable />
+            </div>
+
+            <div className="mt-8">
+                <h3 className="text-lg font-bold mb-2">Manage Rewards</h3>
+                <div className="flex flex-col gap-4">
+                    <div>
+                        <div className="mb-2">
+                            Rewards Claim Status:{" "}
+                            <span className="font-bold">
+                                {claimingStatus === null ? "..." : claimingStatus ? "TRUE" : "FALSE"}
+                            </span>
+                        </div>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={handleRewardsClaimStatusChange}
+                        >
+                            Pause/Resume
+                        </button>
+                    </div>
+
+                    <div>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={handleAirdrop}
+                        >
+                            Airdrop
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
