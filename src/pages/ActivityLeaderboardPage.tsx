@@ -98,6 +98,7 @@ const ActivityLeaderboard = () => {
                                 <th className="px-4 py-3 font-medium text-white">Rank</th>
                                 <th className="px-4 py-3 font-medium text-white">Wallet Address</th>
                                 <th className="px-4 py-3 font-medium text-white">Points</th>
+                                <th className="px-4 py-3 font-medium text-white">Overall Points</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,6 +117,7 @@ const ActivityLeaderboard = () => {
                                         <td className="px-4 py-3 font-medium">{index + 1}</td>
                                         <td className="px-4 py-3">{leaderboardItem.walletAddress}</td>
                                         <td className="px-4 py-3 font-bold">{leaderboardItem.gain}</td>
+                                        <td className="px-4 py-3 font-bold">{leaderboardItem.point}</td>
                                     </tr>
                                 ))}
                         </tbody>
