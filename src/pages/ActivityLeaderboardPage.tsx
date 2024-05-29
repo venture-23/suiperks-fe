@@ -11,7 +11,7 @@ import { useAppContext } from "../context/AppContext";
 
 const ActivityLeaderboard = () => {
     const wallet = useWallet();
-    const { rewardsClaimStatus } = useAppContext();
+    const { rewardsClaimStatus, activeNFT } = useAppContext();
     const [data, setData] = useState<LeaderboardItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [points, setPoints] = useState<number>(0);
@@ -29,10 +29,10 @@ const ActivityLeaderboard = () => {
     };
 
     const handleClaim = async () => {
-        if (!wallet.address) return;
-
         try {
-            const txb = createClaimRewardTxb(wallet.address);
+            if (!activeNFT?.nftId) throw new Error("No Active NFT.");
+
+            const txb = createClaimRewardTxb(activeNFT?.nftId);
             const txnResponse = await wallet.signAndExecuteTransactionBlock({
                 // @ts-expect-error transactionBlock type mismatch error between @suiet/wallet-kit and @mysten/sui.js
                 transactionBlock: txb,
@@ -40,7 +40,7 @@ const ActivityLeaderboard = () => {
             console.log("txnResponse", txnResponse);
             if (txnResponse?.digest) {
                 toast.success("Rewards Claim Success.");
-                getUserPoints(wallet.address);
+                getUserPoints(wallet.address as string);
             }
         } catch (error) {
             console.error("Error placing bid:", error);

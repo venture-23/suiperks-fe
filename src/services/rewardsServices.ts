@@ -82,12 +82,12 @@ export const makeAirdrop = async (): Promise<boolean> => {
     }
 };
 
-export const createClaimRewardTxb = (walletAddress: string) => {
+export const createClaimRewardTxb = (nftAddress: string) => {
     try {
         const txb = new TransactionBlock();
         txb.moveCall({
             target: `${PACKAGE_ID}::oxcoin::claim_voter_reward`,
-            arguments: [txb.object(DIRECTORY_ID), txb.object(walletAddress)],
+            arguments: [txb.object(DIRECTORY_ID), txb.object(nftAddress)],
         });
 
         return txb;
