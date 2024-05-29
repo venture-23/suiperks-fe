@@ -41,7 +41,7 @@ const LandingPage = () => {
                         <p className="md:text-base text-sm my-4 text-red-400">Connect wallet to place bid</p>
                     )}
                     <Link
-                        to="/active-bid"
+                        to="/auction"
                         className={`py-3 px-4 rounded ${wallet.connected ? "bg-[#1c0971] hover:bg-blue-700 text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                         onClick={(e) => !wallet.connected && e.preventDefault()}
                     >

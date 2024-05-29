@@ -21,7 +21,7 @@ function App() {
                 <div className="pt-[80px] w-full flex flex-1">
                     <Routes>
                         <Route path="/proposals" element={<ProposalPage />} />
-                        <Route path="/active-bid" element={<ActiveBid />} />
+                        <Route path="/auction" element={<ActiveBid />} />
                         <Route path="/admin" element={<AdminPage />} />
                         <Route path="/user-dashboard" element={<UserDashboard />} />
                         <Route path="/proposal-submit" element={<ProposalForm />} />
