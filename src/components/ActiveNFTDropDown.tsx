@@ -9,7 +9,7 @@ const ActiveNFTDropDown = () => {
     };
 
     return (
-        <div className="nft-drop-down group relative w-[200px]">
+        <div className="nft-drop-down group relative 2xl:w-[200px] lg:w-[140px] w-[200px]">
             <div className="bg-[rgba(235,235,235,0.8)] px-4 py-2 rounded-lg font-semibold cursor-pointer h-[48px] flex justify-center items-center">
                 {activeNFT ? (
                     <div>

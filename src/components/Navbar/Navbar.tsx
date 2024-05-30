@@ -68,18 +68,16 @@ const Navbar = () => {
 
     return (
         <>
-            <div className="navbar bg-[#1c0971] z-40">
+            <div className="navbar bg-[#1c0971] z-40 xl:px-10 px-2">
                 <div className="navbar-contents">
                     <div className="logos-and-links">
-                        <NavLink
-                            to="/"
-                            //className="font-bold text-xl text-white"
-                            style={{ fontFamily: "Capriola, sans-serif" }}
-                        >
-                            <img src={Logo} className="h-10" />
-                        </NavLink>
-
                         <div className="nav-links text-white ">
+                            <NavLink
+                                to="/"
+                                //className="font-bold text-xl text-white"
+                            >
+                                <img src={Logo} className="h-10" />
+                            </NavLink>
                             <NavLink
                                 to="/auction"
                                 className={`nav-link ${location.pathname === "/auction" ? "active" : ""}`}
@@ -178,11 +176,7 @@ const Navbar = () => {
 
             <div className="mobile-navbar">
                 <div className="mobile-navbar-content">
-                    <div
-                        onClick={() => mobileNavigate("/")}
-                        // className="font-bold text-xl text-white py-3"
-                        style={{ fontFamily: "Capriola, sans-serif" }}
-                    >
+                    <div onClick={() => mobileNavigate("/")} className="mx-6">
                         <img src={Logo} className="h-10" />
                     </div>
 
