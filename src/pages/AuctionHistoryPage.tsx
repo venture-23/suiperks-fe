@@ -72,25 +72,34 @@ const AuctionHistoryPage = () => {
                                                 {auctionData.nftId.slice(0, 6)}...{auctionData.nftId.slice(-6)}
                                             </Link>
                                         </div>
-                                        <div>
-                                            Winner:{" "}
-                                            <Link
-                                                to={`${SUI_EXPLORER_URL}/account/${auctionData.highestBidder}`}
-                                                target="_blank"
-                                                className="underline"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                {" "}
-                                                {auctionData?.highestBidder?.slice(0, 6)}...
-                                                {auctionData?.highestBidder?.slice(-6)}
-                                            </Link>
-                                        </div>
-                                        <div className="text-xl">
-                                            Bidding Price:{" "}
-                                            <span className="font-bold">
-                                                {(auctionData.amount * 10 ** -9).toFixed(5)} SUI
-                                            </span>
-                                        </div>
+                                        {auctionData.highestBidder ? (
+                                            <div>
+                                                Winner:{" "}
+                                                <Link
+                                                    to={`${SUI_EXPLORER_URL}/account/${auctionData.highestBidder}`}
+                                                    target="_blank"
+                                                    className="underline"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    {" "}
+                                                    {auctionData?.highestBidder?.slice(0, 6)}...
+                                                    {auctionData?.highestBidder?.slice(-6)}
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            ""
+                                        )}
+
+                                        {auctionData.amount ? (
+                                            <div className="text-xl">
+                                                Bidding Price:{" "}
+                                                <span className="font-bold">
+                                                    {(auctionData.amount * 10 ** -9).toFixed(5)} SUI
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            ""
+                                        )}
                                     </div>
                                 </div>
                             </Link>
