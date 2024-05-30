@@ -117,14 +117,12 @@ const Navbar = () => {
                                     <div className="pt-2 hidden group-hover:block absolute right-0 min-w-[250px]">
                                         <div className="bg-[rgba(235,235,235,0.8)] rounded-lg p-4">
                                             <div className="flex flex-col gap-2">
-                                                <div className="font-bold text-black">
-                                                    <NavLink
-                                                        to="/dashboard"
-                                                        className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
-                                                    >
-                                                        Dashboard
-                                                    </NavLink>
-                                                </div>
+                                                <NavLink
+                                                    to="/dashboard"
+                                                    className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""} font-bold text-black bg-white px-1 py-2 rounded`}
+                                                >
+                                                    Dashboard
+                                                </NavLink>
                                                 <div className="font-bold text-black">
                                                     <p className="text-[10px] text-[#7f7f7f]">Wallet Address</p>
                                                     <div className="flex gap-1">
