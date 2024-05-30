@@ -38,14 +38,9 @@ const Navbar = () => {
     };
 
     const [menuOpen, setMenuOpen] = useState(false);
-    const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
-    };
-
-    const toggleUserDropdown = () => {
-        setUserDropdownOpen(!userDropdownOpen);
     };
 
     const mobileNavigate = (url: string) => {
@@ -112,64 +107,64 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-center bg-[rgba(235,235,235,0.8)] px-4 py-2 rounded-lg">
-                        <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
-                    </div>
-
                     <div className="right-section">
+                        <div className="bg-[rgba(235,235,235,0.8)] px-4 py-2 rounded-lg font-semibold cursor-pointer h-[48px] flex justify-center items-center">
+                            <div>Treasury: {formatBalance(treasuryBalance)} SUI</div>
+                        </div>
                         {wallet.connected ? (
                             <>
-                                <NavLink
-                                    to="/dashboard"
-                                    className={`nav-link text-white dashboard ${location.pathname === "/dashboard" ? "active" : ""}`}
-                                >
-                                    Dashboard
-                                </NavLink>
                                 <ActiveNFTDropDown />
-                                <div className="relative">
-                                    <img
-                                        src={UserImg}
-                                        className="w-auto h-[40px] cursor-pointer text-white"
-                                        onClick={toggleUserDropdown}
-                                    />
-                                    {userDropdownOpen && (
-                                        <div className="user-details absolute right-0 mt-4 min-w-[250px] flex flex-col gap-3 bg-[rgba(255,255,255,0.7)] border border-gray-300 rounded-lg shadow-lg p-4">
-                                            <div className="font-bold text-black">
-                                                <p className="text-[10px] text-[#7f7f7f]">Wallet Address</p>
-                                                <div className="flex gap-1">
-                                                    <div>
-                                                        {wallet.address
-                                                            ? `${wallet.address.substring(0, 6)}...${wallet.address.substring(wallet.address.length - 6)}`
-                                                            : "Address not available"}
-                                                    </div>
-                                                    <div
-                                                        onClick={() =>
-                                                            wallet.address && copyToClipboard(wallet.address)
-                                                        }
-                                                        title={copyTooltip}
+                                <div className="relative group">
+                                    <img src={UserImg} className="w-auto h-[40px] cursor-pointer text-white" />
+                                    <div className="pt-2 hidden group-hover:block absolute right-0 min-w-[250px]">
+                                        <div className="bg-[rgba(235,235,235,0.8)] rounded-lg p-4">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="font-bold text-black">
+                                                    <NavLink
+                                                        to="/dashboard"
+                                                        className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
                                                     >
-                                                        <img
-                                                            src={CopyIcon}
-                                                            className="h-6"
-                                                            style={{ cursor: "pointer" }}
-                                                        />
+                                                        Dashboard
+                                                    </NavLink>
+                                                </div>
+                                                <div className="font-bold text-black">
+                                                    <p className="text-[10px] text-[#7f7f7f]">Wallet Address</p>
+                                                    <div className="flex gap-1">
+                                                        <div>
+                                                            {wallet.address
+                                                                ? `${wallet.address.substring(0, 6)}...${wallet.address.substring(wallet.address.length - 6)}`
+                                                                : "Address not available"}
+                                                        </div>
+                                                        <div
+                                                            onClick={() =>
+                                                                wallet.address && copyToClipboard(wallet.address)
+                                                            }
+                                                            title={copyTooltip}
+                                                        >
+                                                            <img
+                                                                src={CopyIcon}
+                                                                className="h-6"
+                                                                style={{ cursor: "pointer" }}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                <div className="text-black">
+                                                    Balance:&nbsp;
+                                                    <span className="font-bold text-lg">
+                                                        {formatWalletBalance(walletBalance)} SUI
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    className="text-white bg-red-500 p-2 rounded-lg w-full"
+                                                    onClick={handleDisconnect}
+                                                >
+                                                    Disconnect
+                                                </button>
                                             </div>
-                                            <div className="text-black">
-                                                Balance:&nbsp;
-                                                <span className="font-bold text-lg">
-                                                    {formatWalletBalance(walletBalance)} SUI
-                                                </span>
-                                            </div>
-                                            <button
-                                                className="text-white bg-red-500 p-2 rounded-lg w-full"
-                                                onClick={handleDisconnect}
-                                            >
-                                                Disconnect
-                                            </button>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </>
                         ) : (
