@@ -12,12 +12,24 @@ const FaqSection = () => {
 
     const faqItems: FAQItem[] = [
         {
-            question: "What is SUI Perks?",
-            answer: "SUI Perks is a ",
+            question: "What is SUIPerks?",
+            answer: "SUIPerks is a platform that transforms NFTs into valuable investments and establishes a community-controlled treasury. It uses NFTs as gateway passes, enabling decentralized crowdfunding and democratic governance.",
         },
         {
-            question: "What is SUI Perks?",
-            answer: "SUI Perks is a ",
+            question: "How does the daily NFT minting process work?",
+            answer: " Each day, SUIPerks mints a single NFT available for public bidding. This approach ensures fairness and prevents pump-and-dump schemes, with the highest bid amount allocated to the community treasury.",
+        },
+        {
+            question: "What benefits do NFT holders get?",
+            answer: "NFT holders gain exclusive rights to vote on proposals, submit their own ideas, and shape the platform's direction. This democratizes the decision-making process and ensures community involvement.",
+        },
+        {
+            question: "How does SUIPerks support charitable initiatives?",
+            answer: " SUIPerks extends beyond supporting builders to include charitable initiatives such as aiding disease victims, disaster relief, and women's development programs. The community treasury can also fund and own sports clubs and other projects.",
+        },
+        {
+            question: " How does SUIPerks ensure transparency and security?",
+            answer: "   As one of the first DAOs on SUI, SUIPerks offers unparalleled transparency, with all user activities visible to everyone. Your identity is securely linked to your wallet address and NFTs, adding an extra layer of trust and accountability.",
         },
     ];
 
@@ -29,9 +41,9 @@ const FaqSection = () => {
             <h2 className="name md:text-4xl text-2xl font-bold mb-6 text-center text-[#1c0971]">FAQs</h2>
             <div className="md:w-[555px] w-auto">
                 {faqItems.map((item, index) => (
-                    <div key={index} className="py-4 border border-[#000000] rounded-[25px] px-3 mb-2">
+                    <div key={index} className="py-4 px-3 mb-2 border-b border-[#1c0971] ">
                         <div
-                            className="flex items-center justify-between cursor-pointer"
+                            className="flex items-center justify-between cursor-pointer "
                             onClick={() => toggleDropdown(index)}
                         >
                             <div
