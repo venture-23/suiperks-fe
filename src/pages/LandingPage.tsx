@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import AuctionImg from "../assets/images/auction.png";
 import ContributeImg from "../assets/images/contribute.png";
 import EarnImg from "../assets/images/earnReward.png";
+import SolutionSection from "../components/LandingPage/SolutionSection";
 
 const LandingPage = () => {
     return (
@@ -32,6 +33,7 @@ const LandingPage = () => {
                         />
                     </div>
                 </div>
+                <SolutionSection />
                 <FaqSection />
                 <JoinUsSection />
             </div>
