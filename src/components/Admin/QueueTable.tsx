@@ -5,6 +5,7 @@ import {
     executeProposalTxb,
     fetchAllProposals,
     queueProposalTxb,
+    updateProposalFailStatus,
 } from "../../services/proposalServices";
 import { useWallet } from "@suiet/wallet-kit";
 import { toast } from "react-toastify";
@@ -46,6 +47,7 @@ const QueueTable = () => {
 
             if (errorCode >= 0) {
                 toast.error(errorMessage);
+                await updateProposalFailStatus(proposalId);
             } else {
                 toast.error("Proposal queue failed");
             }
