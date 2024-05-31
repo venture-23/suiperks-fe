@@ -8,6 +8,9 @@ import {
 import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
 import { useAppContext } from "../context/AppContext";
+import { Link } from "react-router-dom";
+
+const SUI_EXPLORER_URL = "https://suiscan.xyz/testnet";
 
 const ActivityLeaderboard = () => {
     const wallet = useWallet();
@@ -123,7 +126,15 @@ const ActivityLeaderboard = () => {
                                             key={index}
                                         >
                                             <td className="px-4 py-3 font-medium">{index + 1}</td>
-                                            <td className="px-4 py-3">{leaderboardItem.walletAddress}</td>
+                                            <td className="px-4 py-3">
+                                                <Link
+                                                    to={`${SUI_EXPLORER_URL}/account/${leaderboardItem.walletAddress}`}
+                                                    target="_blank"
+                                                    className="underline"
+                                                >
+                                                    {leaderboardItem.walletAddress}
+                                                </Link>
+                                            </td>
                                             <td className="px-4 py-3 font-bold">{leaderboardItem.gain}</td>
                                             <td className="px-4 py-3 font-bold">{leaderboardItem.point}</td>
                                         </tr>
